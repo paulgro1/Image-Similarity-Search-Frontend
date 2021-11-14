@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import '../layout/css/style.css'
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container'
 
-import Card from 'react-bootstrap/Card';
-import Image from 'react-bootstrap/Image';
+import D3Map from './D3Map';
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import { bindActionCreators } from "redux";
@@ -47,34 +43,17 @@ class MainPage extends Component {
         let imageItem
         
         // NUR FÜR TESTZWECKE:
-        images = [{url: "../../testImages/1.jpg"},{url: "../../testImages/2.jpeg"},{url: "../../testImages/3.jpeg"}]
+        images = [
+            {url: "../../testImages/1.jpg", x: 0, y: 10},
+            {url: "../../testImages/2.jpeg",  x: 200, y: 500},
+            {url: "../../testImages/3.jpeg",  x: 700, y: 30}
+        ]
 
         if(images){
-            imageItem = <div classname="card-columns">
-                <Container>
-                <Row>
-                {   
-                    images.map(image => {
-                        // var imagePath = "../../images/posts/" + image.url;
-                        var imagePath = image.url
-                        return(
-                            <Col xs={8} md={6} lg={3} className="card-columns">
-                                <Card className="single-card">
-                                    <Card.Header>
-                                    </Card.Header>
-                                    <Card.Body className="card-body">
-                                        <Image src={imagePath} width="100%" height="100%"/>
-                                    </Card.Body>
-                                    <Card.Footer>
-                                    </Card.Footer>
-                                </Card>
-                            </Col>
-                        )
-                    })
-                }
-            </Row>
-            </Container>
-            </div>
+            console.log("Vor Aufruf D3Map");
+            return(
+                {D3Map}
+            )
         } else {
             imageItem = <p>No images could be found.</p>
         }
