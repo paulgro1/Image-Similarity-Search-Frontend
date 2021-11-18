@@ -73,6 +73,20 @@ function rootReducer(state=initialState, action) {
                 pending: false,
                 error: action.error
             }
+        case fetchImagesActions.SHOW_INFORMATION_DIALOG:
+            return {
+                ...state,
+                showInformationDialog: true,
+                pending: false,
+                error: null
+            }
+        case fetchImagesActions.HIDE_INFORMATION_DIALOG:
+            return {
+                ...state,
+                showInformationDialog: false,
+                pending: false,
+                error: null
+            }
         default:
             return state
     }

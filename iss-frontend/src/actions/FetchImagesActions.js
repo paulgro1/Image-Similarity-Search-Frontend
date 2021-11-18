@@ -4,6 +4,9 @@ export const FETCH_IMAGES_PENDING = 'FETCH_IMAGES_PENDING';
 export const FETCH_IMAGES_SUCCESS = 'FETCH_IMAGES_SUCCESS';
 export const FETCH_IMAGES_ERROR = 'FETCH_IMAGES_ERROR';
 
+export const SHOW_INFORMATION_DIALOG = "SHOW_INFORMATION_DIALOG";
+export const HIDE_INFORMATION_DIALOG = "HIDE_INFORMATION_DIALOG";
+
 
 export function fetchImagesPendingAction(){
     return {
@@ -22,6 +25,18 @@ export function fetchImagesErrorAction(error){
     return {
         type: FETCH_IMAGES_ERROR,
         error: error
+    }
+}
+
+export function showInformationDialogAction(){
+    return {
+        type: SHOW_INFORMATION_DIALOG,
+    }
+}
+
+export function hideInformationDialogAction(){
+    return {
+        type: HIDE_INFORMATION_DIALOG,
     }
 }
 
