@@ -90,7 +90,7 @@ class D3Map extends Component {
          * just for testing purposes
          */
         var similarImages = []
-        for (let i = 0; i <= this.state.sliderValue; i++){
+        for (let i = 0; i < this.state.sliderValue; i++){
             similarImages.push({
                 url: "../../testImages/leo.png"
             })
@@ -99,7 +99,7 @@ class D3Map extends Component {
 
         return(
             <div ref="canvas">
-                <Modal show={showDialog} onHide={this.handleClose} size="lg">
+                <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={true}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
                     </Modal.Header>
@@ -131,19 +131,19 @@ class D3Map extends Component {
                                 <Col lg={9}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>
                                     <Container>
-                                        <Row>
-                                            {
-                                             similarImages.map(img => {
-                                                 var url = img.url
+                                            <Row>
+                                                {
+                                                    similarImages.map(img => {
+                                                        var url = img.url
 
-                                                 return(
-                                                     <Col>
-                                                        <Image src={url} />
-                                                     </Col>
-                                                 )
-                                             })
-                                            }
-                                        </Row>
+                                                        return(
+                                                            <Col>
+                                                                <Image src={url} />
+                                                            </Col>
+                                                        )
+                                                    })
+                                                }
+                                            </Row>
                                     </Container>
                                 </Col>
 
