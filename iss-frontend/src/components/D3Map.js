@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from "redux";
 import * as d3 from 'd3';
 
+import '../layout/css/style.css'
+
 import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -99,7 +101,7 @@ class D3Map extends Component {
 
         return(
             <div ref="canvas">
-                <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={true}>
+                <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
                     </Modal.Header>
@@ -130,21 +132,15 @@ class D3Map extends Component {
                                 </Col>
                                 <Col lg={9}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>
-                                    <Container>
-                                            <Row>
-                                                {
-                                                    similarImages.map(img => {
-                                                        var url = img.url
+                                    <div id="image-container">
+                                        {similarImages.map(img => {
+                                            var url = img.url
 
-                                                        return(
-                                                            <Col>
-                                                                <Image src={url} />
-                                                            </Col>
-                                                        )
-                                                    })
-                                                }
-                                            </Row>
-                                    </Container>
+                                            return(
+                                                <Image src={url}/>  
+                                            )
+                                        })} 
+                                    </div>
                                 </Col>
 
                             </Row>
