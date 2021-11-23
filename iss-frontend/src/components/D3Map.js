@@ -42,6 +42,8 @@ class D3Map extends Component {
                 y: 500 * Math.random()
             })
         }
+        /* const {getImagesFromDbAction} = this.props
+        getImagesFromDbAction() */
         this.drawMap(IMAGES);
     }
 
@@ -158,6 +160,7 @@ class D3Map extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showInformationDialogAction: fetchImagesActions.showInformationDialogAction,
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
+    getImagesFromDbAction: fetchImagesActions.getImagesFromDb,
 },dispatch)
 
 const connectedD3Map = connect(mapStateToProps, mapDispatchToProps) (D3Map);

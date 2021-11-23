@@ -65,12 +65,12 @@ export function getImagesFromDb() {
 }
 
 /**
- * This function fetches the images.
+ * This function fetches the thumbnails of the images for D3 map.
  * @returns array of images recieved from the backend 
  */
 export function fetchImages(){
     
-    var restUrl = route.FETCH_IMAGES;
+    var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch Images from: " + restUrl);
 
     return fetch(restUrl)
@@ -86,6 +86,7 @@ export function fetchImages(){
  * @returns array with images
  */
 function handleResponse(response) {
+    console.log(response)
     return response.text().then(text => {
         var images = JSON.parse(text)
 
