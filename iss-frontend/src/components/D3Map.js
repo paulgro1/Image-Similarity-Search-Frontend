@@ -33,17 +33,20 @@ class D3Map extends Component {
         this.setValue = this.setValue.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        var imagesMeta = await fetchImagesActions.fetchImagesMeta()
         var IMAGES = []
-        for (let i = 0; i <= 100; i++){
-            IMAGES.push({
-                url: "../../testImages/leo.png", 
-                x: 1300 * Math.random(), 
-                y: 500 * Math.random()
-            })
+        for (const imageMeta of imagesMeta){
+            var imageWidth = 96
+            var imageHeight = 128
+            let image = {
+                id: imageMeta.id,
+                url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
+                x: (imageMeta.x * 20) + 830 - (imageWidth / 2),
+                y: (imageMeta.y * 20) + 400 - (imageHeight / 2),
+            }
+            IMAGES.push(image)
         }
-        /* const {getImagesFromDbAction} = this.props
-        getImagesFromDbAction() */
         this.drawMap(IMAGES);
     }
 
@@ -63,8 +66,8 @@ class D3Map extends Component {
     }
 
     drawMap(data) {
-        const canvasHeight = 600
-        const canvasWidth = 1400
+        const canvasHeight = 800
+        const canvasWidth = 1860
         const svgCanvas = d3.select(this.refs.canvas)
             .append('svg')
             .attr('width', canvasWidth)
@@ -75,6 +78,7 @@ class D3Map extends Component {
             .data(data)
             .enter()
             .append('image')
+            .attr('id', image => image.id)
             .attr('xlink:href', image => image.url)
             .attr('x', image => image.x)
             .attr('y', image => image.y)
@@ -144,7 +148,6 @@ class D3Map extends Component {
                                         })} 
                                     </div>
                                 </Col>
-
                             </Row>
                         </Container>
                     </Modal.Body>

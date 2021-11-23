@@ -80,28 +80,39 @@ export function fetchImages(){
     });
 }
 
+export function fetchImagesMeta(){
+
+    var restUrl = route.FETCH_THUMBNAIL_META;
+    console.log("Fetch image metadata from: " + restUrl);
+
+    return fetch(restUrl)
+        .then(response => response.json())
+        .then(handleResponse)
+        .then(imageMeta => {
+            return imageMeta;
+    });
+}
+
 /**
  * This funtion handels the response from the backend.
  * @param response - response recieved from the backend
- * @returns array with images
+ * @returns array with image metadata
  */
 function handleResponse(response) {
-    console.log(response)
-    return response.text().then(text => {
-        var images = JSON.parse(text)
 
-        var imagesArray = []
-        for(let i = 0; i < images.length; i++){
-            // TODO: richtige Parameter abrufen, diese hier sind nur Platzhalter.
-            let image = {
-                _id: images[i]._id,
-                x: images[i].x,
-                y: images[i].y,
-                url: images[i].url
-            }
-            imagesArray.push(image)
+    var data = []
+    data = response
+
+    var imagesMetaArray = []
+    for(const oneMeta of data){
+        let image = {
+            id: oneMeta.id,
+            x: oneMeta.position[0],
+            y: oneMeta.position[1],
         }
-        
-        return imagesArray;
-    });
+        imagesMetaArray.push(image)
+    }
+
+    return imagesMetaArray;
+
 }
