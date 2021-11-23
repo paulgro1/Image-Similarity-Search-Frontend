@@ -25,7 +25,8 @@ class D3Map extends Component {
         super(props);
         this.state = {
             images: this.props.imagesToDisplay,
-            selectedImage: {},
+            selectedImageUrl: undefined,
+            selectedImageFilename: undefined,
             sliderValue: 15
         }
         this.handleShow = this.handleShow.bind(this);
@@ -41,6 +42,7 @@ class D3Map extends Component {
             var imageHeight = 128
             let image = {
                 id: imageMeta.id,
+                filename: imageMeta.filename,
                 url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
                 x: (imageMeta.x * 20) + 830 - (imageWidth / 2),
                 y: (imageMeta.y * 20) + 400 - (imageHeight / 2),
@@ -51,7 +53,8 @@ class D3Map extends Component {
     }
 
     handleShow(e){
-        this.setState({selectedImage: e.target.getAttribute("href")});
+        this.setState({selectedImageUrl: e.target.getAttribute("href")});
+        this.setState({selectedImageFilename: e.target.getAttribute("filename")});
         const {showInformationDialogAction} = this.props;
         showInformationDialogAction();
     }
@@ -79,6 +82,7 @@ class D3Map extends Component {
             .enter()
             .append('image')
             .attr('id', image => image.id)
+            .attr('filename', image => image.filename)
             .attr('xlink:href', image => image.url)
             .attr('x', image => image.x)
             .attr('y', image => image.y)
@@ -104,7 +108,6 @@ class D3Map extends Component {
             })
         }
 
-
         return(
             <div ref="canvas">
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
@@ -115,14 +118,12 @@ class D3Map extends Component {
                         <Container>
                             <Row>
                                 <Col lg={3}>
-                                    <Image src={this.state.selectedImage} />
+                                    <Image src={this.state.selectedImageUrl} />
                                 </Col>
                                 <Col lg={9}>
                                     <h3>Image Properties:</h3>
                                     <div>
-                                        Name: leo.png<br/>
-                                        URL: {this.state.selectedImage}<br/>
-                                        Size: xMB<br/>
+                                        Name: {this.state.selectedImageFilename}<br/>
                                     </div>
                                     <br></br>
                                 </Col>

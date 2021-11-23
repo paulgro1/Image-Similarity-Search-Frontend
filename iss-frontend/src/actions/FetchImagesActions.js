@@ -99,7 +99,7 @@ export function fetchImagesMeta(){
  * @returns array with image metadata
  */
 function handleResponse(response) {
-
+    console.log(response)
     var data = []
     data = response
 
@@ -107,6 +107,7 @@ function handleResponse(response) {
     for(const oneMeta of data){
         let image = {
             id: oneMeta.id,
+            filename: oneMeta.filename,
             x: oneMeta.position[0],
             y: oneMeta.position[1],
         }
