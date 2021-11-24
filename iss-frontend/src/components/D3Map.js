@@ -10,8 +10,6 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import RangeSlider from 'react-bootstrap-range-slider';
-
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 
@@ -24,10 +22,9 @@ class D3Map extends Component {
     constructor(props){
         super(props);
         this.state = {
-            images: this.props.imagesToDisplay,
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
-            sliderValue: 15
+            sliderValue: 5
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -55,6 +52,9 @@ class D3Map extends Component {
     handleShow(e){
         this.setState({selectedImageUrl: e.target.getAttribute("href")});
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
+        if(this.props.sliderValue !== undefined){
+            this.setState({sliderValue: this.props.sliderValue});
+        }
         const {showInformationDialogAction} = this.props;
         showInformationDialogAction();
     }
@@ -62,6 +62,7 @@ class D3Map extends Component {
     handleClose(){
         const {hideInformationDialogAction} = this.props;
         hideInformationDialogAction();
+
     } 
 
     setValue(value){
@@ -98,6 +99,7 @@ class D3Map extends Component {
             showDialog = false;
         }
 
+
         /**
          * just for testing purposes
          */
@@ -129,14 +131,6 @@ class D3Map extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col lg={3}>
-                                    <RangeSlider
-                                    value={this.state.sliderValue}
-                                    onChange={changeEvent => this.setValue(changeEvent.target.value)}
-                                    min={0}
-                                    max={30}
-                                    />
-                                </Col>
                                 <Col lg={9}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>
                                     <div id="image-container">

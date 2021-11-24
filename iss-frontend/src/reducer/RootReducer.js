@@ -1,5 +1,6 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
+import * as settingsActions from '../actions/SettingsActions';
 
 const initialState = {
     images: [],
@@ -86,6 +87,21 @@ function rootReducer(state=initialState, action) {
                 showInformationDialog: false,
                 pending: false,
                 error: null
+            }
+        case settingsActions.SHOW_SETTINGS_DIALOG:
+            return {
+                ...state,
+                showSettingsDialog: true
+            }
+        case settingsActions.HIDE_SETTINGS_DIALOG:
+            return {
+                ...state,
+                showSettingsDialog: false
+            }
+        case settingsActions.SET_SLIDER_VALUE:
+            return {
+                ...state,
+                sliderValue: action.value
             }
         default:
             return state

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
-import ImageUploadButton from './ImageUploadButton'
+import ImageUploadButton from './ImageUploadButton';
+import SettingsButton from './SettingsButton';
 
 class Header extends Component {
 
@@ -15,6 +16,7 @@ class Header extends Component {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             <ImageUploadButton/>
+                            <SettingsButton/>
                         </Nav>
                     </Navbar.Collapse> 
                 </Navbar>
