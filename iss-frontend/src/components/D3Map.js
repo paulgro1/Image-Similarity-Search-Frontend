@@ -22,6 +22,7 @@ class D3Map extends Component {
     constructor(props){
         super(props);
         this.state = {
+            selectedImageId: undefined,
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
             sliderValue: 5
@@ -50,6 +51,7 @@ class D3Map extends Component {
     }
 
     handleShow(e){
+        this.setState({selectedImageId: e.target.getAttribute("id")});
         this.setState({selectedImageUrl: e.target.getAttribute("href")});
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
         if(this.props.sliderValue !== undefined){
@@ -119,29 +121,34 @@ class D3Map extends Component {
                     <Modal.Body>
                         <Container>
                             <Row>
-                                <Col lg={3}>
-                                    <Image src={this.state.selectedImageUrl} />
+                                <Col lg={4}>
+                                    <Image src={'http://localhost:8080/images/' + this.state.selectedImageId} width={192} height={256}/>
                                 </Col>
-                                <Col lg={9}>
-                                    <h3>Image Properties:</h3>
-                                    <div>
-                                        Name: {this.state.selectedImageFilename}<br/>
-                                    </div>
-                                    <br></br>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg={9}>
+                                <Col lg={8}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>
+                                    The number under the image shows the euclidean distance to the selected image. <br/>
+                                    <br/>
                                     <div id="image-container">
                                         {similarImages.map(img => {
                                             var url = img.url
 
-                                            return(
-                                                <Image src={url}/>  
+                                            return (
+                                                <div>
+                                                    <Image src={url}/> <br/>
+                                                    34
+                                                </div>
                                             )
                                         })} 
                                     </div>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col lg={9}>
+                                    <h4>Image Properties:</h4>
+                                    <div>
+                                        Name: {this.state.selectedImageFilename}<br/>
+                                    </div>
+                                    <br></br> 
                                 </Col>
                             </Row>
                         </Container>

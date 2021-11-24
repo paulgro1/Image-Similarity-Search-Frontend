@@ -1,7 +1,11 @@
 #image-container {
-    width: 550px !important;
-    height: 200px !important;
+    width: 480px !important;
+    height: 150px !important;
     overflow-y: scroll;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: flex-start;
   }
   
  
