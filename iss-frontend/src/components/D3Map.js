@@ -32,7 +32,7 @@ class D3Map extends Component {
     }
 
     async componentDidMount() {
-        var imagesMeta = await fetchImagesActions.fetchImagesMeta()
+        var imagesMeta = await fetchImagesActions.fetchOneThumbnailMeta()
         var IMAGES = []
         for (const imageMeta of imagesMeta){
             var imageWidth = 96
