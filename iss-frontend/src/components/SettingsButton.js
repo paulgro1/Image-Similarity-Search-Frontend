@@ -23,6 +23,7 @@ class SettingsButton extends Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
 
     handleShow(e){
@@ -38,8 +39,13 @@ class SettingsButton extends Component {
 
     setValue(value){
         this.setState({sliderValue: value});
+    }
+
+    handleSave(e){
+        e.preventDefault();
         const {setValueAction} = this.props;
-        setValueAction(value);
+        setValueAction(this.state.sliderValue);
+        this.handleClose();
     }
 
     render(){
@@ -67,6 +73,8 @@ class SettingsButton extends Component {
                             min={0}
                             max={30}
                         />
+                        <br/>
+                        <Button onClick={this.handleSave}>Save Changes</Button>
                     </Modal.Body>
                     <Modal.Footer>
                     </Modal.Footer>
