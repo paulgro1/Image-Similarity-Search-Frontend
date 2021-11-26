@@ -8,33 +8,33 @@ export const SHOW_INFORMATION_DIALOG = "SHOW_INFORMATION_DIALOG";
 export const HIDE_INFORMATION_DIALOG = "HIDE_INFORMATION_DIALOG";
 
 
-export function fetchImagesPendingAction(){
+export function fetchImagesPendingAction() {
     return {
         type: FETCH_IMAGES_PENDING
     }
 }
 
-export function fetchImagesSuccessAction(images){
+export function fetchImagesSuccessAction(images) {
     return {
         type: FETCH_IMAGES_SUCCESS,
         images: images
     }
 }
 
-export function fetchImagesErrorAction(error){
+export function fetchImagesErrorAction(error) {
     return {
         type: FETCH_IMAGES_ERROR,
         error: error
     }
 }
 
-export function showInformationDialogAction(){
+export function showInformationDialogAction() {
     return {
         type: SHOW_INFORMATION_DIALOG,
     }
 }
 
-export function hideInformationDialogAction(){
+export function hideInformationDialogAction() {
     return {
         type: HIDE_INFORMATION_DIALOG,
     }
@@ -43,14 +43,14 @@ export function hideInformationDialogAction(){
 /**
  * This function calls the fetchImages() function and 
  * dispatches the actions.
-*/
+ */
 export function getImagesFromDb() {
 
     return dispatch => {
         dispatch(fetchImagesPendingAction());
         fetchOneThumbnailMeta()
-            .then (
-                function(images){
+            .then(
+                function (images) {
                     const action = fetchImagesSuccessAction(images);
                     dispatch(action);
                 },
@@ -68,9 +68,9 @@ export function getImagesFromDb() {
  * This function fetches the meta-data for one thumbnail of the images for D3 map.
  * @returns array of images recieved from the backend 
  */
-export function fetchOneThumbnailMeta(){
-    
-    var restUrl ='http://localhost:8080/images/3/metadata';
+export function fetchOneThumbnailMeta() {
+
+    var restUrl = 'http://localhost:8080/images/3/metadata';
     console.log("Fetch image metadata from: " + restUrl);
 
     return fetch(restUrl)
@@ -78,7 +78,7 @@ export function fetchOneThumbnailMeta(){
         .then(handleOneMetaResponse)
         .then(imageMeta => {
             return imageMeta;
-    });
+        });
 }
 
 /**
@@ -86,21 +86,21 @@ export function fetchOneThumbnailMeta(){
  * @param response - response recieved from the backend
  * @returns object with meta-data for one image
  */
- function handleOneMetaResponse(response) {
+function handleOneMetaResponse(response) {
     console.log(response)
-    var image = response
+    let image = response
 
-        var image = {
-            id: image.id,
-            filename: image.filename,
-            x: image.position[0],
-            y: image.position[1],
-        }
+    image = {
+        id: image.id,
+        filename: image.filename,
+        x: image.position[0],
+        y: image.position[1],
+    }
     return image;
 }
 
 
-export function fetchAllThumbnailMeta(){
+export function fetchAllThumbnailMeta() {
 
     var restUrl = route.FETCH_ALL_THUMBNAIL_META;
     console.log("Fetch image metadata from: " + restUrl);
@@ -110,7 +110,7 @@ export function fetchAllThumbnailMeta(){
         .then(handleMetaResponse)
         .then(imageMeta => {
             return imageMeta;
-    });
+        });
 }
 
 /**
@@ -120,11 +120,11 @@ export function fetchAllThumbnailMeta(){
  */
 function handleMetaResponse(response) {
     console.log(response)
-    var data = []
+    let data = []
     data = response
 
     var imagesMetaArray = []
-    for(const oneMeta of data){
+    for (const oneMeta of data) {
         let image = {
             id: oneMeta.id,
             filename: oneMeta.filename,
@@ -141,8 +141,8 @@ function handleMetaResponse(response) {
  * This function fetches on image.
  * @returns one image recieved from the backend 
  */
-  export function fetchOneImage(id){
-    
+export function fetchOneImage(id) {
+
     var restUrl = route.FETCH_ONE_IMAGE + id;
     console.log("Fetch Images from: " + restUrl);
 
@@ -150,53 +150,52 @@ function handleMetaResponse(response) {
         .then(handleImageResponse)
         .then(image => {
             return image;
-    });
-} 
+        });
+}
 
 
 function handleImageResponse(response) {
     console.log(response)
     return response
-            .json().then(img => {
-        var images = new Buffer.from(img).toString("base64")
-        console.log(images)        
-        return images;
-    });
+        .json().then(img => {
+            var images = new Buffer.from(img).toString("base64")
+            console.log(images)
+            return images;
+        });
 }
 
 
-export function fetchNearestNeighbours(){
+export function fetchNearestNeighbours() {
 
-    (async () => {
-        const rawResponse = await fetch('http://localhost:8080/faiss/getNN/3', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({k: 6})
+     return fetch('http://localhost:8080/faiss/getNN/3', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                k: 6
+            })
+        })
+        .then(response => response.json())
+        .then(handleMetaNearestNeighboursResponse)
+        .then(nearestNeighbours => {
+            return nearestNeighbours;
         });
-        const content = await rawResponse.json();
-      
-        console.log(content);
-      })();
 }
 
 function handleMetaNearestNeighboursResponse(response) {
     console.log(response)
-    var data = []
-    data = response
+    let nearestNeighbours = []
+    nearestNeighbours = response
 
-    let nearestNeighbours = {
+    nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,
         similarities: response.similarities,
     }
 
     console.log(nearestNeighbours)
-    
+
     return nearestNeighbours;
 }
-
-
-

@@ -31,8 +31,11 @@ class D3Map extends Component {
         this.setValue = this.setValue.bind(this);
     }
 
+    async getNearestNeighbours() {
+    }
+
     async componentDidMount() {
-        var imagesMeta = await fetchImagesActions.fetchOneThumbnailMeta()
+        var imagesMeta = await fetchImagesActions.fetchAllThumbnailMeta()
         var IMAGES = []
         for (const imageMeta of imagesMeta){
             var imageWidth = 96
@@ -47,6 +50,23 @@ class D3Map extends Component {
             IMAGES.push(image)
         }
         this.drawMap(IMAGES);
+
+        var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours()
+        var nearestNeighboursArray = []
+        console.log(nearestNeighbours)
+        for (let i=0; i <= 5; i++){
+            const nearestNeighbour = {
+                id: nearestNeighbours.ids[0][i],
+                distances: nearestNeighbours.distances[i],
+                similarities: nearestNeighbours.similarities[0][i],
+                url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i],
+                x: 1860 * Math.random(),
+                y: 800 * Math.random(),
+            }
+            console.log(nearestNeighbour)
+            nearestNeighboursArray.push(nearestNeighbour)
+        }
+        this.drawMap2(nearestNeighboursArray);
     }
 
     handleShow(e){
@@ -92,6 +112,25 @@ class D3Map extends Component {
             }.bind(this))
     }
 
+    drawMap2(data) {
+        const canvasHeight = 800
+        const canvasWidth = 1860
+        const svgCanvas = d3.select(this.refs.canvas)
+            .append('svg')
+            .attr('width', canvasWidth)
+            .attr('height', canvasHeight)
+            .style("border", "1px solid black")
+        
+            svgCanvas.selectAll('image')
+            .data(data)
+            .enter()
+            .append('image')
+            .attr('id', image => image.id)
+            .attr('xlink:href', image => image.url)
+            .attr('x', image => image.x)
+            .attr('y', image => image.y)
+    }
+
     render(){
 
         var showDialog = this.props.showInformationDialog
@@ -111,7 +150,8 @@ class D3Map extends Component {
         }
 
         return(
-            <div ref="canvas">
+            <div>
+                <div ref="canvas">
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
@@ -150,6 +190,10 @@ class D3Map extends Component {
                     </Modal.Footer>
                 </Modal>
             </div>
+            <div ref="nearestNeighbours">
+            </div>
+            </div>
+            
         )
 
     }
