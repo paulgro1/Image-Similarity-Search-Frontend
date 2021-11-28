@@ -25,15 +25,34 @@ class D3Map extends Component {
             selectedImageId: undefined,
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
-            sliderValue: 5
+            sliderValue: 5,
+            nearestNeighbours: undefined
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
+        this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
+    }
+
+    async getNearestNeighbours(id, k) {
+        var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
+        var nearestNeighboursArray = []
+        console.log(nearestNeighbours)
+        for (let i=0; i < k; i++){
+            var nearestNeighbour = {
+                id: nearestNeighbours.ids[0][i],
+                distances: nearestNeighbours.distances[i],
+                similarities: nearestNeighbours.similarities[0][i],
+                url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
+            }
+            console.log(nearestNeighbour)
+            nearestNeighboursArray.push(nearestNeighbour)
+        }
+        return nearestNeighboursArray;
     }
 
     async componentDidMount() {
-        var imagesMeta = await fetchImagesActions.fetchImagesMeta()
+        var imagesMeta = await fetchImagesActions.fetchAllThumbnailMeta()
         var IMAGES = []
         for (const imageMeta of imagesMeta){
             var imageWidth = 96
@@ -50,13 +69,14 @@ class D3Map extends Component {
         this.drawMap(IMAGES);
     }
 
-    handleShow(e){
+    async handleShow(e){
         this.setState({selectedImageId: e.target.getAttribute("id")});
         this.setState({selectedImageUrl: e.target.getAttribute("href")});
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
         }
+        this.setState({nearestNeighbours: await this.getNearestNeighbours(this.state.selectedImageId, this.state.sliderValue)});
         const {showInformationDialogAction} = this.props;
         showInformationDialogAction();
     }
@@ -101,19 +121,14 @@ class D3Map extends Component {
             showDialog = false;
         }
 
-
-        /**
-         * just for testing purposes
-         */
         var similarImages = []
-        for (let i = 0; i < this.state.sliderValue; i++){
-            similarImages.push({
-                url: "../../testImages/leo.png"
-            })
+        if(this.state.nearestNeighbours){
+            similarImages = this.state.nearestNeighbours;
         }
 
         return(
-            <div ref="canvas">
+            <div>
+                <div ref="canvas">
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
@@ -126,16 +141,17 @@ class D3Map extends Component {
                                 </Col>
                                 <Col lg={8}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>
-                                    The number under the image shows the euclidean distance to the selected image. <br/>
+                                    The number below the images shows the percentual similarity to the selected image based on the euclidean distance. <br/>
                                     <br/>
                                     <div id="image-container">
                                         {similarImages.map(img => {
                                             var url = img.url
+                                            var euclideanDistance = img.similarities * 100
 
                                             return (
                                                 <div>
                                                     <Image src={url}/> <br/>
-                                                    34
+                                                    {euclideanDistance.toFixed(2)} %
                                                 </div>
                                             )
                                         })} 
@@ -157,6 +173,10 @@ class D3Map extends Component {
                     </Modal.Footer>
                 </Modal>
             </div>
+            <div ref="nearestNeighbours">
+            </div>
+            </div>
+            
         )
 
     }
