@@ -75,6 +75,7 @@ class D3Map extends Component {
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
+            console.log("SLIDER VALUE CHANGED")
         }
         this.setState({nearestNeighbours: await this.getNearestNeighbours(this.state.selectedImageId, this.state.sliderValue)});
         const {showInformationDialogAction} = this.props;
@@ -172,8 +173,6 @@ class D3Map extends Component {
                     <Modal.Footer>
                     </Modal.Footer>
                 </Modal>
-            </div>
-            <div ref="nearestNeighbours">
             </div>
             </div>
             

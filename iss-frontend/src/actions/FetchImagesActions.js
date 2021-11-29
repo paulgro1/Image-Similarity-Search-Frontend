@@ -174,7 +174,7 @@ export function fetchNearestNeighbours(id, k) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                k: k
+                k: parseInt(k)
             })
         })
         .then(response => response.json())
