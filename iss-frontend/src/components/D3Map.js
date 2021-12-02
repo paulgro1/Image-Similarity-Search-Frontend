@@ -26,12 +26,14 @@ class D3Map extends Component {
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
             sliderValue: 5,
-            nearestNeighbours: undefined
+            nearestNeighbours: undefined,
+            clickActive: false,
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
+        this.setClick = this.setClick.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
@@ -92,6 +94,26 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
+    setClick(value){
+        this.setState({clickActive: value});
+    }
+
+    markImage(clickedImage, d3) {
+        if (this.state.clickActive === false) {
+            d3.select(clickedImage.target).classed("highlightOn", true);
+            this.setState({ clickActive: true })
+            console.log(this.state.clickActive)
+            console.log(d3.select(clickedImage.target))
+
+        } else {
+            d3.select(clickedImage.target).classed("highlightOn", false);
+            this.setState({ clickActive: false })
+            console.log(this.state.clickActive)
+            console.log(d3.select(clickedImage.target))
+
+        }
+    }
+
     drawMap(data) {
         const canvasHeight = 800
         const canvasWidth = 1860
@@ -110,9 +132,15 @@ class D3Map extends Component {
             .attr('xlink:href', image => image.url)
             .attr('x', image => image.x)
             .attr('y', image => image.y)
-            .on("click", function(e) {
-                this.handleShow(e);
+            .style("border", "10px solid red")
+            /* Funktion zum markieren des angeklickten Images */
+            .on("click", function(clickedImage) {
+                this.markImage(clickedImage, d3);
             }.bind(this))
+            /* Funktion zum öffnen der Informationsansicht */
+            /* .on("click", function(e) {
+                this.handleShow(e);
+            }.bind(this)) */
     }
 
     render(){
