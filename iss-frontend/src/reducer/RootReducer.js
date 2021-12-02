@@ -5,7 +5,8 @@ import * as settingsActions from '../actions/SettingsActions';
 const initialState = {
     images: [],
     uploadPending: false,
-    showImageUploadDialog: false
+    showImageUploadDialog: false,
+    sliderValue: 5
 };
 
 /**

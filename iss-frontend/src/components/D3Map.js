@@ -96,8 +96,7 @@ class D3Map extends Component {
         var newImages = []
         for(let i = 0; i < 1; i++){
             let image = {
-                id: uploadedImages.ids[i][0],
-                url: 'http://localhost:8080/uploads/' + uploadedImages.ids[i][0],
+                url: 'TODO',
                 x: uploadedImages.coordinates[i][0],
                 y: uploadedImages.coordinates[i][1],
             }
@@ -141,7 +140,6 @@ class D3Map extends Component {
             .data(newImages)
             .enter()
             .append('image')
-            .attr('id', image => image.id)
             .attr('xlink:href', image => image.url)
             .attr('x', image => image.x)
             .attr('y', image => image.y)

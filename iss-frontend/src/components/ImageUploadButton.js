@@ -19,7 +19,6 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
-            numberImages: 1
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -52,7 +51,11 @@ class ImageUploadButton extends Component {
             
             formData.append(`images[${i}]`, files[i]);
         }
-        formData.append("k", this.state.numberImages)
+        var sliderValue = 5;
+        if(this.props.sliderValue !== undefined){
+            sliderValue = this.props.sliderValue
+        }
+        formData.append("k", sliderValue)
         imageUploadAction(formData);
     }
 
@@ -61,8 +64,6 @@ class ImageUploadButton extends Component {
         this.setState({files: e.target.files}, () => {
             console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));
         })
-        this.setState({numberImages: e.target.files.length})
-        console.log("[ImageUploadButton] Number of files in state: " + this.state.numberImages);
     }
 
     render(){
