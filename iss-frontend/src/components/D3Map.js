@@ -33,7 +33,7 @@ class D3Map extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
-        this.setClick = this.setClick.bind(this);
+        this.setClickActive = this.setClickActive.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
@@ -94,7 +94,7 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
-    setClick(value){
+    setClickActive(value){
         this.setState({clickActive: value});
     }
 
@@ -102,13 +102,11 @@ class D3Map extends Component {
         if (this.state.clickActive === false) {
             d3.select(clickedImage.target).classed("highlightOn", true);
             this.setState({ clickActive: true })
-            console.log(this.state.clickActive)
             console.log(d3.select(clickedImage.target))
 
         } else {
             d3.select(clickedImage.target).classed("highlightOn", false);
             this.setState({ clickActive: false })
-            console.log(this.state.clickActive)
             console.log(d3.select(clickedImage.target))
 
         }
