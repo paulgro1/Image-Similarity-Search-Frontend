@@ -24,14 +24,14 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: true,
-                response: undefined,
+                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
             return {
                 ...state,
                 showImageUploadDialog: false,
-                response: undefined,
+                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.UPLOAD_PENDING:
@@ -45,7 +45,7 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: false,
                 pending: false,
-                response: action.response,
+                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.UPLOAD_ERROR:

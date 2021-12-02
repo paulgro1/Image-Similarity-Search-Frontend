@@ -28,7 +28,7 @@ export function getUploadPendingAction(){
 export function getUploadSuccessAction(response){
     return {
         type: UPLOAD_SUCCESS,
-        response: response
+        uploadedImages: response
     }
 }
 
@@ -46,10 +46,10 @@ export function getUploadErrorAction(error){
  * This function calls the upload() function and 
  * dispatches the actions.
 */
-export function imageUpload(token, formData) {
+export function imageUpload(formData) {
     return dispatch => {
         dispatch(getUploadPendingAction());
-        upload(token, formData)
+        upload(formData)
             .then(function(response){
                 console.log("imageUpload response: " + JSON.stringify(response));
                 const action = getUploadSuccessAction(response);
@@ -65,32 +65,38 @@ export function imageUpload(token, formData) {
 }
 
 /**
- * @param token - user session token
  * @param formData - uploaded image wrapped in a form
  * 
  * This function sends the image included in the formData to the
  * backend. 
  * @returns response recieved from the backend
 */
-async function upload(token, formData) {
-
+async function upload(formData) {
+    // log all entries of formData Object
+    for(let pair of formData.entries()){
+        console.log(pair[0] + ', ' + pair[1]);
+    }
+    console.log(route.IMAGE_UPLOAD)
     return await axios({
-        method: "post",
+        method: "POST",
         url: route.IMAGE_UPLOAD,
         data: formData,
         headers: {
-            "token": token,
             "Content-Type": "multipart/form-data"
-        }
+        },
     })
     .then(response => {
         if(response.status === 200) {
             console.log("Response from image upload: " + JSON.stringify(response.data))
-            /* TODO
-            *  Je nachdem was der Server returned, können wir hier die Daten aufbereiten,
-            *  eh sie an die components übergeben werden.
-            */
-            return response;
+            let responseData = response.data
+            console.log(responseData.coordinates[0])
+            let imageData = {
+                distances: responseData.distances,
+                ids: responseData.ids,
+                coordinates: responseData.coordinates,
+                similarities: responseData.similarities
+            }
+            return imageData;
         }
         else {
             console.log("Error occured in image upload response.")

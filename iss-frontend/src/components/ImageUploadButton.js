@@ -18,7 +18,8 @@ class ImageUploadButton extends Component {
     constructor(props){
         super(props)
         this.state = {
-            file: {}
+            files: undefined,
+            numberImages: 1
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -39,23 +40,29 @@ class ImageUploadButton extends Component {
 
     handleSubmit(e){
         e.preventDefault();
-        const {file} = this.state;
+        const {files} = this.state;
         const {imageUploadAction} = this.props;
-        console.log("handleSubmit image from form: " + file.name);
+        console.log("handleSubmit images from form: ");
+        console.log(this.state.files)
 
         const formData = new FormData();
-        formData.append("img", file, file.name);
-
-        imageUploadAction(this.props.token, formData);
+        for(let i = 0; i < files.length; i++) {
+            console.log("IN FOR LOOP: ")
+            console.log(files[i])
+            
+            formData.append(`images[${i}]`, files[i]);
+        }
+        formData.append("k", this.state.numberImages)
+        imageUploadAction(formData);
     }
 
-    /*
-    * Note: I guess you could upload multiple files by removing [0] (?)
-    */
-    handleSelect(e){
-        this.setState({file: e.target.files[0]}, () => {
-            console.log("[ImageUploadButton] Files in state: " + this.state.file);
+    async handleSelect(e){
+        console.log(e.target.files)
+        this.setState({files: e.target.files}, () => {
+            console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));
         })
+        this.setState({numberImages: e.target.files.length})
+        console.log("[ImageUploadButton] Number of files in state: " + this.state.numberImages);
     }
 
     render(){
@@ -88,7 +95,7 @@ class ImageUploadButton extends Component {
                     <Modal.Body>
                         <Form>
                             <Form.Group>
-                                <input type='file' onChange={this.handleSelect}/>
+                                <input type='file' onChange={this.handleSelect} multiple/>
                             </Form.Group>
                             <Button variant="primary" onClick={this.handleSubmit}>
                                 Submit

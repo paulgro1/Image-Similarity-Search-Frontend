@@ -26,12 +26,14 @@ class D3Map extends Component {
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
             sliderValue: 5,
-            nearestNeighbours: undefined
+            nearestNeighbours: undefined,
+            uploadedImages: undefined
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
+        this.handleUploadedImages = this.handleUploadedImages.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
@@ -88,6 +90,23 @@ class D3Map extends Component {
 
     } 
 
+    handleUploadedImages(uploadedImages){
+        console.log("HIER")
+        this.setState({uploadedImages: uploadedImages})
+        var newImages = []
+        for(let i = 0; i < 1; i++){
+            let image = {
+                id: uploadedImages.ids[i][0],
+                url: 'http://localhost:8080/uploads/' + uploadedImages.ids[i][0],
+                x: uploadedImages.coordinates[i][0],
+                y: uploadedImages.coordinates[i][1],
+            }
+            newImages.push(image)
+        }
+        console.log(newImages)
+        this.updateMap(newImages)
+    }
+
     setValue(value){
         this.setState({sliderValue: value});
     }
@@ -115,6 +134,22 @@ class D3Map extends Component {
             }.bind(this))
     }
 
+    updateMap(newImages){
+        console.log("Erstmal geschafft -> warten auf Zoomed map")
+        const svgCanvas = d3.select(this.refs.canvas)
+        svgCanvas.selectAll('image')
+            .data(newImages)
+            .enter()
+            .append('image')
+            .attr('id', image => image.id)
+            .attr('xlink:href', image => image.url)
+            .attr('x', image => image.x)
+            .attr('y', image => image.y)
+            .on("click", function(e) {
+                this.handleShow(e);
+            }.bind(this))
+    }
+
     render(){
 
         var showDialog = this.props.showInformationDialog
@@ -126,6 +161,14 @@ class D3Map extends Component {
         if(this.state.nearestNeighbours){
             similarImages = this.state.nearestNeighbours;
         }
+
+        if(this.state.uploadedImages === undefined){
+            var uploadedImages = this.props.uploadedImages;
+            if(uploadedImages){
+                this.handleUploadedImages(uploadedImages);
+            }
+        }
+        
 
         return(
             <div>
