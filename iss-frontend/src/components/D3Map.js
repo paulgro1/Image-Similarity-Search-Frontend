@@ -27,13 +27,15 @@ class D3Map extends Component {
             selectedImageFilename: undefined,
             sliderValue: 5,
             nearestNeighbours: undefined,
-            uploadedImages: undefined
+            uploadedImages: undefined,
+            uploadedImagesUrls: []
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setValue = this.setValue.bind(this);
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
         this.handleUploadedImages = this.handleUploadedImages.bind(this);
+        this.storeImageUrls = this.storeImageUrls.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
@@ -71,6 +73,13 @@ class D3Map extends Component {
         this.drawMap(IMAGES);
     }
 
+    // change to componentDidUpdate later!
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.uploadedImages !== this.state.uploadedImages) {
+            this.handleUploadedImages(nextProps.uploadedImages);
+        }
+    }
+
     async handleShow(e){
         this.setState({selectedImageId: e.target.getAttribute("id")});
         this.setState({selectedImageUrl: e.target.getAttribute("href")});
@@ -90,13 +99,21 @@ class D3Map extends Component {
 
     } 
 
-    handleUploadedImages(uploadedImages){
-        console.log("HIER")
+    async handleUploadedImages(uploadedImages){
+        if(this.props.files){
+            console.log("FILES FROM STORE")
+            console.log(this.props.files)
+
+            var files = this.props.files;
+            await this.storeImageUrls(files);
+        }
         this.setState({uploadedImages: uploadedImages})
+        console.log("IMAGE URLS: ")
+        console.log(this.state.uploadedImagesUrls)
         var newImages = []
         for(let i = 0; i < 1; i++){
             let image = {
-                url: 'TODO',
+                url: this.state.uploadedImagesUrls[i],
                 x: uploadedImages.coordinates[i][0],
                 y: uploadedImages.coordinates[i][1],
             }
@@ -105,6 +122,18 @@ class D3Map extends Component {
         console.log(newImages)
         this.updateMap(newImages)
     }
+
+    storeImageUrls(files){
+        const imageFiles = files; 
+        const filesLength = imageFiles.length;
+        
+        var imageUrls = [];
+        for(var i = 0; i < filesLength; i++) {
+            imageUrls.push(URL.createObjectURL(files[i])) 
+        }
+        console.log(imageUrls)
+        this.setState({ uploadedImagesUrls: imageUrls });
+    } 
 
     setValue(value){
         this.setState({sliderValue: value});
@@ -118,7 +147,8 @@ class D3Map extends Component {
             .attr('width', canvasWidth)
             .attr('height', canvasHeight)
             .style("border", "1px solid black")
-        
+            //.classed('main-canvas', true) // in css datei mit .main-canvas ansprechen
+
             svgCanvas.selectAll('image')
             .data(data)
             .enter()
@@ -133,8 +163,11 @@ class D3Map extends Component {
             }.bind(this))
     }
 
+    // Video von Fabian schauen
+    // maxheight, maxwidth
     updateMap(newImages){
         console.log("Erstmal geschafft -> warten auf Zoomed map")
+        console.log(newImages)
         const svgCanvas = d3.select(this.refs.canvas)
         svgCanvas.selectAll('image')
             .data(newImages)
@@ -159,15 +192,7 @@ class D3Map extends Component {
         if(this.state.nearestNeighbours){
             similarImages = this.state.nearestNeighbours;
         }
-
-        if(this.state.uploadedImages === undefined){
-            var uploadedImages = this.props.uploadedImages;
-            if(uploadedImages){
-                this.handleUploadedImages(uploadedImages);
-            }
-        }
         
-
         return(
             <div>
                 <div ref="canvas">

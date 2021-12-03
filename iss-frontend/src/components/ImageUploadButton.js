@@ -19,11 +19,13 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
+            // storedImages: []
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        // this.storeImages = this.storeImages.bind(this);
     }
 
     handleShow(e){
@@ -59,8 +61,29 @@ class ImageUploadButton extends Component {
         imageUploadAction(formData);
     }
 
+    /* // adapted from https://stackoverflow.com/questions/48815282/storing-uploaded-images-in-react-state-with-file-reader
+    storeImages(e){
+        e.preventDefault();
+        this.setState({ storedImages: [] }); // empty out current images array
+        const imageFiles = e.target.files; // document.getElementById("image"); // You may want to avoid querying the dom yourself, try and rely on react as much as possible
+        const filesLength = imageFiles.length; // imageFiles.files.length;
+
+        for(var i = 0; i < filesLength; i++) {
+            let reader = new FileReader();
+            let file = imageFiles[i];
+
+            reader.onloadend = () => {
+                this.setState({ storedImages: this.state.images.concat(reader.result) });
+            }
+            reader.readAsDataURL(file);
+        }
+    } */
+
     async handleSelect(e){
-        console.log(e.target.files)
+        const {sendFilesToStoreAction} = this.props;
+        console.log(e.target.files);
+        // this.storeImages(e);
+        sendFilesToStoreAction(e.target.files)
         this.setState({files: e.target.files}, () => {
             console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));
         })
@@ -116,7 +139,8 @@ class ImageUploadButton extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showImageUploadDialogAction: imageUploadActions.getShowImageUploadDialogAction,
     hideImageUploadDialogAction: imageUploadActions.getHideImageUploadDialogAction,
-    imageUploadAction: imageUploadActions.imageUpload
+    imageUploadAction: imageUploadActions.imageUpload,
+    sendFilesToStoreAction: imageUploadActions.getSendFilesToStoreAction
 },dispatch)
 
 const connectedUploadButton = connect(mapStateToProps, mapDispatchToProps)(ImageUploadButton);

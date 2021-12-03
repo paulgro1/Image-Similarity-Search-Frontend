@@ -6,6 +6,7 @@ export const HIDE_IMAGE_UPLOAD_DIALOG = 'HIDE_IMAGE_UPLOAD_DIALOG';
 export const UPLOAD_PENDING = 'UPLOAD PENDING';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_ERROR = 'UPLOAD_ERROR';
+export const SEND_FILES_TO_STORE = 'SEND_FILES_TO_STORE';
 
 export function getShowImageUploadDialogAction(){
     return {
@@ -16,6 +17,14 @@ export function getShowImageUploadDialogAction(){
 export function getHideImageUploadDialogAction(){
     return {
         type: HIDE_IMAGE_UPLOAD_DIALOG
+    }
+}
+
+// provides uploaded files from UploadButton in D3 Map
+export function getSendFilesToStoreAction(files){
+    return {
+        type: SEND_FILES_TO_STORE,
+        files: files
     }
 }
 

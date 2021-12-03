@@ -55,6 +55,13 @@ function rootReducer(state=initialState, action) {
                 pending: false,
                 error: action.error
             }
+        case imageUploadActions.SEND_FILES_TO_STORE:
+            return {
+                showImageUploadDialog: true,
+                files: action.files,
+                pending: false,
+                error: null
+            }
         case fetchImagesActions.FETCH_IMAGES_PENDING:
             return {
                 ...state,
