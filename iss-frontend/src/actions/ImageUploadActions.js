@@ -98,7 +98,7 @@ async function upload(formData) {
         if(response.status === 200) {
             console.log("Response from image upload: " + JSON.stringify(response.data))
             let responseData = response.data
-            console.log(responseData.coordinates[0])
+
             let imageData = {
                 distances: responseData.distances,
                 ids: responseData.ids,

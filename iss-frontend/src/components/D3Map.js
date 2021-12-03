@@ -100,18 +100,17 @@ class D3Map extends Component {
     } 
 
     async handleUploadedImages(uploadedImages){
-        if(this.props.files){
+        var files = this.props.files;
+        if(files){
             console.log("FILES FROM STORE")
-            console.log(this.props.files)
-
-            var files = this.props.files;
+            console.log(files)
             await this.storeImageUrls(files);
         }
         this.setState({uploadedImages: uploadedImages})
         console.log("IMAGE URLS: ")
         console.log(this.state.uploadedImagesUrls)
         var newImages = []
-        for(let i = 0; i < 1; i++){
+        for(let i = 0; i < files.length; i++){
             let image = {
                 url: this.state.uploadedImagesUrls[i],
                 x: uploadedImages.coordinates[i][0],
