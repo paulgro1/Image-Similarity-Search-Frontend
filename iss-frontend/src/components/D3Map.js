@@ -28,7 +28,8 @@ class D3Map extends Component {
             sliderValue: 5,
             nearestNeighbours: undefined,
             uploadedImages: undefined,
-            uploadedImagesUrls: []
+            uploadedImagesUrls: [],
+            IMAGES: undefined,
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -70,27 +71,62 @@ class D3Map extends Component {
             }
             IMAGES.push(image)
         }
+        this.setState({IMAGES: IMAGES})
         this.drawMap(IMAGES);
     }
 
     // change to componentDidUpdate later!
-    componentWillReceiveProps(nextProps) {
+    async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            this.handleUploadedImages(nextProps.uploadedImages);
+            await this.setState({uploadedImages: nextProps.uploadedImages})
+            this.handleUploadedImages();
+        }
+        if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
+            this.setState({sliderValue: nextProps.sliderValue});
         }
     }
 
     async handleShow(e){
+        const {showInformationDialogAction} = this.props;
+
         this.setState({selectedImageId: e.target.getAttribute("id")});
         this.setState({selectedImageUrl: e.target.getAttribute("href")});
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
+
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
             console.log("SLIDER VALUE CHANGED")
         }
-        this.setState({nearestNeighbours: await this.getNearestNeighbours(this.state.selectedImageId, this.state.sliderValue)});
-        const {showInformationDialogAction} = this.props;
-        showInformationDialogAction();
+        // handle uploaded image case
+        if(parseInt(this.state.selectedImageId) >= this.state.IMAGES.length){
+            var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
+            console.log("Id of uploaded image: " + id)
+            console.log(this.state.uploadedImages);
+            var nN = {
+                distances: this.state.uploadedImages.distances[id],
+                ids: this.state.uploadedImages.ids[id],
+                similarities: this.state.uploadedImages.similarities[id]
+            }
+
+            var nearestNeighboursArray = [];
+            for (let i=0; i < nN.ids.length; i++){
+                var nearestNeighbour = {
+                    id: nN.ids[i],
+                    distances: nN.distances[i],
+                    similarities: nN.similarities[i],
+                    url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i]
+                }
+                console.log(nearestNeighbour)
+                nearestNeighboursArray.push(nearestNeighbour)
+            }
+            console.log(nearestNeighboursArray)
+            this.setState({nearestNeighbours: nearestNeighboursArray});
+            showInformationDialogAction();
+
+        } else {
+            this.setState({nearestNeighbours: await this.getNearestNeighbours(this.state.selectedImageId, this.state.sliderValue)});
+            showInformationDialogAction();
+        } 
     }
 
     handleClose(){
@@ -99,26 +135,32 @@ class D3Map extends Component {
 
     } 
 
-    async handleUploadedImages(uploadedImages){
+    async handleUploadedImages(){
         var files = this.props.files;
+        var imageWidth = 96
+        var imageHeight = 128
+        var uploadedImages = this.state.uploadedImages
+
+        if(uploadedImages === undefined){
+            //TODO: remove old images from map
+            return;
+        }
+
         if(files){
-            console.log("FILES FROM STORE")
-            console.log(files)
             await this.storeImageUrls(files);
         }
-        this.setState({uploadedImages: uploadedImages})
-        console.log("IMAGE URLS: ")
-        console.log(this.state.uploadedImagesUrls)
+
         var newImages = []
         for(let i = 0; i < files.length; i++){
             let image = {
+                id: this.state.IMAGES.length + i,
+                filename: "uploaded_img",
                 url: this.state.uploadedImagesUrls[i],
-                x: uploadedImages.coordinates[i][0],
-                y: uploadedImages.coordinates[i][1],
+                x: (uploadedImages.coordinates[i][0] * 20) + 830 - (imageWidth / 2),
+                y: (uploadedImages.coordinates[i][1] * 20) + 400 - (imageHeight / 2),
             }
             newImages.push(image)
         }
-        console.log(newImages)
         this.updateMap(newImages)
     }
 
@@ -141,14 +183,16 @@ class D3Map extends Component {
     drawMap(data) {
         const canvasHeight = 800
         const canvasWidth = 1860
+        
         const svgCanvas = d3.select(this.refs.canvas)
             .append('svg')
+            .attr('id', 'canvas-svg')
             .attr('width', canvasWidth)
             .attr('height', canvasHeight)
             .style("border", "1px solid black")
             //.classed('main-canvas', true) // in css datei mit .main-canvas ansprechen
 
-            svgCanvas.selectAll('image')
+        svgCanvas.selectAll('image')
             .data(data)
             .enter()
             .append('image')
@@ -160,24 +204,31 @@ class D3Map extends Component {
             .on("click", function(e) {
                 this.handleShow(e);
             }.bind(this))
+        
     }
 
-    // Video von Fabian schauen
     // maxheight, maxwidth
-    updateMap(newImages){
-        console.log("Erstmal geschafft -> warten auf Zoomed map")
-        console.log(newImages)
-        const svgCanvas = d3.select(this.refs.canvas)
-        svgCanvas.selectAll('image')
-            .data(newImages)
+    updateMap(data){
+        console.log("Draw new images on map")
+        console.log(data)
+        
+        d3.select('#canvas-svg')
+            .selectAll('div')
+            .data(data)
             .enter()
             .append('image')
-            .attr('xlink:href', image => image.url)
-            .attr('x', image => image.x)
-            .attr('y', image => image.y)
+            // thumbnail size: 128 x 96 px
+            .attr('height', "128px") 
+            .attr('width', "96px") 
+            .attr('id', data => data.id)
+            .attr('filename', data => data.filename)
+            .attr('xlink:href', data => data.url)
+            .attr('x', data => data.x)
+            .attr('y', data => data.y)
             .on("click", function(e) {
                 this.handleShow(e);
             }.bind(this))
+
     }
 
     render(){
@@ -190,11 +241,14 @@ class D3Map extends Component {
         var similarImages = []
         if(this.state.nearestNeighbours){
             similarImages = this.state.nearestNeighbours;
+            console.log("Similar Images: ")
+            console.log(similarImages)
         }
         
         return(
             <div>
                 <div ref="canvas">
+                
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
@@ -203,7 +257,7 @@ class D3Map extends Component {
                         <Container>
                             <Row>
                                 <Col lg={4}>
-                                    <Image src={'http://localhost:8080/images/' + this.state.selectedImageId} width={192} height={256}/>
+                                    <Image src={this.state.selectedImageUrl} width={192} height={256}/>
                                 </Col>
                                 <Col lg={8}>
                                     <h3>Top {this.state.sliderValue} Similar Images:</h3>

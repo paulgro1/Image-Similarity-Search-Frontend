@@ -19,13 +19,19 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
-            // storedImages: []
+            sliderValue: 5
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
-        // this.storeImages = this.storeImages.bind(this);
+    }
+
+     // change to componentDidUpdate later!
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
+            this.setState({sliderValue: nextProps.sliderValue});
+        }
     }
 
     handleShow(e){
@@ -53,36 +59,14 @@ class ImageUploadButton extends Component {
             
             formData.append(`images[${i}]`, files[i]);
         }
-        var sliderValue = 5;
-        if(this.props.sliderValue !== undefined){
-            sliderValue = this.props.sliderValue
-        }
-        formData.append("k", sliderValue)
+        
+        formData.append("k", this.state.sliderValue)
         imageUploadAction(formData);
     }
-
-    /* // adapted from https://stackoverflow.com/questions/48815282/storing-uploaded-images-in-react-state-with-file-reader
-    storeImages(e){
-        e.preventDefault();
-        this.setState({ storedImages: [] }); // empty out current images array
-        const imageFiles = e.target.files; // document.getElementById("image"); // You may want to avoid querying the dom yourself, try and rely on react as much as possible
-        const filesLength = imageFiles.length; // imageFiles.files.length;
-
-        for(var i = 0; i < filesLength; i++) {
-            let reader = new FileReader();
-            let file = imageFiles[i];
-
-            reader.onloadend = () => {
-                this.setState({ storedImages: this.state.images.concat(reader.result) });
-            }
-            reader.readAsDataURL(file);
-        }
-    } */
 
     async handleSelect(e){
         const {sendFilesToStoreAction} = this.props;
         console.log(e.target.files);
-        // this.storeImages(e);
         sendFilesToStoreAction(e.target.files)
         this.setState({files: e.target.files}, () => {
             console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));
