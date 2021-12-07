@@ -31,7 +31,8 @@ class D3Map extends Component {
             uploadedImagesUrls: [],
             IMAGES: undefined,
             xAxis: undefined,
-            yAxis: undefined
+            yAxis: undefined,
+            clickActive: false,
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -39,6 +40,7 @@ class D3Map extends Component {
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
         this.handleUploadedImages = this.handleUploadedImages.bind(this);
         this.storeImageUrls = this.storeImageUrls.bind(this);
+        this.setClickActive = this.setClickActive.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
