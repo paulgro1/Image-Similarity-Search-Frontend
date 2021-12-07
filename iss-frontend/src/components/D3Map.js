@@ -90,7 +90,11 @@ class D3Map extends Component {
         const {showInformationDialogAction} = this.props;
 
         this.setState({selectedImageId: e.target.getAttribute("id")});
-        this.setState({selectedImageUrl: e.target.getAttribute("href")});
+        if(parseInt(e.target.getAttribute("id")) >= this.state.IMAGES.length){
+            this.setState({selectedImageUrl: e.target.getAttribute("href")})
+        } else {
+            this.setState({selectedImageUrl: 'http://localhost:8080/images/'+ e.target.getAttribute("id")});
+        }
         this.setState({selectedImageFilename: e.target.getAttribute("filename")});
 
         if(this.props.sliderValue !== undefined){
