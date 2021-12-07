@@ -43,6 +43,10 @@ class D3Map extends Component {
         this.setClickActive = this.setClickActive.bind(this);
     }
 
+    setClickActive(value){
+        this.setState({clickActive: value});
+    }
+
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
         var nearestNeighboursArray = []
@@ -185,6 +189,62 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
+    async markImage(click, image, svgCanvas) {
+        if(this.props.sliderValue !== undefined){
+            this.setState({sliderValue: this.props.sliderValue});
+            console.log("SLIDER VALUE CHANGED")
+        }
+        console.log("In mark Image")
+        console.log(image)
+        
+        let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image), this.state.sliderValue)
+            let nearestNeighboursArray = []
+            console.log(nearestNeighbours)
+            for (let i=0; i < this.state.sliderValue; i++){
+                let nearestNeighbour = {
+                    id: nearestNeighbours.ids[0][i],
+                }
+                nearestNeighboursArray.push(nearestNeighbour)
+                console.log(nearestNeighboursArray.length)
+            }
+
+        if (this.state.clickActive === false) {
+    
+            /* mark clicked Image */
+            let clickedImage = document.getElementById(image)
+
+            console.log('clickedImage: ')
+            console.log(clickedImage.width.value)
+            svgCanvas.append('rect')
+                .attr('class', 'stroke')
+                .attr('width', clickedImage.width)
+                .attr('height', clickedImage.height)
+                .attr('x', clickedImage.x)
+                .attr('y', clickedImage.y)
+                .style('stroke', 'green')
+
+                
+            /* mark next neighbours */
+            for ( let neighbour of nearestNeighboursArray) {
+                let image = document.getElementById(neighbour.id)
+                                
+                /* add rect to immage */
+                svgCanvas.append('rect')
+                .attr('class', 'stroke')
+                .attr('width', image.width)
+                .attr('height', image.height)
+                .attr('x', image.x)
+                .attr('y', image.y)
+                }
+            /* set State */
+            this.setState({ clickActive: true })
+
+        } else {
+            svgCanvas.selectAll('rect').remove()
+            this.setState({ clickActive: false })
+        }
+    }
+
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
             addImages(newImages, this.state.xAxis, this.state.yAxis)
@@ -261,12 +321,15 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', 15)
                     .attr('height', 15)  
-                    .on("click", function(e) {
+                    .on("click", function(click,image) {
+                        console.log(image)
+                        console.log(click)
+                        this.markImage(click, image, svgCanvas);
+                    }.bind(this))
+                    /* Funktion zum öffnen der Informationsansicht */
+                    .on("dblclick", function(e) {
                         this.handleShow(e);
-                    }.bind(this))  
-                    .call(d3.zoom().on("zoom", function () {
-                        svgCanvas.attr("transform")
-                    }))
+                    }.bind(this))
                 
                 var k = 1;
             }   
@@ -309,10 +372,13 @@ class D3Map extends Component {
                         .attr('y', function(image) {return y(image.y)})
                         .attr('width', 15)
                         .attr('height', 15)  
-                        .on("click", function(e) {
-                            console.log(e)
+                        .on("click", function(click,image) {
+                            this.markImage(click, image, svgCanvas);
+                        }.bind(this))
+                        /* Funktion zum öffnen der Informationsansicht */
+                        .on("dblclick", function(e) {
                             this.handleShow(e);
-                        }.bind(this))  
+                        }.bind(this)) 
                 } 
     }
 

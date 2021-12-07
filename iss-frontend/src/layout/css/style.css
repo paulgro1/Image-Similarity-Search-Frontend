@@ -27,4 +27,10 @@
   object-fit: contain;
 }
   
+.stroke {
+  fill: transparent;
+  stroke: red;
+  shape-rendering: crispEdges;
+  stroke-width: 3px;
+}
  
