@@ -30,6 +30,8 @@ class D3Map extends Component {
             uploadedImages: undefined,
             uploadedImagesUrls: [],
             IMAGES: undefined,
+            xAxis: undefined,
+            yAxis: undefined
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -60,14 +62,13 @@ class D3Map extends Component {
         var imagesMeta = await fetchImagesActions.fetchAllThumbnailMeta()
         var IMAGES = []
         for (const imageMeta of imagesMeta){
-            var imageWidth = 96
-            var imageHeight = 128
+      
             let image = {
                 id: imageMeta.id,
                 filename: imageMeta.filename,
                 url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
-                x: (imageMeta.x * 20) + 830 - (imageWidth / 2),
-                y: (imageMeta.y * 20) + 400 - (imageHeight / 2),
+                x: imageMeta.x,
+                y: imageMeta.y 
             }
             IMAGES.push(image)
         }
@@ -89,13 +90,13 @@ class D3Map extends Component {
     async handleShow(e){
         const {showInformationDialogAction} = this.props;
 
-        this.setState({selectedImageId: e.target.getAttribute("id")});
-        if(parseInt(e.target.getAttribute("id")) >= this.state.IMAGES.length){
-            this.setState({selectedImageUrl: e.target.getAttribute("href")})
+        this.setState({selectedImageId: e.id});
+        if(parseInt(e.id) >= this.state.IMAGES.length){
+            this.setState({selectedImageUrl: e.url})
         } else {
-            this.setState({selectedImageUrl: 'http://localhost:8080/images/'+ e.target.getAttribute("id")});
+            this.setState({selectedImageUrl: 'http://localhost:8080/images/'+ e.id});
         }
-        this.setState({selectedImageFilename: e.target.getAttribute("filename")});
+        this.setState({selectedImageFilename: e.filename});
 
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
@@ -141,8 +142,6 @@ class D3Map extends Component {
 
     async handleUploadedImages(){
         var files = this.props.files;
-        var imageWidth = 96
-        var imageHeight = 128
         var uploadedImages = this.state.uploadedImages
 
         if(uploadedImages === undefined){
@@ -160,12 +159,12 @@ class D3Map extends Component {
                 id: this.state.IMAGES.length + i,
                 filename: "uploaded_img",
                 url: this.state.uploadedImagesUrls[i],
-                x: (uploadedImages.coordinates[i][0] * 20) + 830 - (imageWidth / 2),
-                y: (uploadedImages.coordinates[i][1] * 20) + 400 - (imageHeight / 2),
+                x: uploadedImages.coordinates[i][0],
+                y: uploadedImages.coordinates[i][1],
             }
             newImages.push(image)
         }
-        this.updateMap(newImages)
+        this.drawMap(this.state.IMAGES, newImages);
     }
 
     storeImageUrls(files){
@@ -184,55 +183,135 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
-    drawMap(data) {
-        const canvasHeight = 800
-        const canvasWidth = 1860
-        
-        const svgCanvas = d3.select(this.refs.canvas)
-            .append('svg')
-            .attr('id', 'canvas-svg')
-            .attr('width', canvasWidth)
-            .attr('height', canvasHeight)
-            .style("border", "1px solid black")
-            //.classed('main-canvas', true) // in css datei mit .main-canvas ansprechen
+    drawMap(data, newImages) {
+        if(this.state.uploadedImages){
+            addImages(newImages, this.state.xAxis, this.state.yAxis)
+        } else {
+            var margin = {top: 10, right: 30, bottom: 30, left: 60},
+            canvasWidth = 1400 - margin.left - margin.right,
+            canvasHeight = 1000  - margin.top - margin.bottom;
 
-        svgCanvas.selectAll('image')
-            .data(data)
-            .enter()
-            .append('image')
-            .attr('id', image => image.id)
-            .attr('filename', image => image.filename)
-            .attr('xlink:href', image => image.url)
-            .attr('x', image => image.x)
-            .attr('y', image => image.y)
-            .on("click", function(e) {
-                this.handleShow(e);
-            }.bind(this))
-        
-    }
+            var svgCanvas = d3.select(this.refs.canvas)
+                .append('svg')
+                    .attr('id', 'canvas-svg')
+                    .attr('width', canvasWidth)
+                    .attr('height', canvasHeight)
 
-    // maxheight, maxwidth
-    updateMap(data){
-        console.log("Draw new images on map")
-        console.log(data)
-        
-        d3.select('#canvas-svg')
-            .selectAll('div')
-            .data(data)
-            .enter()
-            .append('image')
-            // thumbnail size: 128 x 96 px
-            .attr('height', "128px") 
-            .attr('width', "96px") 
-            .attr('id', data => data.id)
-            .attr('filename', data => data.filename)
-            .attr('xlink:href', data => data.url)
-            .attr('x', data => data.x)
-            .attr('y', data => data.y)
-            .on("click", function(e) {
-                this.handleShow(e);
-            }.bind(this))
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+                // x-Axis
+                var x = d3.scaleLinear()
+                    .domain([-50, 60])
+                    .range([ 0, canvasWidth ]);
+                var xAxis = svgCanvas.append("g")
+                    .call(d3.axisBottom(x));
+
+                this.setState({xAxis: x})
+                // y-Axis
+                var y = d3.scaleLinear()
+                    .domain([-60, 40])
+                    .range([ canvasHeight, 0]);
+                var yAxis = svgCanvas.append("g")
+                    .call(d3.axisLeft(y));
+
+                this.setState({yAxis: y})
+                // Add a clipPath: everything out of this area won't be drawn.
+                svgCanvas
+                    .append("defs")
+                    .append("SVG:clipPath")
+                    .attr("id", "clip")
+                    .append("SVG:rect")
+                    .attr("width", canvasWidth )
+                    .attr("height", canvasHeight )
+                    .attr("x", 0)
+                    .attr("y", 0)
+
+                // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+                var zoom = d3.zoom()
+                .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+                .extent([[0, 0], [canvasWidth, canvasHeight]])
+                .on("zoom", updateChart) 
+
+                // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+                svgCanvas.append("rect")
+                .attr("width", canvasWidth)
+                .attr("height", canvasHeight)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                .call(zoom)
+                    
+
+                // Create the scatter variable: where both the circles and the brush take place
+                var scatter = svgCanvas.append('g')
+                    .attr('id', 'scatter')
+                    .attr("clip-path", "url(#clip)")
+
+                scatter.selectAll('image')
+                    .data(data)
+                    .enter()
+                    .append('image')
+                    .attr('id', image => image.id)
+                    .attr('filename', image => image.filename)
+                    .attr('xlink:href', image => image.url)
+                    .attr('x', function(image) {return x(image.x)})
+                    .attr('y', function(image) {return y(image.y)})
+                    .attr('width', 15)
+                    .attr('height', 15)  
+                    .on("click", function(e) {
+                        this.handleShow(e);
+                    }.bind(this))  
+                    .call(d3.zoom().on("zoom", function () {
+                        svgCanvas.attr("transform")
+                    }))
+                
+                var k = 1;
+            }   
+                // A function that updates the chart when the user zoom and thus new boundaries are available
+                function updateChart() {
+                    // recover the new scale
+                    var newX = d3.event.transform.rescaleX(x);
+                    var newY = d3.event.transform.rescaleY(y);
+                   
+                    // update axes with these new boundaries
+                    xAxis.call(d3.axisBottom(newX))
+                    yAxis.call(d3.axisLeft(newY))
+
+                    // update image position
+                    scatter.selectAll("image")
+                        .attr('x', function(image) {return newX(image.x)})
+                        .attr('y', function(image) {return newY(image.y)})  
+                    
+                    k = d3.event.transform.k
+                
+                    scatter.selectAll("image")
+                        .attr('width', 15*k)
+                        .attr('height', 15*k)
+
+                }
+                function addImages(data, x, y){
+                    console.log("YAY")
+                    console.log(data)
+                    var scatter = d3.select('#scatter')
+                    .append('svg')
+                    
+                    scatter.selectAll('image')
+                        .data(data)
+                        .enter()
+                        .append('image')
+                        .attr('id', image => image.id)
+                        .attr('filename', image => image.filename)
+                        .attr('xlink:href', image => image.url)
+                        .attr('x', function(image) {return x(image.x)})
+                        .attr('y', function(image) {return y(image.y)})
+                        .attr('width', 15)
+                        .attr('height', 15)  
+                        .on("click", function(e) {
+                            console.log(e)
+                            this.handleShow(e);
+                        }.bind(this))  
+                } 
     }
 
     render(){
