@@ -189,15 +189,15 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
-    async markImage(click, image, svgCanvas) {
+    async markImage(image, x, y) {
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
             console.log("SLIDER VALUE CHANGED")
         }
         console.log("In mark Image")
-        console.log(image)
+        console.log(image.id)
         
-        let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image), this.state.sliderValue)
+        let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue)
             let nearestNeighboursArray = []
             console.log(nearestNeighbours)
             for (let i=0; i < this.state.sliderValue; i++){
@@ -205,22 +205,28 @@ class D3Map extends Component {
                     id: nearestNeighbours.ids[0][i],
                 }
                 nearestNeighboursArray.push(nearestNeighbour)
-                console.log(nearestNeighboursArray.length)
+                
             }
 
         if (this.state.clickActive === false) {
     
             /* mark clicked Image */
-            let clickedImage = document.getElementById(image)
+            let clickedImage = document.getElementById(image.id)
+
+            // let clickedImage = d3.select("#image_" + image.id).node()
 
             console.log('clickedImage: ')
-            console.log(clickedImage.width.value)
-            svgCanvas.append('rect')
+            console.log(clickedImage)
+            
+            d3.select('#scatter').append('rect')
+                .attr('id', 'clicked_img_border_' + clickedImage.getAttribute('id'))
                 .attr('class', 'stroke')
-                .attr('width', clickedImage.width)
-                .attr('height', clickedImage.height)
-                .attr('x', clickedImage.x)
-                .attr('y', clickedImage.y)
+                .attr('width', clickedImage.getAttribute('width'))
+                .attr('height', clickedImage.getAttribute('height'))
+             /*    .attr('x', function() {console.log(clickedImage.x.animVal.value); return x(clickedImage.x.animVal.value)})
+                .attr('y', function() {return y(clickedImage.y.animVal.value)})  */
+                .attr('x', clickedImage.getAttribute('x'))
+                .attr('y', clickedImage.getAttribute('y'))
                 .style('stroke', 'green')
 
                 
@@ -229,18 +235,19 @@ class D3Map extends Component {
                 let image = document.getElementById(neighbour.id)
                                 
                 /* add rect to immage */
-                svgCanvas.append('rect')
+                d3.select('#scatter').append('rect')
+                .attr('id', 'nearest_neighbours_border_' + image.getAttribute('id'))
                 .attr('class', 'stroke')
-                .attr('width', image.width)
-                .attr('height', image.height)
-                .attr('x', image.x)
-                .attr('y', image.y)
+                .attr('width', image.getAttribute('width'))
+                .attr('height', image.getAttribute('height'))
+                .attr('x', image.getAttribute('x'))
+                .attr('y', image.getAttribute('y'))
                 }
             /* set State */
             this.setState({ clickActive: true })
 
         } else {
-            svgCanvas.selectAll('rect').remove()
+            // svgCanvas.selectAll('rect').remove()
             this.setState({ clickActive: false })
         }
     }
@@ -321,10 +328,8 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', 15)
                     .attr('height', 15)  
-                    .on("click", function(click,image) {
-                        console.log(image)
-                        console.log(click)
-                        this.markImage(click, image, svgCanvas);
+                    .on("click", function(image) {
+                        this.markImage(image, x, y);
                     }.bind(this))
                     /* Funktion zum öffnen der Informationsansicht */
                     .on("dblclick", function(e) {
@@ -345,14 +350,24 @@ class D3Map extends Component {
 
                     // update image position
                     scatter.selectAll("image")
-                        .attr('x', function(image) {return newX(image.x)})
+                        .attr('x', function(image) {console.log(image);return newX(image.x)})
                         .attr('y', function(image) {return newY(image.y)})  
+                
                     
                     k = d3.event.transform.k
                 
                     scatter.selectAll("image")
                         .attr('width', 15*k)
                         .attr('height', 15*k)
+
+                    scatter.selectAll("rect")
+                        .attr('x', function(d, i, rect) {console.log(rect[i]); return newX(rect[d].getAttribute('x'))})
+                        .attr('y', function(d, i, rect) {return newY(rect[i].getAttribute('y'))})  
+           
+                    scatter.selectAll("rect")
+                        .attr('width', 15*k)
+                        .attr('height', 15*k)
+    
 
                 }
                 function addImages(data, x, y){
@@ -372,8 +387,8 @@ class D3Map extends Component {
                         .attr('y', function(image) {return y(image.y)})
                         .attr('width', 15)
                         .attr('height', 15)  
-                        .on("click", function(click,image) {
-                            this.markImage(click, image, svgCanvas);
+                        .on("click", function(image) {
+                            this.markImage(image, x, y);
                         }.bind(this))
                         /* Funktion zum öffnen der Informationsansicht */
                         .on("dblclick", function(e) {
