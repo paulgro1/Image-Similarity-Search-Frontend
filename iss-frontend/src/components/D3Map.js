@@ -196,9 +196,9 @@ class D3Map extends Component {
         if(this.state.uploadedImages){
             addImages(newImages, this.state.xAxis, this.state.yAxis)
         } else {
-            var margin = {top: 10, right: 30, bottom: 30, left: 60},
-            canvasWidth = 1400 - margin.left - margin.right,
-            canvasHeight = 1000  - margin.top - margin.bottom;
+            var margin = {top: 10, right: 30, bottom: 30, left: 60}
+            var canvasWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - margin.left - margin.right
+            var canvasHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - margin.top - margin.bottom
 
             var svgCanvas = d3.select(this.refs.canvas)
                 .append('svg')
