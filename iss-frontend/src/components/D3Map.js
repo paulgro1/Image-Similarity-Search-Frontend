@@ -43,9 +43,7 @@ class D3Map extends Component {
         this.setClickActive = this.setClickActive.bind(this);
     }
 
-    setClickActive(value){
-        this.setState({clickActive: value});
-    }
+    
 
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
@@ -191,6 +189,71 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
+    setClickActive(value){
+        this.setState({clickActive: value});
+    }
+
+    removeMark(Canvas){
+        if(this.state.clickActive === true) {
+            Canvas.selectAll('image')
+            .classed('hide', false)
+            .classed('highlight', false)
+            .classed('highlight_neighbour', false)
+            this.setState({ clickActive: false })
+        }
+        else{
+            return
+        }
+        
+    }
+
+    async markImage(image, id, Canvas) {
+
+       await Canvas.selectAll('image').classed('hide', true)
+
+        if(this.props.sliderValue !== undefined){
+            this.setState({sliderValue: this.props.sliderValue});
+            console.log("SLIDER VALUE CHANGED")
+        }
+        
+        let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue)
+            let nearestNeighboursArray = []
+            console.log(nearestNeighbours)
+            for (let i=0; i < this.state.sliderValue; i++){
+                let nearestNeighbour = {
+                    id: nearestNeighbours.ids[0][i],
+                }
+                nearestNeighboursArray.push(nearestNeighbour)
+            }
+
+        if (this.state.clickActive === false) {
+            /* mark clicked Image */
+            let clickedImage = document.getElementById(image.id)
+            console.log(clickedImage)
+            clickedImage.classList.toggle('hide')
+            clickedImage.classList.add('highlight')
+            console.log(clickedImage)
+
+            /* mark next neighbours */
+            for ( let neighbour of nearestNeighboursArray) {
+                let image = document.getElementById(neighbour.id)
+                console.log(image)
+                image.classList.toggle('hide')
+                image.classList.add('highlight_neighbour')
+                console.log(image)            
+            }
+            /* set State */
+            this.setState({ clickActive: true })
+
+        } else {
+            Canvas.selectAll('image')
+            .classed('hide', false)
+            .classed('highlight', false)
+            .classed('highlight_neighbour', false)
+            this.setState({ clickActive: false })
+        }
+    }
+    
 
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
@@ -201,13 +264,18 @@ class D3Map extends Component {
             canvasHeight = 1000  - margin.top - margin.bottom;
 
             var svgCanvas = d3.select(this.refs.canvas)
+            .on("click", function() {
+                this.removeMark(svgCanvas)                
+            }.bind(this))
                 .append('svg')
                     .attr('id', 'canvas-svg')
                     .attr('width', canvasWidth)
                     .attr('height', canvasHeight)
+                    
 
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    
 
                 // x-Axis
                 var x = d3.scaleLinear()
@@ -235,6 +303,7 @@ class D3Map extends Component {
                     .attr("height", canvasHeight )
                     .attr("x", 0)
                     .attr("y", 0)
+                    
 
                 // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
                 var zoom = d3.zoom()
@@ -256,6 +325,7 @@ class D3Map extends Component {
                 var scatter = svgCanvas.append('g')
                     .attr('id', 'scatter')
                     .attr("clip-path", "url(#clip)")
+                    
 
                 scatter.selectAll('image')
                     .data(data)
@@ -267,8 +337,14 @@ class D3Map extends Component {
                     .attr('x', function(image) {return x(image.x)})
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
-                    .attr('height', image => image.height)  
-                    /* Funktion zum öffnen der Informationsansicht */
+                    .attr('height', image => image.height)
+                    .classed('highlight_neighbour', false)
+                    .classed('hide', false)  
+                    /* mark next neighbours */
+                    .on("click", function(click,image) {
+                        this.markImage(click, image, svgCanvas, d3);
+                    }.bind(this))
+                    /* open information-view */
                     .on("dblclick", function(e) {
                         this.handleShow(e);
                     }.bind(this))
@@ -313,12 +389,18 @@ class D3Map extends Component {
                         .attr('x', function(image) {return x(image.x)})
                         .attr('y', function(image) {return y(image.y)})
                         .attr('width', 15)
-                        .attr('height', 15)  
-                        /* Funktion zum öffnen der Informationsansicht */
+                        .attr('height', 15)
+                        .classed('highlight_neighbour', false)
+                        .classed('hide', false)  
+                        /* mark next neighbours */
+                        .on("click", function(click,image) {
+                            this.markImage(click, image, scatter);
+                        }.bind(this))
+                        /* open information-view */
                         .on("dblclick", function(e) {
                             this.handleShow(e);
-                        }.bind(this)) 
-                } 
+                        }.bind(this))
+                }   
     }
 
     render(){

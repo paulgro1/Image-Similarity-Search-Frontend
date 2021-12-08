@@ -4,33 +4,28 @@
   overflow-y: scroll;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-.zIndex{
-  z-index: 0;
+#image-container>div{
+  margin: 2%;
 }
 
-.border{
-  border: 20px solid rgb(255, 0, 0) !important;
+#scatter>image {
+  margin: 10%;
 }
-.highlightOn {
-  /* z-index: 999; */
-  width: 200px;
-  height: 300px;
-  opacity: 0.9;
-  background-color: red;
-  padding: 20%;
-  border: 20px solid rgb(255, 0, 0) !important;
-  outline: 20px red;
-  object-fit: contain;
+
+.highlight {
+  opacity: 1;
+  outline: 0.5vh solid green;
+}
+
+.highlight_neighbour {
+  opacity: 1;
+  outline: 0.5vh solid red;
 }
   
-.stroke {
-  fill: transparent;
-  stroke: red;
-  shape-rendering: crispEdges;
-  stroke-width: 3px;
+.hide {
+  opacity: 0.1;
 }
  
