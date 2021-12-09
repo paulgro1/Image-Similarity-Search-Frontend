@@ -32,6 +32,9 @@ class D3Map extends Component {
             IMAGES: undefined,
             xAxis: undefined,
             yAxis: undefined,
+            newX: undefined,
+            newY: undefined,
+            imgScale: undefined,
             clickActive: false,
         }
         this.handleShow = this.handleShow.bind(this);
@@ -97,7 +100,8 @@ class D3Map extends Component {
 
     async handleShow(e){
         const {showInformationDialogAction} = this.props;
-
+        console.log("In handleShow(): ")
+        console.log(e)
         this.setState({selectedImageId: e.id});
         if(parseInt(e.id) >= this.state.IMAGES.length){
             this.setState({selectedImageUrl: e.url})
@@ -106,10 +110,6 @@ class D3Map extends Component {
         }
         this.setState({selectedImageFilename: e.filename});
 
-        if(this.props.sliderValue !== undefined){
-            this.setState({sliderValue: this.props.sliderValue});
-            console.log("SLIDER VALUE CHANGED")
-        }
         // handle uploaded image case
         if(parseInt(this.state.selectedImageId) >= this.state.IMAGES.length){
             var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
@@ -122,7 +122,7 @@ class D3Map extends Component {
             }
 
             var nearestNeighboursArray = [];
-            for (let i=0; i < nN.ids.length; i++){
+            for (let i=0; i < this.state.sliderValue; i++){
                 var nearestNeighbour = {
                     id: nN.ids[i],
                     distances: nN.distances[i],
@@ -193,7 +193,7 @@ class D3Map extends Component {
 
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
-            addImages(newImages, this.state.xAxis, this.state.yAxis)
+            addImages(newImages, this.state.xAxis, this.state.yAxis, this.handleShow, this.state)
         } else {
             var margin = {top: 10, right: 30, bottom: 30, left: 60}
             var canvasWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - margin.left - margin.right
@@ -239,7 +239,7 @@ class D3Map extends Component {
                 var zoom = d3.zoom()
                 .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
                 .extent([[0, 0], [canvasWidth, canvasHeight]])
-                .on("zoom", updateChart) 
+                .on("zoom", updateChart.bind(this))
 
                 // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
                 svgCanvas.append("rect")
@@ -280,6 +280,8 @@ class D3Map extends Component {
                     var newX = d3.event.transform.rescaleX(x);
                     var newY = d3.event.transform.rescaleY(y);
                    
+                    this.setState({newX: newX});
+                    this.setState({newY: newY});
                     // update axes with these new boundaries
                     xAxis.call(d3.axisBottom(newX))
                     yAxis.call(d3.axisLeft(newY))
@@ -291,6 +293,7 @@ class D3Map extends Component {
                 
                     
                     k = d3.event.transform.k
+                    this.setState({imgScale: k});
                 
                     scatter.selectAll("image")
                         .attr('width', 15*k)
@@ -298,15 +301,16 @@ class D3Map extends Component {
 
 
                 }
-                function addImages(data, x, y){
+
+                function addImages(data, x, y, handleShow, state){
                     var prevSvg = d3.select('#uploadedImages')
                     if(prevSvg !== null){
                         removeUploadedImages()
                     }
 
                     var scatter = d3.select('#scatter')
-                    .append('svg')
-                    .attr('id', 'uploadedImages')
+                        .append('svg')
+                        .attr('id', 'uploadedImages')
                     
                     scatter.selectAll('image')
                         .data(data)
@@ -315,13 +319,13 @@ class D3Map extends Component {
                         .attr('id', image => image.id)
                         .attr('filename', image => image.filename)
                         .attr('xlink:href', image => image.url)
-                        .attr('x', function(image) {return x(image.x)})
-                        .attr('y', function(image) {return y(image.y)})
-                        .attr('width', 15)
-                        .attr('height', 15)  
+                        .attr('x', function(image) {return state.newX(image.x)})
+                        .attr('y', function(image) {return state.newY(image.y)})
+                        .attr('width', 15 * state.imgScale)
+                        .attr('height', 15 * state.imgScale)  
                         /* Funktion zum öffnen der Informationsansicht */
                         .on("dblclick", function(e) {
-                            this.handleShow(e);
+                            handleShow(e);
                         }.bind(this)) 
                 } 
 
