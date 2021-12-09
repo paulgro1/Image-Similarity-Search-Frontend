@@ -153,7 +153,6 @@ class D3Map extends Component {
         var uploadedImages = this.state.uploadedImages
 
         if(uploadedImages === undefined){
-            //TODO: remove old images from map
             return;
         }
 
@@ -300,8 +299,14 @@ class D3Map extends Component {
 
                 }
                 function addImages(data, x, y){
+                    var prevSvg = d3.select('#uploadedImages')
+                    if(prevSvg !== null){
+                        removeUploadedImages()
+                    }
+
                     var scatter = d3.select('#scatter')
                     .append('svg')
+                    .attr('id', 'uploadedImages')
                     
                     scatter.selectAll('image')
                         .data(data)
@@ -319,6 +324,11 @@ class D3Map extends Component {
                             this.handleShow(e);
                         }.bind(this)) 
                 } 
+
+                function removeUploadedImages(){
+                    var svg = d3.select('#uploadedImages')
+                        .remove()
+                }
     }
 
     render(){
