@@ -242,20 +242,20 @@ class D3Map extends Component {
                 .extent([[0, 0], [canvasWidth, canvasHeight]])
                 .on("zoom", updateChart) 
 
-                // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
-                svgCanvas.append("rect")
-                .attr("width", canvasWidth)
-                .attr("height", canvasHeight)
-                .style("fill", "none")
-                .style("pointer-events", "all")
-                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                .call(zoom)
-                    
 
                 // Create the scatter variable: where both the circles and the brush take place
                 var scatter = svgCanvas.append('g')
                     .attr('id', 'scatter')
                     .attr("clip-path", "url(#clip)")
+
+                // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+                scatter.append("rect")
+                    .attr("width", canvasWidth)
+                    .attr("height", canvasHeight)
+                    .style("fill", "none")
+                    .style("pointer-events", "all")
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                    
 
                 scatter.selectAll('image')
                     .data(data)
@@ -272,6 +272,8 @@ class D3Map extends Component {
                     .on("dblclick", function(e) {
                         this.handleShow(e);
                     }.bind(this))
+
+                    scatter.call(zoom)
                 
                 var k = 1;
             }   
