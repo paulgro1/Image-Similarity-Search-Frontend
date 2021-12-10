@@ -199,7 +199,9 @@ class D3Map extends Component {
             var margin = {top: 10, right: 30, bottom: 30, left: 60}
             var canvasWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - margin.left - margin.right
             var canvasHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - margin.top - margin.bottom
-
+            var k = 1
+            var tick_amount = 10
+                
             var svgCanvas = d3.select(this.refs.canvas)
                 .append('svg')
                     .attr('id', 'canvas-svg')
@@ -212,19 +214,26 @@ class D3Map extends Component {
                 // x-Axis
                 var x = d3.scaleLinear()
                     .domain([-50, 60])
-                    .range([ 0, canvasWidth ]);
+                    .range([ 0, canvasWidth ])  
                 var xAxis = svgCanvas.append("g")
-                    .call(d3.axisBottom(x));
-
+                    .call(d3.axisBottom(x).ticks(tick_amount))
+                    
+                xAxis.select(".domain")
+                    .attr("stroke-width","0")
+                    
                 this.setState({xAxis: x})
                 // y-Axis
                 var y = d3.scaleLinear()
                     .domain([-60, 40])
                     .range([ canvasHeight, 0]);
                 var yAxis = svgCanvas.append("g")
-                    .call(d3.axisLeft(y));
+                    .call(d3.axisLeft(y).ticks(tick_amount));
 
+                yAxis.select(".domain")
+                    .attr("stroke-width","0")
+                    
                 this.setState({yAxis: y})
+
                 // Add a clipPath: everything out of this area won't be drawn.
                 svgCanvas
                     .append("defs")
@@ -242,7 +251,6 @@ class D3Map extends Component {
                 .extent([[0, 0], [canvasWidth, canvasHeight]])
                 .on("zoom", updateChart) 
 
-
                 // Create the scatter variable: where both the circles and the brush take place
                 var scatter = svgCanvas.append('g')
                     .attr('id', 'scatter')
@@ -255,8 +263,7 @@ class D3Map extends Component {
                     .style("fill", "none")
                     .style("pointer-events", "all")
                     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                    
-
+                
                 scatter.selectAll('image')
                     .data(data)
                     .enter()
@@ -272,35 +279,30 @@ class D3Map extends Component {
                     .on("dblclick", function(e) {
                         this.handleShow(e);
                     }.bind(this))
-
+                    
                     scatter.call(zoom)
-                
-                var k = 1;
-            }   
+            }  
                 // A function that updates the chart when the user zoom and thus new boundaries are available
                 function updateChart() {
+                    k = d3.event.transform.k
                     // recover the new scale
                     var newX = d3.event.transform.rescaleX(x);
                     var newY = d3.event.transform.rescaleY(y);
                    
                     // update axes with these new boundaries
-                    xAxis.call(d3.axisBottom(newX))
-                    yAxis.call(d3.axisLeft(newY))
+                    xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
+                    yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
 
                     // update image position
                     scatter.selectAll("image")
                         .attr('x', function(image) {return newX(image.x)})
                         .attr('y', function(image) {return newY(image.y)})  
-                
                     
-                    k = d3.event.transform.k
-                
                     scatter.selectAll("image")
                         .attr('width', 15*k)
                         .attr('height', 15*k)
-
-
                 }
+
                 function addImages(data, x, y){
                     var scatter = d3.select('#scatter')
                     .append('svg')
@@ -320,7 +322,7 @@ class D3Map extends Component {
                         .on("dblclick", function(e) {
                             this.handleShow(e);
                         }.bind(this)) 
-                } 
+                }
     }
 
     render(){
@@ -337,10 +339,9 @@ class D3Map extends Component {
             console.log(similarImages)
         }
         
-        return(
+        return(    
             <div>
                 <div ref="canvas">
-                
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
