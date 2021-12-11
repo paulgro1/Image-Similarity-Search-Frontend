@@ -1,0 +1,26 @@
+@mixin move-ani($step1:10, $step2:20, $step3:40, $step4:60, $step5:80) {
+    @keyframes move {
+        from {
+            transform: translateZ(0);
+        }
+        #{$step1*1%}{
+            transform: translateZ(10vh);
+            @content;
+        }
+        #{$step2*1%}{
+            transform: translateZ(20vh);
+        }
+        #{$step3*1%}{
+            transform: translateZ(30vh);
+        }
+        #{$step4*1%}{
+            transform: translateZ(40vh);
+        }
+        #{$step5*1%}{
+            transform: translateZ(50vh);
+        }
+        to {
+            transform: translateZ(60vh);
+        }
+    }
+}

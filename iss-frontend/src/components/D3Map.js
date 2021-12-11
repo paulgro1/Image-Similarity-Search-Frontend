@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import * as d3 from 'd3';
 
 import '../layout/css/style.css'
+import '../layout/css/D3MapStyle.css'
 
 import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
@@ -48,7 +49,6 @@ class D3Map extends Component {
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
         var nearestNeighboursArray = []
-        console.log(nearestNeighbours)
         for (let i=0; i < k; i++){
             var nearestNeighbour = {
                 id: nearestNeighbours.ids[0][i],
@@ -56,7 +56,6 @@ class D3Map extends Component {
                 similarities: nearestNeighbours.similarities[0][i],
                 url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
             }
-            console.log(nearestNeighbour)
             nearestNeighboursArray.push(nearestNeighbour)
         }
         return nearestNeighboursArray;
@@ -73,8 +72,8 @@ class D3Map extends Component {
                 url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
                 x: imageMeta.x,
                 y: imageMeta.y,
-                width: 15,
-                height: 15
+                width: 12,
+                height: 16
             }
             IMAGES.push(image)
         }
@@ -127,10 +126,8 @@ class D3Map extends Component {
                     similarities: nN.similarities[i],
                     url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i]
                 }
-                console.log(nearestNeighbour)
                 nearestNeighboursArray.push(nearestNeighbour)
             }
-            console.log(nearestNeighboursArray)
             this.setState({nearestNeighbours: nearestNeighboursArray});
             showInformationDialogAction();
 
@@ -193,11 +190,11 @@ class D3Map extends Component {
         this.setState({clickActive: value});
     }
 
-    removeMark(Canvas){
+    removeMark(){
         if(this.state.clickActive === true) {
-            Canvas.selectAll('image')
-            .classed('hide', false)
+            d3.selectAll('image')
             .classed('highlight', false)
+            .classed('hide', false)
             .classed('highlight_neighbour', false)
             this.setState({ clickActive: false })
         }
@@ -208,17 +205,12 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, Canvas) {
-
-       await Canvas.selectAll('image').classed('hide', true)
-
         if(this.props.sliderValue !== undefined){
             this.setState({sliderValue: this.props.sliderValue});
-            console.log("SLIDER VALUE CHANGED")
         }
         
         let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue)
             let nearestNeighboursArray = []
-            console.log(nearestNeighbours)
             for (let i=0; i < this.state.sliderValue; i++){
                 let nearestNeighbour = {
                     id: nearestNeighbours.ids[0][i],
@@ -227,20 +219,23 @@ class D3Map extends Component {
             }
 
         if (this.state.clickActive === false) {
+            // hide all images
+            d3.selectAll('image').classed('hide', true)
+
             /* mark clicked Image */
-            let clickedImage = document.getElementById(image.id)
-            console.log(clickedImage)
-            clickedImage.classList.toggle('hide')
-            clickedImage.classList.add('highlight')
-            console.log(clickedImage)
+            d3.select('#image_' + image.id)
+            .classed('highlight', true)
+            .classed('hide', false)
+            .classed('highlight_neighbour', false)
+            
 
             /* mark next neighbours */
             for ( let neighbour of nearestNeighboursArray) {
-                let image = document.getElementById(neighbour.id)
-                console.log(image)
-                image.classList.toggle('hide')
-                image.classList.add('highlight_neighbour')
-                console.log(image)            
+                d3.select('#image_' + neighbour.id)
+                .classed('highlight', false)
+                .classed('hide', false)
+                .classed('highlight_neighbour', true)
+          
             }
             /* set State */
             this.setState({ clickActive: true })
@@ -264,9 +259,6 @@ class D3Map extends Component {
             canvasHeight = 1000  - margin.top - margin.bottom;
 
             var svgCanvas = d3.select(this.refs.canvas)
-            .on("click", function() {
-                this.removeMark(svgCanvas)                
-            }.bind(this))
                 .append('svg')
                     .attr('id', 'canvas-svg')
                     .attr('width', canvasWidth)
@@ -319,6 +311,9 @@ class D3Map extends Component {
                 .style("pointer-events", "all")
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 .call(zoom)
+                .on("click", function() {
+                    this.removeMark(svgCanvas)                
+                }.bind(this))
                     
 
                 // Create the scatter variable: where both the circles and the brush take place
@@ -331,15 +326,16 @@ class D3Map extends Component {
                     .data(data)
                     .enter()
                     .append('image')
-                    .attr('id', image => image.id)
+                    .attr('id',image => "image_" +  image.id)
                     .attr('filename', image => image.filename)
                     .attr('xlink:href', image => image.url)
                     .attr('x', function(image) {return x(image.x)})
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
                     .attr('height', image => image.height)
+                    .classed('hide', false)
+                    .classed('highlight', false)
                     .classed('highlight_neighbour', false)
-                    .classed('hide', false)  
                     /* mark next neighbours */
                     .on("click", function(click,image) {
                         this.markImage(click, image, svgCanvas, d3);
@@ -370,8 +366,8 @@ class D3Map extends Component {
                     k = d3.event.transform.k
                 
                     scatter.selectAll("image")
-                        .attr('width', 15*k)
-                        .attr('height', 15*k)
+                        .attr('width', 12*k)
+                        .attr('height', 16*k)
 
 
                 }
@@ -383,15 +379,16 @@ class D3Map extends Component {
                         .data(data)
                         .enter()
                         .append('image')
-                        .attr('id', image => image.id)
+                        .attr('id', image => "image_" + image.id)
                         .attr('filename', image => image.filename)
                         .attr('xlink:href', image => image.url)
                         .attr('x', function(image) {return x(image.x)})
                         .attr('y', function(image) {return y(image.y)})
-                        .attr('width', 15)
-                        .attr('height', 15)
+                        .attr('width', 12)
+                        .attr('height', 16)
+                        .classed('hide', false)
+                        .classed('highlight', false)
                         .classed('highlight_neighbour', false)
-                        .classed('hide', false)  
                         /* mark next neighbours */
                         .on("click", function(click,image) {
                             this.markImage(click, image, scatter);

@@ -1,0 +1,19 @@
+*,
+*::after,
+*::before{
+    box-sizing: border-box;
+}
+
+:root{
+    font-family: sans-serif;
+}
+
+ul{
+    list-style: none;
+    padding: 0;
+}
+
+img{
+    max-width: 100%;
+}
+

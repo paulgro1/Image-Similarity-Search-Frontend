@@ -11,21 +11,5 @@
   margin: 2%;
 }
 
-#scatter>image {
-  margin: 10%;
-}
 
-.highlight {
-  opacity: 1;
-  outline: 0.5vh solid green;
-}
-
-.highlight_neighbour {
-  opacity: 1;
-  outline: 0.5vh solid red;
-}
-  
-.hide {
-  opacity: 0.1;
-}
  
