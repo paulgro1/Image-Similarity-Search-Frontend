@@ -199,6 +199,7 @@ class D3Map extends Component {
             var margin = {top: 10, right: 30, bottom: 30, left: 60}
             var canvasWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - margin.left - margin.right
             var canvasHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - margin.top - margin.bottom
+            var zoomRect = false
             var k = 1
             var tick_amount = 10
                 
@@ -234,6 +235,10 @@ class D3Map extends Component {
                     
                 this.setState({yAxis: y})
 
+                d3.select("#zoom-rect").on("change", function() {
+                    zoomRect = this.checked;
+                });
+
                 // Add a clipPath: everything out of this area won't be drawn.
                 svgCanvas
                     .append("defs")
@@ -251,6 +256,10 @@ class D3Map extends Component {
                 .extent([[0, 0], [canvasWidth, canvasHeight]])
                 .on("zoom", updateChart) 
 
+                var zoom_rect = d3.zoom()
+                .on("zoom", updateChart);
+
+
                 // Create the scatter variable: where both the circles and the brush take place
                 var scatter = svgCanvas.append('g')
                     .attr('id', 'scatter')
@@ -263,7 +272,8 @@ class D3Map extends Component {
                     .style("fill", "none")
                     .style("pointer-events", "all")
                     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                
+                    
+
                 scatter.selectAll('image')
                     .data(data)
                     .enter()
@@ -280,27 +290,116 @@ class D3Map extends Component {
                         this.handleShow(e);
                     }.bind(this))
                     
-                    scatter.call(zoom)
-            }  
-                // A function that updates the chart when the user zoom and thus new boundaries are available
-                function updateChart() {
-                    k = d3.event.transform.k
-                    // recover the new scale
-                    var newX = d3.event.transform.rescaleX(x);
-                    var newY = d3.event.transform.rescaleY(y);
-                   
-                    // update axes with these new boundaries
-                    xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
-                    yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
-
-                    // update image position
-                    scatter.selectAll("image")
-                        .attr('x', function(image) {return newX(image.x)})
-                        .attr('y', function(image) {return newY(image.y)})  
+                    d3.select("#zoom-rect").on("change", function() {
+                        zoomRect = this.checked;
+                        console.log(zoomRect)
+                        console.log(zoomRect)
+                    });
                     
+                    scatter.call(zoom).on("mousedown.zoom", function() {
+                        d3.event.stopPropagation();
+                        d3.select("#zoom-rect").on("change", function() {
+                            zoomRect = this.checked;
+                            console.log(zoomRect)
+                        });
+                        if (!zoomRect) {
+                            return;
+                        }
+                        var e = this,
+                            origin = d3.mouse(e),
+                            rect = scatter.append("rect").attr("class", "zoom");
+                        d3.select("body").classed("noselect", true);
+                        origin[0] = Math.max(0, Math.min(canvasWidth, origin[0]));
+                        origin[1] = Math.max(0, Math.min(canvasHeight, origin[1]));
+                        d3.select(window)
+                            .on("mousemove.zoomRect", function() {
+                              var m = d3.mouse(e);
+                              m[0] = Math.max(0, Math.min(canvasWidth, m[0]));
+                              m[1] = Math.max(0, Math.min(canvasHeight, m[1]));
+                              rect.attr("x", Math.min(origin[0], m[0]))
+                                  .attr("y", Math.min(origin[1], m[1]))
+                                  .attr("width", Math.abs(m[0] - origin[0]))
+                                  .attr("height", Math.abs(m[1] - origin[1]))
+                                  .style("opacity", 0.3)
+                            })
+                            .on("mouseup.zoomRect", function() {
+                              d3.select(window).on("mousemove.zoomRect", null).on("mouseup.zoomRect", null);
+                              d3.select("body").classed("noselect", false);
+                              var m = d3.mouse(e);
+                             //k = d3.event.transform.k
+                              m[0] = Math.max(0, Math.min(canvasWidth, m[0]));
+                              m[1] = Math.max(0, Math.min(canvasHeight, m[1]));
+                              if (m[0] !== origin[0] && m[1] !== origin[1]) {
+                                x = x.domain([origin[0], m[0]].map(x.invert).sort())
+                                y = y.domain([origin[1], m[1]].map(y.invert).sort())
+                                scatter.call(zoom)
+                              }
+                              rect.remove();
+                              updateChart();
+                            }, true);
+                        d3.event.stopPropagation();
+                      })
+
+                    
+                    
+            }   
+
+                /* function refresh() {
+                    xAxis.call(d3.axisBottom(x).ticks(tick_amount))
+                    yAxis.call(d3.axisLeft(y).ticks(tick_amount))
+
+                    /* // update image position
+                    scatter.selectAll("image")
+                        .attr('x', function(image) {return x(image.x)})
+                        .attr('y', function(image) {return y(image.y)})
+               
                     scatter.selectAll("image")
                         .attr('width', 15*k)
-                        .attr('height', 15*k)
+                        .attr('height', 15*k) 
+
+                    
+                } */
+
+                // A function that updates the chart when the user zoom and thus new boundaries are available
+                function updateChart() {
+                    console.log(d3.event)
+
+                        k = d3.event.transform.k
+                         // recover the new scale
+                        var newX = d3.event.transform.rescaleX(x);
+                        var newY = d3.event.transform.rescaleY(y);
+                   
+                        // update axes with these new boundaries
+                        xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
+                        yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
+
+                        // update image position
+                        scatter.selectAll("image")
+                            .attr('x', function(image) {return newX(image.x)})
+                            .attr('y', function(image) {return newY(image.y)})  
+                            console.log(k)
+                    
+                        scatter.selectAll("image")
+                            .attr('width', 15*k)
+                            .attr('height', 15*k)
+
+                    
+                    /* else{
+                        //k = d3.event.transform.k
+                        xAxis.call(d3.axisBottom(x).ticks(tick_amount))
+                        yAxis.call(d3.axisLeft(y).ticks(tick_amount))
+
+                        var r = d3.zoomTransform(x).k
+                        console.log(k)
+
+                        scatter.selectAll("image")
+                        .attr('x', function(image) {return x(image.x)})
+                        .attr('y', function(image) {return y(image.y)})
+               
+                        scatter.selectAll("image")
+                            .attr('width', 15*k)
+                            .attr('height', 15*k) 
+                    } */
                 }
 
                 function addImages(data, x, y){
@@ -342,6 +441,12 @@ class D3Map extends Component {
         return(    
             <div>
                 <div ref="canvas">
+                <div>
+                    <input class="form-check-input" type="checkbox" value="" id="zoom-rect"/>
+                    <label for="zoom-rect">
+                        Zoom with rectangle
+                    </label>
+                </div>
                 <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Informations</Modal.Title>
