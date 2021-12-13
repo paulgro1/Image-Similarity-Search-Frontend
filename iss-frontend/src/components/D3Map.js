@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import * as d3 from 'd3';
 
 import '../layout/css/style.css'
+import '../layout/css/D3MapStyle.css'
 
 import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
@@ -43,14 +44,11 @@ class D3Map extends Component {
         this.setClickActive = this.setClickActive.bind(this);
     }
 
-    setClickActive(value){
-        this.setState({clickActive: value});
-    }
+    
 
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
         var nearestNeighboursArray = []
-        console.log(nearestNeighbours)
         for (let i=0; i < k; i++){
             var nearestNeighbour = {
                 id: nearestNeighbours.ids[0][i],
@@ -58,7 +56,6 @@ class D3Map extends Component {
                 similarities: nearestNeighbours.similarities[0][i],
                 url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
             }
-            console.log(nearestNeighbour)
             nearestNeighboursArray.push(nearestNeighbour)
         }
         return nearestNeighboursArray;
@@ -75,8 +72,8 @@ class D3Map extends Component {
                 url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
                 x: imageMeta.x,
                 y: imageMeta.y,
-                width: 15,
-                height: 15
+                width: 12,
+                height: 16
             }
             IMAGES.push(image)
         }
@@ -129,10 +126,8 @@ class D3Map extends Component {
                     similarities: nN.similarities[i],
                     url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i]
                 }
-                console.log(nearestNeighbour)
                 nearestNeighboursArray.push(nearestNeighbour)
             }
-            console.log(nearestNeighboursArray)
             this.setState({nearestNeighbours: nearestNeighboursArray});
             showInformationDialogAction();
 
@@ -191,6 +186,69 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
+    setClickActive(value){
+        this.setState({clickActive: value});
+    }
+
+    removeMark(){
+        if(this.state.clickActive === true) {
+            d3.selectAll('image')
+            .classed('highlight', false)
+            .classed('hide', false)
+            .classed('highlight_neighbour', false)
+            this.setState({ clickActive: false })
+        }
+        else{
+            return
+        }
+        
+    }
+
+    async markImage(image, id, Canvas) {
+        if(this.props.sliderValue !== undefined){
+            this.setState({sliderValue: this.props.sliderValue});
+        }
+        
+        let nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue)
+            let nearestNeighboursArray = []
+            for (let i=0; i < this.state.sliderValue; i++){
+                let nearestNeighbour = {
+                    id: nearestNeighbours.ids[0][i],
+                }
+                nearestNeighboursArray.push(nearestNeighbour)
+            }
+
+        if (this.state.clickActive === false) {
+            // hide all images
+            d3.selectAll('image').classed('hide', true)
+
+            /* mark clicked Image */
+            d3.select('#image_' + image.id)
+            .classed('highlight', true)
+            .classed('hide', false)
+            .classed('highlight_neighbour', false)
+            
+
+            /* mark next neighbours */
+            for ( let neighbour of nearestNeighboursArray) {
+                d3.select('#image_' + neighbour.id)
+                .classed('highlight', false)
+                .classed('hide', false)
+                .classed('highlight_neighbour', true)
+          
+            }
+            /* set State */
+            this.setState({ clickActive: true })
+
+        } else {
+            Canvas.selectAll('image')
+            .classed('hide', false)
+            .classed('highlight', false)
+            .classed('highlight_neighbour', false)
+            this.setState({ clickActive: false })
+        }
+    }
+    
 
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
@@ -207,9 +265,11 @@ class D3Map extends Component {
                     .attr('id', 'canvas-svg')
                     .attr('width', canvasWidth)
                     .attr('height', canvasHeight)
+                    
 
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    
 
                 // x-Axis
                 var x = d3.scaleLinear()
@@ -244,17 +304,19 @@ class D3Map extends Component {
                     .attr("height", canvasHeight )
                     .attr("x", 0)
                     .attr("y", 0)
+                    
 
                 // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
                 var zoom = d3.zoom()
                 .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
                 .extent([[0, 0], [canvasWidth, canvasHeight]])
-                .on("zoom", updateChart) 
+                .on("zoom", updateChart)    
 
                 // Create the scatter variable: where both the circles and the brush take place
                 var scatter = svgCanvas.append('g')
                     .attr('id', 'scatter')
                     .attr("clip-path", "url(#clip)")
+                    
 
                 // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
                 scatter.append("rect")
@@ -263,19 +325,29 @@ class D3Map extends Component {
                     .style("fill", "none")
                     .style("pointer-events", "all")
                     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                    .on("click", function() {
+                        this.removeMark(svgCanvas)                
+                    }.bind(this))
                 
                 scatter.selectAll('image')
                     .data(data)
                     .enter()
                     .append('image')
-                    .attr('id', image => image.id)
+                    .attr('id',image => "image_" +  image.id)
                     .attr('filename', image => image.filename)
                     .attr('xlink:href', image => image.url)
                     .attr('x', function(image) {return x(image.x)})
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
-                    .attr('height', image => image.height)  
-                    /* Funktion zum öffnen der Informationsansicht */
+                    .attr('height', image => image.height)
+                    .classed('hide', false)
+                    .classed('highlight', false)
+                    .classed('highlight_neighbour', false)
+                    /* mark next neighbours */
+                    .on("click", function(click,image) {
+                        this.markImage(click, image, svgCanvas, d3);
+                    }.bind(this))
+                    /* open information-view */
                     .on("dblclick", function(e) {
                         this.handleShow(e);
                     }.bind(this))
@@ -299,8 +371,8 @@ class D3Map extends Component {
                         .attr('y', function(image) {return newY(image.y)})  
                     
                     scatter.selectAll("image")
-                        .attr('width', 15*k)
-                        .attr('height', 15*k)
+                        .attr('width', 12*k)
+                        .attr('height', 16*k)
                 }
 
                 function addImages(data, x, y){
@@ -311,14 +383,21 @@ class D3Map extends Component {
                         .data(data)
                         .enter()
                         .append('image')
-                        .attr('id', image => image.id)
+                        .attr('id', image => "image_" + image.id)
                         .attr('filename', image => image.filename)
                         .attr('xlink:href', image => image.url)
                         .attr('x', function(image) {return x(image.x)})
                         .attr('y', function(image) {return y(image.y)})
-                        .attr('width', 15)
-                        .attr('height', 15)  
-                        /* Funktion zum öffnen der Informationsansicht */
+                        .attr('width', 12)
+                        .attr('height', 16)
+                        .classed('hide', false)
+                        .classed('highlight', false)
+                        .classed('highlight_neighbour', false)
+                        /* mark next neighbours */
+                        .on("click", function(click,image) {
+                            this.markImage(click, image, scatter);
+                        }.bind(this))
+                        /* open information-view */
                         .on("dblclick", function(e) {
                             this.handleShow(e);
                         }.bind(this)) 
