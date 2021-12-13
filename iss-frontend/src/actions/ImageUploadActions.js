@@ -96,7 +96,6 @@ async function upload(formData) {
     })
     .then(response => {
         if(response.status === 200) {
-            console.log("Response from image upload: " + JSON.stringify(response.data))
             let responseData = response.data
 
             let imageData = {

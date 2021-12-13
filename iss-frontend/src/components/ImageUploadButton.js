@@ -19,7 +19,7 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
-            sliderValue: 5
+            sliderValue: 30
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -27,12 +27,12 @@ class ImageUploadButton extends Component {
         this.handleSelect = this.handleSelect.bind(this);
     }
 
-     // change to componentDidUpdate later!
+    /*  // change to componentDidUpdate later!
     componentWillReceiveProps(nextProps) {
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
         }
-    }
+    } */
 
     handleShow(e){
         e.preventDefault();
@@ -54,7 +54,6 @@ class ImageUploadButton extends Component {
 
         const formData = new FormData();
         for(let i = 0; i < files.length; i++) {
-            console.log("IN FOR LOOP: ")
             console.log(files[i])
             
             formData.append(`images[${i}]`, files[i]);
