@@ -2,6 +2,7 @@
 
 ### (1) Benötigte Software:
 
+- node.js zur Nutzung von [npm](https://nodejs.org/en/download/) 
 - Code Editor wie [VSCode](https://code.visualstudio.com/)
 
 ### (2) Klonen des Frontend-Repo
@@ -17,7 +18,7 @@ In diesem Ordner muss die Datei .env mit folgendem Inhalt erstellt werden.
 ```txt
 REACT_APP_BACKEND_HOST=localhost
 REACT_APP_BACKEND_PORT=8080
-REACT_APP_BACKEND_SERVER=http://${REACT_APP_BACKEND_HOST}:${REACT_APP_BACKEND_PORT}/l
+REACT_APP_BACKEND_SERVER=http://${REACT_APP_BACKEND_HOST}:${REACT_APP_BACKEND_PORT}/
 ```
 
 Wichtig: Jede neue Umgebungsvariable in .env muss mit "REACT_APP_" beginnen.
