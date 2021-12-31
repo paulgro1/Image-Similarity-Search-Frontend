@@ -3,6 +3,8 @@ import * as route from '../config/Routes';
 
 export const SHOW_IMAGE_UPLOAD_DIALOG = 'SHOW_IMAGE_UPLOAD_DIALOG';
 export const HIDE_IMAGE_UPLOAD_DIALOG = 'HIDE_IMAGE_UPLOAD_DIALOG';
+export const SHOW_IMAGE_CROP_DIALOG = 'SHOW_IMAGE_CROP_DIALOG';
+export const HIDE_IMAGE_CROP_DIALOG = 'HIDE_IMAGE_CROP_DIALOG';
 export const UPLOAD_PENDING = 'UPLOAD PENDING';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_ERROR = 'UPLOAD_ERROR';
@@ -19,6 +21,19 @@ export function getHideImageUploadDialogAction(){
         type: HIDE_IMAGE_UPLOAD_DIALOG
     }
 }
+
+export function getShowImageCropDialogAction(){
+    return {
+        type: SHOW_IMAGE_CROP_DIALOG
+    }
+}
+
+export function getHideImageCropDialogAction(){
+    return {
+        type: HIDE_IMAGE_CROP_DIALOG
+    }
+}
+
 
 // provides uploaded files from UploadButton in D3 Map
 export function getSendFilesToStoreAction(files){

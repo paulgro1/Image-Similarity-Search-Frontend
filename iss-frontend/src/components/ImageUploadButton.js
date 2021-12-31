@@ -3,7 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
-
+import Slider from '@material-ui/core/Slider'
+import Image from 'react-bootstrap/Image';
+import Cropper from 'react-easy-crop'
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
@@ -19,10 +21,16 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
-            sliderValue: 30
+            sliderValue: 5,
+            crop: { x: 336, y: 448 },
+            zoom: 1,
+            aspect: 4 / 3,
+            imageSrc: 'https://de.babor.com/content/application/database/files/0/19568//stage-trockene-haut.jpg'
         };
         this.handleShow = this.handleShow.bind(this);
+        this.handleShowCrop = this.handleShowCrop.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleCloseCrop = this.handleCloseCrop.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
     }
@@ -44,6 +52,20 @@ class ImageUploadButton extends Component {
         const {hideImageUploadDialogAction} = this.props;
         hideImageUploadDialogAction();
     } 
+
+
+    handleShowCrop(e){
+        e.preventDefault();
+        const {files} = this.state;
+        const {showImageCropDialogAction} = this.props;
+        showImageCropDialogAction();
+    }
+
+    handleCloseCrop(){
+        const {hideImageCropDialogAction} = this.props;
+        hideImageCropDialogAction();
+    }
+
 
     handleSubmit(e){
         e.preventDefault();
@@ -79,6 +101,11 @@ class ImageUploadButton extends Component {
             showDialog = false;
         }
 
+        var showCropDialog = this.props.showImageCropDialogAction
+        if(showCropDialog === undefined){
+            showCropDialog = false;
+        }
+
         var pending = this.props.pending;
         if(pending === undefined){
             pending = false;
@@ -90,38 +117,117 @@ class ImageUploadButton extends Component {
         }
 
         return (
-            <div>
-                <Button variant="outline-success" onClick={this.handleShow}> 
-                    Upload Image 
-                </Button>
+            <><div>
+            <Button variant="outline-success" onClick={this.handleShow}>
+                Upload Image
+            </Button>
 
-                <Modal show={showDialog} onHide={this.handleClose}>
+            <Modal show={showDialog} onHide={this.handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Image Upload</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <input type='file' onChange={this.handleSelect} multiple />
+                        </Form.Group>
+                        <Button variant="dark" onClick={this.handleShowCrop}>
+                            Open
+                        </Button>
+                        {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                        {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                </Modal.Footer>
+            </Modal>
+        </div><div>
+                <Modal show={showCropDialog} onHide={this.handleCloseCrop}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Image Upload</Modal.Title>
+                        <Modal.Title>Crop and Upload Image</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form>
-                            <Form.Group>
-                                <input type='file' onChange={this.handleSelect} multiple/>
-                            </Form.Group>
-                            <Button variant="primary" onClick={this.handleSubmit}>
+                    <Form> 
+                        {/*  <Image src={this.state.selectedImageUrl} width={400} height={450}/> */}
+                            <center><Image src={this.state.selectedImageUrl} width={400} height={450}/></center>
+                            <div className="crop-container">
+                                <Cropper
+                                    image={this.state.imageSrc}
+                                    crop={this.state.crop}
+                                    zoom={this.state.zoom}
+                                    aspect={this.state.aspect}
+                                    onCropChange={this.onCropChange}
+                                    onCropComplete={this.onCropComplete}
+                                    onZoomChange={this.onZoomChange} />
+                            </div>
+                            <div className="controls">
+                                <Slider
+                                    value={this.state.zoom}
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    aria-labelledby="Zoom"
+                                    onChange={(e, zoom) => this.onZoomChange(zoom)}
+                                    classes={{ container: 'slider' }} />
+                            </div>
+                            <center><Button variant="dark" onClick={this.handleSubmit}>
                                 Submit
-                            </Button>
-                            {error && <Form.Label style={{color: "red"}}> Something went wrong. </Form.Label>}
-                            {pending && <Spinner animation="border" style={{color: "grey"}} size="sm"/>}
+                            </Button></center>
+                            {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                            {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
                     </Modal.Footer>
                 </Modal>
-            </div>
-        )
-    }
+            </div></>
+
+
+
+
+
+
+/* <div>
+            <Button variant="outline-success" onClick={this.handleShow}> 
+                Upload Image 
+            </Button>
+
+            <Modal show={showDialog} onHide={this.handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Image Upload</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <input type='file' onChange={this.handleSelect} multiple/>
+                        </Form.Group>
+                        <Button variant="primary" onClick={this.handleSubmit}>
+                            Open
+                        </Button>
+                        {error && <Form.Label style={{color: "red"}}> Something went wrong. </Form.Label>}
+                        {pending && <Spinner animation="border" style={{color: "grey"}} size="sm"/>}
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                </Modal.Footer>
+            </Modal>
+        </div> */
+
+
+
+
+
+
+
+    )
+}
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     showImageUploadDialogAction: imageUploadActions.getShowImageUploadDialogAction,
+  //  showImageCropDialogAction: imageUploadActions.getShowImageCropDialogAction,
     hideImageUploadDialogAction: imageUploadActions.getHideImageUploadDialogAction,
+    hideImageCropDialogAction: imageUploadActions.getHideImageCropDialogAction,
     imageUploadAction: imageUploadActions.imageUpload,
     sendFilesToStoreAction: imageUploadActions.getSendFilesToStoreAction
 },dispatch)
