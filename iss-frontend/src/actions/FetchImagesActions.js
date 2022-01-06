@@ -186,7 +186,7 @@ export function fetchNearestNeighbours(id, k) {
 
 function handleMetaNearestNeighboursResponse(response) {
     var nearestNeighbours = response
-
+    console.log(response)
     nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,

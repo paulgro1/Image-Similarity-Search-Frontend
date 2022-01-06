@@ -11,6 +11,10 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
+import Button from 'react-bootstrap/Button';
+
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 
@@ -48,6 +52,7 @@ class D3Map extends Component {
         this.drawMap = this.drawMap.bind(this);
         this.handleUploadedNearestN = this.handleUploadedNearestN.bind(this);
         this.markImage = this.markImage.bind(this);
+        this.handleExcelExport = this.handleExcelExport.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
@@ -56,7 +61,7 @@ class D3Map extends Component {
         for (let i=0; i < k; i++){
             var nearestNeighbour = {
                 id: nearestNeighbours.ids[0][i],
-                distances: nearestNeighbours.distances[i],
+                distances: nearestNeighbours.distances[0][i],
                 similarities: nearestNeighbours.similarities[0][i],
                 url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
             }
@@ -144,6 +149,42 @@ class D3Map extends Component {
         hideInformationDialogAction();
 
     } 
+
+    handleExcelExport(){
+        const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
+        var data = [
+            [this.state.sliderValue + ' nearest neighbors of image: ' + this.state.selectedImageFilename],
+            [],
+            ['Image Id', 'Euclidean Distance', 'Similarity in %'],
+        ]
+        for(let img of this.state.nearestNeighbours){
+            console.log(img)
+            let dataRow = []
+            dataRow.push(img.id)
+            dataRow.push(img.distances)
+            dataRow.push((img.similarities * 100).toFixed(2))
+            data.push(dataRow)
+        }
+        console.log(data)
+        this.exportToSpreadsheet(data, fileName)
+    } 
+
+    //source: https://medium.com/an-idea/export-excel-files-client-side-5b3cc5153cf7
+    exportToSpreadsheet (data, fileName) {
+        const fileType ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+        //Create a new Work Sheet using the data stored in an Array of Arrays.
+        const workSheet = XLSX.utils.aoa_to_sheet(data);
+        // Generate a Work Book containing the above sheet.
+        const workBook = {
+          Sheets: { data: workSheet, cols: [] },
+          SheetNames: ["data"],
+        };
+        // Exporting the file with the desired name and extension.
+        const excelBuffer = XLSX.write(workBook, { bookType: "xlsx", type: "array" });
+        const fileData = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(fileData, fileName + fileExtension);
+    };
 
     async handleUploadedImages(){
         var files = this.props.files;
@@ -472,12 +513,17 @@ class D3Map extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col lg={9}>
+                                <Col lg={4}>
                                     <h4>Image Properties:</h4>
                                     <div>
                                         Name: {this.state.selectedImageFilename}<br/>
                                     </div>
                                     <br></br> 
+                                </Col>
+                                <Col lg={8}>
+                                    <Button variant="outline-success" onClick={this.handleExcelExport}>
+                                        Export Data
+                                    </Button>
                                 </Col>
                             </Row>
                         </Container>
