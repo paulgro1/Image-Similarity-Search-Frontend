@@ -164,6 +164,33 @@ function handleImageResponse(response) {
         });
 }
 
+export async function fetchAllThumbnails() {
+    var restUrl = route.FETCH_THUMBNAILS;
+    console.log("Fetch all thumbnails from: " + restUrl);
+
+    var request = require('request');
+    var JSZip = require("jszip");
+
+    request({
+    method : "GET",
+    url : restUrl,
+    encoding: null // <- this one is important !
+    }, function (error, response, body) {
+    JSZip.loadAsync(body).then(function (zip) {
+        const fs = require('fs');
+        for(var i = 0; i<=Object.keys(zip.files).length; i++){
+            console.log("hello")
+            var filename = Object.keys(zip.files)[i]
+            fs.writeFile('../data/message.txt', 'Hello Node.js', function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+                console.log("The files were saved!");
+            }); 
+            }
+        })
+    });
+}
 
 export function fetchNearestNeighbours(id, k) {
     console.log("Fetch " + k +" NN for image: " + id)

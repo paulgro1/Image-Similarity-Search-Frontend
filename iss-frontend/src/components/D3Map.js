@@ -66,7 +66,7 @@ class D3Map extends Component {
     }
 
     async componentDidMount() {
-        var imagesMeta = await fetchImagesActions.fetchAllThumbnailMeta()
+        var imagesMeta = await fetchImagesActions.fetchAllThumbnails()
         var IMAGES = []
         for (const imageMeta of imagesMeta){
       
@@ -156,6 +156,7 @@ class D3Map extends Component {
         if(files){
             this.storeImageUrls(files);
         }
+        console.log(this.state.uploadedImagesUrls)
 
         var newImages = []
         for(let i = 0; i < files.length; i++){
