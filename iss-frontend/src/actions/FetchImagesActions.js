@@ -186,11 +186,13 @@ export function fetchNearestNeighbours(id, k) {
 
 function handleMetaNearestNeighboursResponse(response) {
     var nearestNeighbours = response
+    console.log('Response from fetch NN')
     console.log(response)
     nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,
         similarities: response.similarities,
+        filenames: response.neighbour_filenames
     }
     return nearestNeighbours;
 }

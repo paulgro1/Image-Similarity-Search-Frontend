@@ -61,6 +61,7 @@ class D3Map extends Component {
         for (let i=0; i < k; i++){
             var nearestNeighbour = {
                 id: nearestNeighbours.ids[0][i],
+                filename: nearestNeighbours.filenames[0][i],
                 distances: nearestNeighbours.distances[0][i],
                 similarities: nearestNeighbours.similarities[0][i],
                 url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
@@ -108,13 +109,15 @@ class D3Map extends Component {
             var nN = {
                 distances: this.state.uploadedImages.distances[id],
                 ids: this.state.uploadedImages.ids[id],
-                similarities: this.state.uploadedImages.similarities[id]
+                similarities: this.state.uploadedImages.similarities[id],
+                filenames: this.state.uploadedImages.filenames[id]
             }
 
             var nearestNeighboursArray = [];
             for (let i=0; i < this.state.sliderValue; i++){
                 var nearestNeighbour = {
                     id: nN.ids[i],
+                    filename: nN.filenames[id],
                     distances: nN.distances[i],
                     similarities: nN.similarities[i],
                     url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i]
@@ -153,14 +156,15 @@ class D3Map extends Component {
     handleExcelExport(){
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
         var data = [
-            [this.state.sliderValue + ' nearest neighbors of image: ' + this.state.selectedImageFilename],
+            [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
             [],
-            ['Image Id', 'Euclidean Distance', 'Similarity in %'],
+            ['Image Id','Filename', 'Euclidean Distance', 'Similarity in %'],
         ]
         for(let img of this.state.nearestNeighbours){
             console.log(img)
             let dataRow = []
             dataRow.push(img.id)
+            dataRow.push(img.filename)
             dataRow.push(img.distances)
             dataRow.push((img.similarities * 100).toFixed(2))
             data.push(dataRow)
