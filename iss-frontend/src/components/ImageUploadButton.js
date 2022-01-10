@@ -4,7 +4,6 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 import Slider from '@material-ui/core/Slider'
-import Image from 'react-bootstrap/Image';
 import Cropper from 'react-easy-crop'
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -25,11 +24,14 @@ class ImageUploadButton extends Component {
             crop: { x: 336, y: 448 },
             zoom: 1,
             aspect: 4 / 3,
-            imageSrc: 'https://de.babor.com/content/application/database/files/0/19568//stage-trockene-haut.jpg'
+            file: null,
+           // showcropmodal: false,
+           //Testbild 
+           // imageSrc: 'https://de.babor.com/content/application/database/files/0/19568//stage-trockene-haut.jpg'
         };
         this.handleShow = this.handleShow.bind(this);
-        this.handleShowCrop = this.handleShowCrop.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleShowCrop = this.handleShowCrop.bind(this);
         this.handleCloseCrop = this.handleCloseCrop.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
@@ -41,6 +43,21 @@ class ImageUploadButton extends Component {
             this.setState({sliderValue: nextProps.sliderValue});
         }
     } */
+
+
+
+    onCropChange = (crop) => {
+        this.setState({ crop })
+      }
+    
+      onCropComplete = (croppedArea, croppedAreaPixels) => {
+        console.log(croppedArea, croppedAreaPixels)
+      }
+    
+      onZoomChange = (zoom) => {
+        this.setState({ zoom })
+      }
+
 
     handleShow(e){
         e.preventDefault();
@@ -54,22 +71,46 @@ class ImageUploadButton extends Component {
     } 
 
 
-    handleShowCrop(e){
-        e.preventDefault();
-        const {files} = this.state;
-        const {showImageCropDialogAction} = this.props;
-        showImageCropDialogAction();
-    }
-
     handleCloseCrop(){
         const {hideImageCropDialogAction} = this.props;
         hideImageCropDialogAction();
     }
 
+    handleShowCrop(e){
+        e.preventDefault();
+        const {showImageCropDialogAction} = this.props;
+        showImageCropDialogAction();
+    }
 
+    //Funktion wird aufgerufen, falls nur 1 Image hochgeladen wird 
+    //Soll einzelnes Image, welches gecropppt werden soll, in Modaldialog anzeigen
+    handleShowSingleImageCrop(e){
+       // e.preventDefault();
+         const {showImageCropDialogAction} = this.props;
+         showImageCropDialogAction();
+        const {files} = this.state;
+        if (files && files[0]) {
+            let reader = new FileReader();
+            reader.onload = (e) => {
+               this.setState({
+                  file: e.target.files
+               });
+            };
+            //Bild im Modaldialog anzeigen lassen- funktioniert noch nicht 
+            reader.readAsDataURL(files[0]);
+         }
+         }
+
+
+//Ggf. zusätzliche Submitfunktion für gecropptes Single Image, oder Switch?
     handleSubmit(e){
         e.preventDefault();
-        const {files} = this.state;
+        const files = this.state.files;
+        if (files.length === 1){
+            console.log(files)
+            this.handleShowSingleImageCrop(files);
+        }
+        else {
         const {imageUploadAction} = this.props;
         console.log("handleSubmit images from form: ");
         console.log(this.state.files)
@@ -84,15 +125,20 @@ class ImageUploadButton extends Component {
         formData.append("k", this.state.sliderValue)
         imageUploadAction(formData);
     }
+}
 
-    async handleSelect(e){
+
+    async handleSelect(e){ 
         const {sendFilesToStoreAction} = this.props;
         console.log(e.target.files);
+       
         sendFilesToStoreAction(e.target.files)
+
         this.setState({files: e.target.files}, () => {
             console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));
         })
     }
+
 
     render(){
 
@@ -101,7 +147,7 @@ class ImageUploadButton extends Component {
             showDialog = false;
         }
 
-        var showCropDialog = this.props.showImageCropDialogAction
+        var showCropDialog = this.props.showImageCropDialog
         if(showCropDialog === undefined){
             showCropDialog = false;
         }
@@ -131,8 +177,8 @@ class ImageUploadButton extends Component {
                         <Form.Group>
                             <input type='file' onChange={this.handleSelect} multiple />
                         </Form.Group>
-                        <Button variant="dark" onClick={this.handleShowCrop}>
-                            Open
+                        <Button variant="dark" onClick={this.handleSubmit}>
+                            Submit
                         </Button>
                         {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
                         {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
@@ -141,18 +187,24 @@ class ImageUploadButton extends Component {
                 <Modal.Footer>
                 </Modal.Footer>
             </Modal>
-        </div><div>
-                <Modal show={showCropDialog} onHide={this.handleCloseCrop}>
+        </div>
+        
+        
+        <div>
+             <Modal show={this.showCropDialog} onHide={this.handleCloseCrop}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Crop and Upload Image</Modal.Title>
+                        <Modal.Title>Crop and Upload Single Image</Modal.Title>
                     </Modal.Header>
+
                     <Modal.Body>
                     <Form> 
-                        {/*  <Image src={this.state.selectedImageUrl} width={400} height={450}/> */}
-                            <center><Image src={this.state.selectedImageUrl} width={400} height={450}/></center>
+ 
+                   <div class="modal-body">
+                       <img id="file" src={this.state.file}/></div> 
+                          
                             <div className="crop-container">
                                 <Cropper
-                                    image={this.state.imageSrc}
+                                    image={this.state.file}
                                     crop={this.state.crop}
                                     zoom={this.state.zoom}
                                     aspect={this.state.aspect}
@@ -183,50 +235,14 @@ class ImageUploadButton extends Component {
             </div></>
 
 
-
-
-
-
-/* <div>
-            <Button variant="outline-success" onClick={this.handleShow}> 
-                Upload Image 
-            </Button>
-
-            <Modal show={showDialog} onHide={this.handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Image Upload</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <input type='file' onChange={this.handleSelect} multiple/>
-                        </Form.Group>
-                        <Button variant="primary" onClick={this.handleSubmit}>
-                            Open
-                        </Button>
-                        {error && <Form.Label style={{color: "red"}}> Something went wrong. </Form.Label>}
-                        {pending && <Spinner animation="border" style={{color: "grey"}} size="sm"/>}
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                </Modal.Footer>
-            </Modal>
-        </div> */
-
-
-
-
-
-
-
     )
 }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     showImageUploadDialogAction: imageUploadActions.getShowImageUploadDialogAction,
-  //  showImageCropDialogAction: imageUploadActions.getShowImageCropDialogAction,
     hideImageUploadDialogAction: imageUploadActions.getHideImageUploadDialogAction,
+    showImageCropDialogAction: imageUploadActions.getShowImageCropDialogAction,
     hideImageCropDialogAction: imageUploadActions.getHideImageCropDialogAction,
     imageUploadAction: imageUploadActions.imageUpload,
     sendFilesToStoreAction: imageUploadActions.getSendFilesToStoreAction

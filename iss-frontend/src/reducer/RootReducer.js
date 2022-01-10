@@ -6,6 +6,7 @@ const initialState = {
     images: [],
     uploadPending: false,
     showImageUploadDialog: false,
+    showImageCropDialog: false,
     sliderValue: 5
 };
 
@@ -35,6 +36,24 @@ function rootReducer(state=initialState, action) {
                 uploadedImages: action.uploadedImages,
                 error: null
             }
+
+        case imageUploadActions.SHOW_IMAGE_CROP_DIALOG:
+            return {
+                ...state,
+                showImageCropDialog: true,
+                uploadedImages: action.uploadedImages,
+                error: null
+            }    
+
+        case imageUploadActions.HIDE_IMAGE_CROP_DIALOG:
+            return {
+                ...state,
+                showImageCropDialog: false,
+                uploadedImages: action.uploadedImages,
+                error: null
+            }    
+
+
         case imageUploadActions.UPLOAD_PENDING:
             return {
                 ...state,
