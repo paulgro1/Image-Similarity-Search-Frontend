@@ -66,23 +66,26 @@ class D3Map extends Component {
     }
 
     async componentDidMount() {
-        var imagesMeta = await fetchImagesActions.fetchAllThumbnails()
-        var IMAGES = []
-        for (const imageMeta of imagesMeta){
-      
-            let image = {
-                id: imageMeta.id,
-                filename: imageMeta.filename,
-                url: 'http://localhost:8080/images/thumbnails/' + imageMeta.id,
-                x: imageMeta.x,
-                y: imageMeta.y,
-                width: 12,
-                height: 16
-            }
-            IMAGES.push(image)
-        }
-        this.setState({IMAGES: IMAGES})
-        this.drawMap(IMAGES);
+        var imagesMeta =  await fetchImagesActions.fetchAllThumbnailMeta()
+        fetchImagesActions.fetchAllThumbnails(function(imageUrls) {
+            Promise.all(imageUrls).then(function(imageUrls){
+                var IMAGES = []
+                for(var i = 0; i < imagesMeta.length; i++) {
+                    let image = {
+                        id: imagesMeta[i].id,
+                        filename: imagesMeta[i].filename,
+                        url: imageUrls[i],
+                        x: imagesMeta[i].x,
+                        y: imagesMeta[i].y,
+                        width: 12,
+                        height: 16
+                    }
+                    IMAGES.push(image)
+                }
+                this.setState({IMAGES: IMAGES})
+                this.drawMap(IMAGES);
+            }.bind(this))
+        }.bind(this));
     }
 
     // change to componentDidUpdate later!
@@ -175,11 +178,14 @@ class D3Map extends Component {
     storeImageUrls(files){
         const imageFiles = files; 
         const filesLength = imageFiles.length;
+
+        console.log(files)
         
         var imageUrls = [];
         for(var i = 0; i < filesLength; i++) {
             imageUrls.push(URL.createObjectURL(files[i])) 
         }
+        console.log(imageUrls)
         this.setState({ uploadedImagesUrls: imageUrls });
     } 
 
@@ -415,15 +421,15 @@ class D3Map extends Component {
                         /* mark next neighbours */
                         .on("click", function(click,image) {
                             markImage(click, image, scatter, true);
-                        }.bind(this))
+                        })
                         /* Funktion zum öffnen der Informationsansicht */
                         .on("dblclick", function(e) {
                             handleShow(e);
-                        }.bind(this)) 
+                        }) 
                 } 
 
                 function removeUploadedImages(){
-                    var svg = d3.select('#uploadedImages')
+                    d3.select('#uploadedImages')
                         .remove()
                 }
     }

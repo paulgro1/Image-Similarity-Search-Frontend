@@ -164,30 +164,32 @@ function handleImageResponse(response) {
         });
 }
 
-export async function fetchAllThumbnails() {
+export async function fetchAllThumbnails(callback) {
     var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch all thumbnails from: " + restUrl);
-
     var request = require('request');
     var JSZip = require("jszip");
-
+    
     request({
     method : "GET",
     url : restUrl,
-    encoding: null // <- this one is important !
-    }, function (error, response, body) {
-    JSZip.loadAsync(body).then(function (zip) {
-        const fs = require('fs');
-        for(var i = 0; i<=Object.keys(zip.files).length; i++){
-            console.log("hello")
-            var filename = Object.keys(zip.files)[i]
-            fs.writeFile('../data/message.txt', 'Hello Node.js', function(err) {
-                if(err) {
-                    return console.log(err);
-                }
-                console.log("The files were saved!");
-            }); 
-            }
+    encoding: null // <- this one is important!
+}, function(error, response, body) {
+     JSZip.loadAsync(body).then(function(zip) {
+        var imageUrls = [];
+        var regex = /(?:\.([^.]+))?$/;
+        for(let zipEntry in zip.files) {
+            var url = zip.file(zipEntry).async("arraybuffer").then(function (data) {
+                var ext = regex.exec(zipEntry)[0];
+                var type = "image/" + ext.split('.')[1];
+                var buffer = new Uint8Array(data);
+                var blob = new Blob([buffer.buffer], {type: type});
+                let url = URL.createObjectURL(blob)
+                return url
+               });
+            imageUrls.push(url)
+        }
+        return callback(imageUrls)
         })
     });
 }
