@@ -119,7 +119,6 @@ export function fetchAllThumbnailMeta() {
  * @returns array with image metadata
  */
 function handleMetaResponse(response) {
-    console.log(response)
     let data = []
     data = response
 
@@ -195,4 +194,25 @@ function handleMetaNearestNeighboursResponse(response) {
         filenames: response.neighbour_filenames
     }
     return nearestNeighbours;
+}
+
+
+export function fetchAllNearestNeighbours(k) {
+    console.log("Fetch " + k +" NN of all images")
+    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(handleMetaAllNearestNeighboursResponse)
+        .then(nearestNeighbours => {
+            return nearestNeighbours;
+        });
+}
+
+function handleMetaAllNearestNeighboursResponse(response) {
+    return response;
 }

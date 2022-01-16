@@ -61,6 +61,8 @@ class ImageUploadButton extends Component {
         
         formData.append("k", this.state.sliderValue)
         imageUploadAction(formData);
+
+        //Bilder aus state löschen
     }
 
     async handleSelect(e){

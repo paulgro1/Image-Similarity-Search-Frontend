@@ -32,6 +32,7 @@ class D3Map extends Component {
             selectedImageFilename: undefined,
             sliderValue: 5,
             nearestNeighbours: undefined,
+            allNearestNeighbours: undefined,
             uploadedImages: undefined,
             uploadedImagesUrls: [],
             IMAGES: undefined,
@@ -158,7 +159,7 @@ class D3Map extends Component {
         var data = [
             [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
             [],
-            ['Image Id','Filename', 'Euclidean Distance', 'Similarity in %'],
+            ['NN Id','NN Filename', 'Euclidean Distance', 'Similarity in %'],
         ]
         for(let img of this.state.nearestNeighbours){
             console.log(img)

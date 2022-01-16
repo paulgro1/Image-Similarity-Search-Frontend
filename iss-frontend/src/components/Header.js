@@ -4,6 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
+import ExportButton from './ExportButton';
+
+import '../layout/css/HeaderStyle.css'
 
 class Header extends Component {
 
@@ -16,6 +19,7 @@ class Header extends Component {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             <ImageUploadButton/>
+                            <ExportButton/>
                             <SettingsButton/>
                         </Nav>
                     </Navbar.Collapse> 
