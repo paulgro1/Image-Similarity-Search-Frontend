@@ -43,7 +43,7 @@ class ExportButton extends Component {
         var data = [
             [this.state.sliderValue + ' nearest neighbours of all images.'],
             [],
-            ['Image Id','Filename', 'Cluster Center', 'NN Id', 'NN Filename', 'Euclidean Distance', 'Similarity in %'],
+            ['Image Id','Filename', 'Cluster Center', 'NN Id', 'NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
         ]
         for(let img of this.state.allNearestNeighbours){
             for(let i=0; i<this.state.sliderValue; i++){
@@ -52,7 +52,8 @@ class ExportButton extends Component {
                 dataRow.push(img.filename)
                 dataRow.push(img.cluster_center)
                 dataRow.push(img.neighbour_ids[i])
-                dataRow.push(img.neighbour_filenames[0][i])
+                dataRow.push(img.neighbour_filenames[i])
+                dataRow.push(img.neighbour_cluster_centers[i])
                 dataRow.push(img.distances[i])
                 dataRow.push((img.similarities[i] * 100).toFixed(2))
                 data.push(dataRow)

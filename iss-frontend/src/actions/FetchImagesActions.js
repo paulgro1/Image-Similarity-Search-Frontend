@@ -190,6 +190,7 @@ function handleMetaNearestNeighboursResponse(response) {
     nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,
+        clusterCenters: response.neighbour_cluster_centers,
         similarities: response.similarities,
         filenames: response.neighbour_filenames
     }
@@ -214,5 +215,6 @@ export function fetchAllNearestNeighbours(k) {
 }
 
 function handleMetaAllNearestNeighboursResponse(response) {
+    console.log(response)
     return response;
 }

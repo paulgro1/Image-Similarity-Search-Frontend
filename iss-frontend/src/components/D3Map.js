@@ -40,7 +40,7 @@ class D3Map extends Component {
             yAxis: undefined,
             newX: undefined,
             newY: undefined,
-            imgScale: undefined,
+            imgScale: 1,
             clickActive: false,
         }
         this.handleShow = this.handleShow.bind(this);
@@ -63,6 +63,7 @@ class D3Map extends Component {
             var nearestNeighbour = {
                 id: nearestNeighbours.ids[0][i],
                 filename: nearestNeighbours.filenames[0][i],
+                clusterCenter: nearestNeighbours.clusterCenters[0][i],
                 distances: nearestNeighbours.distances[0][i],
                 similarities: nearestNeighbours.similarities[0][i],
                 url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
@@ -107,11 +108,13 @@ class D3Map extends Component {
             // handle uploaded image case
             var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
             console.log("Id of uploaded image: " + id)
+            console.log(this.state.uploadedImages)
             var nN = {
                 distances: this.state.uploadedImages.distances[id],
                 ids: this.state.uploadedImages.ids[id],
                 similarities: this.state.uploadedImages.similarities[id],
-                filenames: this.state.uploadedImages.filenames[id]
+                filenames: this.state.uploadedImages.nnFilenames[id],
+                clusterCenters: this.state.uploadedImages.nnClusterCenters[id],
             }
 
             var nearestNeighboursArray = [];
@@ -121,7 +124,8 @@ class D3Map extends Component {
                     filename: nN.filenames[id],
                     distances: nN.distances[i],
                     similarities: nN.similarities[i],
-                    url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i]
+                    url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i],
+                    clusterCenter: nN.clusterCenters[i],
                 }
                 nearestNeighboursArray.push(nearestNeighbour)
             }
@@ -158,14 +162,17 @@ class D3Map extends Component {
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
         var data = [
             [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
+            ['Image Id: ' + this.state.selectedImageId],
+            ['Cluster Center: ' + 'TODO'],
             [],
-            ['NN Id','NN Filename', 'Euclidean Distance', 'Similarity in %'],
+            ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
         ]
         for(let img of this.state.nearestNeighbours){
             console.log(img)
             let dataRow = []
             dataRow.push(img.id)
             dataRow.push(img.filename)
+            dataRow.push(img.clusterCenter)
             dataRow.push(img.distances)
             dataRow.push((img.similarities * 100).toFixed(2))
             data.push(dataRow)
@@ -521,7 +528,8 @@ class D3Map extends Component {
                                 <Col lg={4}>
                                     <h4>Image Properties:</h4>
                                     <div>
-                                        Name: {this.state.selectedImageFilename}<br/>
+                                        Filename: {this.state.selectedImageFilename}<br/>
+                                        {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
                                     </div>
                                     <br></br> 
                                 </Col>
