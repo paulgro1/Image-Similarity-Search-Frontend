@@ -55,12 +55,12 @@ export function getUploadErrorAction(error){
  * This function calls the upload() function and 
  * dispatches the actions.
 */
-export function imageUpload(formData) {
+export function imageUpload(formData, sessionToken) {
     return dispatch => {
         dispatch(getUploadPendingAction());
-        upload(formData)
+        upload(formData, sessionToken)
             .then(function(response){
-                console.log("imageUpload response: " + JSON.stringify(response));
+                console.log("imageUpload response: " + JSON.stringify(response.imageData));
                 const action = getUploadSuccessAction(response);
                 dispatch(action);
             },
@@ -80,7 +80,8 @@ export function imageUpload(formData) {
  * backend. 
  * @returns response recieved from the backend
 */
-async function upload(formData) {
+async function upload(formData, sessionToken) {
+    console.log(sessionToken)
     // log all entries of formData Object
     for(let pair of formData.entries()){
         console.log(pair[0] + ', ' + pair[1]);
@@ -91,7 +92,8 @@ async function upload(formData) {
         url: route.IMAGE_UPLOAD,
         data: formData,
         headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
+            'api_session_token': sessionToken
         },
     })
     .then(response => {
@@ -104,7 +106,10 @@ async function upload(formData) {
                 coordinates: responseData.coordinates,
                 similarities: responseData.similarities
             }
-            return imageData;
+
+            let sessionToken = response.headers.api_session_token
+
+            return {imageData: imageData, sessionToken: sessionToken}
         }
         else {
             console.log("Error occured in image upload response.")

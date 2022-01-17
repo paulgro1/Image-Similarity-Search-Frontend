@@ -68,12 +68,16 @@ export function getImagesFromDb() {
  * This function fetches the meta-data for one thumbnail of the images for D3 map.
  * @returns array of images recieved from the backend 
  */
-export function fetchOneThumbnailMeta() {
+export function fetchOneThumbnailMeta(sessionToken) {
 
     var restUrl = 'http://localhost:8080/images/3/metadata';
     console.log("Fetch image metadata from: " + restUrl);
 
-    return fetch(restUrl)
+    return fetch(restUrl, { 
+        method: 'GET',
+        headers: {
+        'api_session_token': sessionToken
+        }})
         .then(response => response.json())
         .then(handleOneMetaResponse)
         .then(imageMeta => {
@@ -100,12 +104,22 @@ function handleOneMetaResponse(response) {
 }
 
 
-export function fetchAllThumbnailMeta() {
+export function fetchAllThumbnailMeta(sessionToken) {
 
     var restUrl = route.FETCH_ALL_THUMBNAIL_META;
     console.log("Fetch image metadata from: " + restUrl);
 
-    return fetch(restUrl)
+    return fetch(restUrl, { 
+        method: 'GET',
+        headers: {
+        'api_session_token': sessionToken
+        }})
+        /*.then(response => {
+            console.log(response)
+            if(!response.headers.api_session_token === sessionToken){
+                sessionToken = response.headers.api_session_token
+            }   
+        })*/
         .then(response => response.json())
         .then(handleMetaResponse)
         .then(imageMeta => {
@@ -118,7 +132,7 @@ export function fetchAllThumbnailMeta() {
  * @param response - response recieved from the backend
  * @returns array with image metadata
  */
-function handleMetaResponse(response) {
+function handleMetaResponse(response, sessionToken) {
     console.log(response)
     let data = []
     data = response
@@ -134,19 +148,23 @@ function handleMetaResponse(response) {
         imagesMetaArray.push(image)
     }
 
-    return imagesMetaArray;
+    return imagesMetaArray
 }
 
 /*
  * This function fetches on image.
  * @returns one image recieved from the backend 
  */
-export function fetchOneImage(id) {
+export function fetchOneImage(id, sessionToken) {
 
     var restUrl = route.FETCH_ONE_IMAGE + id;
     console.log("Fetch Images from: " + restUrl);
 
-    return fetch(restUrl)
+    return fetch(restUrl, { 
+        method: 'GET',
+    headers: {
+        'api_session_token': sessionToken
+    }})
         .then(handleImageResponse)
         .then(image => {
             return image;
@@ -158,13 +176,14 @@ function handleImageResponse(response) {
     console.log(response)
     return response
         .json().then(img => {
+
             var images = new Buffer.from(img).toString("base64")
             console.log(images)
             return images;
         });
 }
 
-export async function fetchAllThumbnails(callback) {
+export async function fetchAllThumbnails(sessionToken, callback) {
     var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch all thumbnails from: " + restUrl);
     var request = require('request');
@@ -172,9 +191,13 @@ export async function fetchAllThumbnails(callback) {
     
     request({
     method : "GET",
+    headers :  {'api_session_token': sessionToken},
     url : restUrl,
     encoding: null // <- this one is important!
 }, function(error, response, body) {
+       /* if(!response.headers.api_session_token === sessionToken){
+            sessionToken = response.headers.api_session_token
+        }    */
      JSZip.loadAsync(body).then(function(zip) {
         var imageUrls = [];
         var regex = /(?:\.([^.]+))?$/;
@@ -189,18 +212,19 @@ export async function fetchAllThumbnails(callback) {
                });
             imageUrls.push(url)
         }
-        return callback(imageUrls)
+        return callback(imageUrls, sessionToken)
         })
     });
 }
 
-export function fetchNearestNeighbours(id, k) {
+export function fetchNearestNeighbours(id, k, sessionToken) {
     console.log("Fetch " + k +" NN for image: " + id)
     return fetch(route.FETCH_NEAREST_NEIGHBOURS + id, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'api_session_token': sessionToken
             },
             body: JSON.stringify({
                 k: parseInt(k)
@@ -222,4 +246,13 @@ function handleMetaNearestNeighboursResponse(response) {
         similarities: response.similarities,
     }
     return nearestNeighbours;
+}
+
+function checkSessionToken(stateSessionToken, requestSessionToken){
+    if(stateSessionToken === requestSessionToken){
+        return true
+    }
+    else{
+        return false
+    }
 }

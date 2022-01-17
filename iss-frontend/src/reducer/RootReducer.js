@@ -26,6 +26,7 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: true,
                 uploadedImages: action.uploadedImages,
+                sessionToken: action.sessionToken,
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
@@ -33,6 +34,7 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: false,
                 uploadedImages: action.uploadedImages,
+                sessionToken: action.sessionToken,
                 error: null
             }
         case imageUploadActions.UPLOAD_PENDING:
@@ -42,11 +44,13 @@ function rootReducer(state=initialState, action) {
                 error: null
             }
         case imageUploadActions.UPLOAD_SUCCESS:
+            console.log(action)
             return {
                 ...state,
                 showImageUploadDialog: false,
                 pending: false,
-                uploadedImages: action.uploadedImages,
+                uploadedImages: action.uploadedImages.imageData,
+                sessionToken: action.uploadedImages.sessionToken,
                 error: null
             }
         case imageUploadActions.UPLOAD_ERROR:
@@ -57,6 +61,7 @@ function rootReducer(state=initialState, action) {
             }
         case imageUploadActions.SEND_FILES_TO_STORE:
             return {
+                ...state,
                 showImageUploadDialog: true,
                 files: action.files,
                 pending: false,

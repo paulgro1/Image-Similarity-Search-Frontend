@@ -37,6 +37,7 @@ class D3Map extends Component {
             newY: undefined,
             imgScale: undefined,
             clickActive: false,
+            sessionToken: undefined
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -51,7 +52,7 @@ class D3Map extends Component {
     }
 
     async getNearestNeighbours(id, k) {
-        var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k)
+        var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k, this.state.sessionToken)
         var nearestNeighboursArray = []
         for (let i=0; i < k; i++){
             var nearestNeighbour = {
@@ -66,8 +67,8 @@ class D3Map extends Component {
     }
 
     async componentDidMount() {
-        var imagesMeta =  await fetchImagesActions.fetchAllThumbnailMeta()
-        fetchImagesActions.fetchAllThumbnails(function(imageUrls) {
+        var imagesMeta =  await fetchImagesActions.fetchAllThumbnailMeta(this.state.sessionToken)
+        fetchImagesActions.fetchAllThumbnails(this.state.sessionToken, function(imageUrls, sessionToken) {
             Promise.all(imageUrls).then(function(imageUrls){
                 var IMAGES = []
                 for(var i = 0; i < imagesMeta.length; i++) {
@@ -82,7 +83,7 @@ class D3Map extends Component {
                     }
                     IMAGES.push(image)
                 }
-                this.setState({IMAGES: IMAGES})
+                this.setState({IMAGES: IMAGES, sessionToken: sessionToken})
                 this.drawMap(IMAGES);
             }.bind(this))
         }.bind(this));
@@ -91,7 +92,8 @@ class D3Map extends Component {
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            await this.setState({uploadedImages: nextProps.uploadedImages})
+            await this.setState({uploadedImages: nextProps.uploadedImages, sessionToken: nextProps.sessionToken})
+            console.log(nextProps.uploadedImages)
             this.handleUploadedImages();
         }
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
@@ -151,6 +153,7 @@ class D3Map extends Component {
     async handleUploadedImages(){
         var files = this.props.files;
         var uploadedImages = this.state.uploadedImages
+        console.log(uploadedImages)
 
         if(uploadedImages === undefined){
             return;
@@ -222,7 +225,7 @@ class D3Map extends Component {
             var nearestNeighboursArray  = this.state.nearestNeighbours
         }
         else{
-            var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue)
+            var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue, this.state.sessionToken)
             var nearestNeighboursArray = []
             for (let i=0; i < this.state.sliderValue; i++){
                 let nearestNeighbour = {

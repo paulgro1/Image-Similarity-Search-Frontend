@@ -19,7 +19,8 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
-            sliderValue: 30
+            sliderValue: 30,
+            sessionToken: undefined
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -35,6 +36,7 @@ class ImageUploadButton extends Component {
     } */
 
     handleShow(e){
+        this.setState({sessionToken: this.props.sessionToken})
         e.preventDefault();
         const {showImageUploadDialogAction} = this.props;
         showImageUploadDialogAction();
@@ -60,7 +62,7 @@ class ImageUploadButton extends Component {
         }
         
         formData.append("k", this.state.sliderValue)
-        imageUploadAction(formData);
+        imageUploadAction(formData, this.state.sessionToken);
     }
 
     async handleSelect(e){
