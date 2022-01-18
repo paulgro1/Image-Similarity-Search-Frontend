@@ -19,7 +19,8 @@ class ExportButton extends Component {
         super(props)
         this.state = {
             sliderValue: 5,
-            allNearestNeighbours: undefined
+            allNearestNeighbours: undefined,
+            imageIds: undefined
         };
         this.getAllNearestNeighbours = this.getAllNearestNeighbours.bind(this);
         this.handleExcelExportAllImages = this.handleExcelExportAllImages.bind(this);
@@ -32,13 +33,44 @@ class ExportButton extends Component {
         }
     }
 
+    async componentDidMount(){
+        const imageIds = await fetchImagesActions.fetchAllImagesIds()
+        this.setState({imageIds: imageIds})
+    }
+
     async getAllNearestNeighbours(k){
         var nearestNeighbours  = await fetchImagesActions.fetchAllNearestNeighbours(k)
         this.setState({allNearestNeighbours: nearestNeighbours});
     }
 
     async handleExcelExportAllImages(){
-        await this.getAllNearestNeighbours(this.state.sliderValue);
+        var imgIds = this.state.imageIds;
+        if(imgIds.length < 100){
+            await this.getAllNearestNeighbours(this.state.sliderValue);
+        } else {
+            
+            //Send requests to backend in chunks of max. 100 ids.
+            var perChunk = 100;
+            var result = imgIds.reduce((resultArray, item, index) => { 
+                const chunkIndex = Math.floor(index/perChunk);
+                if(!resultArray[chunkIndex]) {
+                    resultArray[chunkIndex] = [] // start a new chunk
+                }
+                resultArray[chunkIndex].push(item);
+                return resultArray;
+            }, [])
+
+            // Combine all responses from backend into one array.
+            var allNN = [];
+            for(let i=0; i<result.length; i++){
+                var idChunk = result[i]
+                var nearestNeighbours = await fetchImagesActions.fetchNearestNeighboursWithIds(this.state.sliderValue, idChunk)
+                allNN.push(nearestNeighbours)
+            }
+            var mergedNN = [].concat.apply([], allNN);
+            this.setState({allNearestNeighbours: mergedNN})
+        }
+        
         const fileName = 'all_images_' + this.state.sliderValue + '_NN';
         var data = [
             [this.state.sliderValue + ' nearest neighbours of all images.'],
@@ -92,7 +124,7 @@ class ExportButton extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-
+    fetchAllImagesIds: fetchImagesActions.fetchAllImagesIds,
 },dispatch)
 
 const connectedExportButton = connect(mapStateToProps, mapDispatchToProps)(ExportButton);

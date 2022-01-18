@@ -218,3 +218,44 @@ function handleMetaAllNearestNeighboursResponse(response) {
     console.log(response)
     return response;
 }
+
+export function fetchNearestNeighboursWithIds(k, ids) {
+    console.log("Fetch " + k +" NN of all images")
+    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                picture_ids: ids
+            })
+        })
+        .then(response => response.json())
+        .then(handleMetaAllNearestNeighboursResponse)
+        .then(nearestNeighbours => {
+            return nearestNeighbours;
+        });
+}
+
+export function fetchAllImagesIds(){
+    console.log('Fetch Ids of all images.')
+    return fetch(route.FETCH_ALL_IMAGES_IDS, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(handleAllImagesIdsResponse)
+    .then(ids => {
+        return ids;
+    });
+}
+
+function handleAllImagesIdsResponse(response){
+    console.log(response)
+    return response;
+}
+

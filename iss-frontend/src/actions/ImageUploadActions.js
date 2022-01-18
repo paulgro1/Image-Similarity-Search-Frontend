@@ -106,6 +106,7 @@ async function upload(formData) {
                 clusterCenters: responseData.cluster_centers,
                 nnClusterCenters: responseData.neighbour_cluster_centers,
                 nnFilenames: responseData.neighbour_filenames,
+                // nach merge: ids die als response kommen verwenden für uploaded images
                 uploadedFilenames: responseData.uploaded_filenames
             }
             return imageData;
