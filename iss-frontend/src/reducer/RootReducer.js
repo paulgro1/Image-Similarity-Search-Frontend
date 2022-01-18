@@ -1,6 +1,8 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
+import * as authenticationActions from '../actions/AuthenticationActions';
+
 
 const initialState = {
     images: [],
@@ -26,7 +28,6 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: true,
                 uploadedImages: action.uploadedImages,
-                sessionToken: action.sessionToken,
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
@@ -34,7 +35,6 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: false,
                 uploadedImages: action.uploadedImages,
-                sessionToken: action.sessionToken,
                 error: null
             }
         case imageUploadActions.UPLOAD_PENDING:
@@ -49,8 +49,7 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 showImageUploadDialog: false,
                 pending: false,
-                uploadedImages: action.uploadedImages.imageData,
-                sessionToken: action.uploadedImages.sessionToken,
+                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.UPLOAD_ERROR:
@@ -115,6 +114,11 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 sliderValue: action.value
+            }
+        case authenticationActions.SET_SESSION_TOKEN:
+            return{
+                ...state,
+                sessionToken: action.sessionToken
             }
         default:
             return state

@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 import '../layout/css/style.css'
 import '../layout/css/D3MapStyle.css'
 
+import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -13,6 +14,7 @@ import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
+import * as authenticationActions from '../actions/AuthenticationActions'
 
 const mapStateToProps = state => {
     return state;
@@ -67,8 +69,21 @@ class D3Map extends Component {
     }
 
     async componentDidMount() {
+        await authenticationActions.getSessionToken(function(sessionToken){
+            if (sessionToken) {
+            console.log(sessionToken)
+            const {setSessionToken} = this.props;
+            this.setState({sessionToken: sessionToken})
+            setSessionToken(sessionToken)
+            console.log(this.props)
+                axios.defaults.headers.common['Api-Session-Token'] = sessionToken;
+                console.log("now")
+            } else {
+                axios.defaults.headers.common['Api-Session-Token'] = null;
+            }
+        }.bind(this))
         var imagesMeta =  await fetchImagesActions.fetchAllThumbnailMeta(this.state.sessionToken)
-        fetchImagesActions.fetchAllThumbnails(this.state.sessionToken, function(imageUrls, sessionToken) {
+        fetchImagesActions.fetchAllThumbnails(this.state.sessionToken, function(imageUrls) {
             Promise.all(imageUrls).then(function(imageUrls){
                 var IMAGES = []
                 for(var i = 0; i < imagesMeta.length; i++) {
@@ -83,7 +98,7 @@ class D3Map extends Component {
                     }
                     IMAGES.push(image)
                 }
-                this.setState({IMAGES: IMAGES, sessionToken: sessionToken})
+                this.setState({IMAGES: IMAGES})
                 this.drawMap(IMAGES);
             }.bind(this))
         }.bind(this));
@@ -92,8 +107,7 @@ class D3Map extends Component {
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            await this.setState({uploadedImages: nextProps.uploadedImages, sessionToken: nextProps.sessionToken})
-            console.log(nextProps.uploadedImages)
+            await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
@@ -153,7 +167,6 @@ class D3Map extends Component {
     async handleUploadedImages(){
         var files = this.props.files;
         var uploadedImages = this.state.uploadedImages
-        console.log(uploadedImages)
 
         if(uploadedImages === undefined){
             return;
@@ -162,7 +175,6 @@ class D3Map extends Component {
         if(files){
             this.storeImageUrls(files);
         }
-        console.log(this.state.uploadedImagesUrls)
 
         var newImages = []
         for(let i = 0; i < files.length; i++){
@@ -472,7 +484,7 @@ class D3Map extends Component {
                                             var euclideanDistance = img.similarities * 100
 
                                             return (
-                                                <div>
+                                                <div key={url}>
                                                     <Image src={url}/> <br/>
                                                     {euclideanDistance.toFixed(2)} %
                                                 </div>
@@ -507,6 +519,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     showInformationDialogAction: fetchImagesActions.showInformationDialogAction,
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
     getImagesFromDbAction: fetchImagesActions.getImagesFromDb,
+    setSessionToken: authenticationActions.setSessionToken,
 },dispatch)
 
 const connectedD3Map = connect(mapStateToProps, mapDispatchToProps) (D3Map);
