@@ -223,11 +223,77 @@ export function fetchNearestNeighbours(id, k, sessionToken) {
 
 function handleMetaNearestNeighboursResponse(response) {
     var nearestNeighbours = response
-
+    console.log('Response from fetch NN')
+    console.log(response)
     nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,
+        clusterCenters: response.neighbour_cluster_centers,
         similarities: response.similarities,
+        filenames: response.neighbour_filenames
     }
     return nearestNeighbours;
 }
+
+
+export function fetchAllNearestNeighbours(k) {
+    console.log("Fetch " + k +" NN of all images")
+    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(handleMetaAllNearestNeighboursResponse)
+        .then(nearestNeighbours => {
+            return nearestNeighbours;
+        });
+}
+
+function handleMetaAllNearestNeighboursResponse(response) {
+    console.log(response)
+    return response;
+}
+
+export function fetchNearestNeighboursWithIds(k, ids) {
+    console.log("Fetch " + k +" NN of all images")
+    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                picture_ids: ids
+            })
+        })
+        .then(response => response.json())
+        .then(handleMetaAllNearestNeighboursResponse)
+        .then(nearestNeighbours => {
+            return nearestNeighbours;
+        });
+}
+
+export function fetchAllImagesIds(){
+    console.log('Fetch Ids of all images.')
+    return fetch(route.FETCH_ALL_IMAGES_IDS, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(handleAllImagesIdsResponse)
+    .then(ids => {
+        return ids;
+    });
+}
+
+function handleAllImagesIdsResponse(response){
+    console.log(response)
+    return response;
+}
+
