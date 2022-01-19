@@ -75,9 +75,7 @@ class D3Map extends Component {
             const {setSessionToken} = this.props;
             this.setState({sessionToken: sessionToken})
             setSessionToken(sessionToken)
-            console.log(this.props)
                 axios.defaults.headers.common['Api-Session-Token'] = sessionToken;
-                console.log("now")
             } else {
                 axios.defaults.headers.common['Api-Session-Token'] = null;
             }

@@ -181,9 +181,6 @@ export async function fetchAllThumbnails(sessionToken, callback) {
     url : restUrl,
     encoding: null // <- this one is important!
 }, function(error, response, body) {
-       /* if(!response.headers.api_session_token === sessionToken){
-            sessionToken = response.headers.api_session_token
-        }    */
      JSZip.loadAsync(body).then(function(zip) {
         var imageUrls = [];
         var regex = /(?:\.([^.]+))?$/;
@@ -198,7 +195,7 @@ export async function fetchAllThumbnails(sessionToken, callback) {
                });
             imageUrls.push(url)
         }
-        return callback(imageUrls, sessionToken)
+        return callback(imageUrls)
         })
     });
 }
