@@ -1,5 +1,8 @@
 import * as route from '../config/Routes';
 import axios from 'axios';
+var request = require('request');
+var JSZip = require("jszip");
+    
 
 export const FETCH_IMAGES_PENDING = 'FETCH_IMAGES_PENDING';
 export const FETCH_IMAGES_SUCCESS = 'FETCH_IMAGES_SUCCESS';
@@ -139,42 +142,62 @@ export function fetchAllThumbnailMeta() {
 
 /*
  * This function fetches on image.
- * @returns one image recieved from the backend 
+ * @returns one fullsize image blob url, which was received from the backend 
  */
 export function fetchOneImage(id, sessionToken) {
-
     var restUrl = route.FETCH_ONE_IMAGE + id;
-    console.log("Fetch Images from: " + restUrl);
+    console.log("Fetch One Image from: " + restUrl);
 
     return fetch(restUrl, { 
         method: 'GET',
     headers: {
         'Api-Session-Token': sessionToken
     }})
-        .then(handleImageResponse)
-        .then(image => {
-            return image;
-        });
+        .then(response => response.blob())
+        .then(blob => {
+            return URL.createObjectURL(blob)
+        })
 }
 
-
-function handleImageResponse(response) {
-    console.log(response)
-    return response
-        .json().then(img => {
-
-            var images = new Buffer.from(img).toString("base64")
-            console.log(images)
-            return images;
-        });
+export async function fetchMultipleThumbnails(sessionToken, picture_ids, callback) {
+    var restUrl = route.FETCH_MULTIPLE_THUMBNAILS;
+    console.log("Fetch multiple thumbnails with the ids: " + picture_ids + " from: " + restUrl);
+    
+    request({
+    method : "POST",
+    headers :  {'Api-Session-Token': sessionToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+    },
+    url : restUrl,
+    encoding: null, // <- this one is important!
+    body: JSON.stringify({
+        picture_ids: picture_ids
+    })
+}, function(error, response, body) {
+     JSZip.loadAsync(body).then(function(zip) {
+        var imageUrls = [];
+        var regex = /(?:\.([^.]+))?$/;
+        for(let zipEntry in zip.files) {
+            var url = zip.file(zipEntry).async("arraybuffer").then(function (data) {
+                var ext = regex.exec(zipEntry)[0];
+                var type = "image/" + ext.split('.')[1];
+                var buffer = new Uint8Array(data);
+                var blob = new Blob([buffer.buffer], {type: type});
+                let url = URL.createObjectURL(blob)
+                return url
+               });
+            imageUrls.push(url)
+        }
+        return callback(imageUrls)
+        })
+    });
 }
 
 export async function fetchAllThumbnails(sessionToken, callback) {
     var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch all thumbnails from: " + restUrl);
-    var request = require('request');
-    var JSZip = require("jszip");
-    
+
     request({
     method : "GET",
     headers :  {'Api-Session-Token': sessionToken},
@@ -223,8 +246,6 @@ export function fetchNearestNeighbours(id, k, sessionToken) {
 
 function handleMetaNearestNeighboursResponse(response) {
     var nearestNeighbours = response
-    console.log('Response from fetch NN')
-    console.log(response)
     nearestNeighbours = {
         distances: response.distances,
         ids: response.ids,
@@ -253,7 +274,6 @@ export function fetchAllNearestNeighbours(k) {
 }
 
 function handleMetaAllNearestNeighboursResponse(response) {
-    console.log(response)
     return response;
 }
 
@@ -293,7 +313,6 @@ export function fetchAllImagesIds(){
 }
 
 function handleAllImagesIdsResponse(response){
-    console.log(response)
     return response;
 }
 

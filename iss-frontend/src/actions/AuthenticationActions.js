@@ -27,7 +27,6 @@ export function setSessionTokenAction(sessionToken){
         }
         if(response.headers.has("api-session-token")){
             let key = response.headers.get("api-session-token")
-            console.log("Session Token: " + key)
             setSessionToken(key)
             return callback(key)
         }

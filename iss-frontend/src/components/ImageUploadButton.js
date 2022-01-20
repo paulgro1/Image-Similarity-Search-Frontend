@@ -49,13 +49,8 @@ class ImageUploadButton extends Component {
         e.preventDefault();
         const {files} = this.state;
         const {imageUploadAction} = this.props;
-        console.log("handleSubmit images from form: ");
-        console.log(this.state.files)
-
         const formData = new FormData();
         for(let i = 0; i < files.length; i++) {
-            console.log(files[i])
-            
             formData.append(`images[${i}]`, files[i]);
         }
         
@@ -67,7 +62,6 @@ class ImageUploadButton extends Component {
 
     async handleSelect(e){
         const {sendFilesToStoreAction} = this.props;
-        console.log(e.target.files);
         sendFilesToStoreAction(e.target.files)
         this.setState({files: e.target.files}, () => {
             console.log("[ImageUploadButton] Files in state: " + JSON.stringify(this.state.files));

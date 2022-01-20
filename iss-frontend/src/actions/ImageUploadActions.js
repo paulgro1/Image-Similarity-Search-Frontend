@@ -60,7 +60,6 @@ export function imageUpload(formData) {
         dispatch(getUploadPendingAction());
         upload(formData)
             .then(function(response){
-                console.log("imageUpload response: " + JSON.stringify(response));
                 const action = getUploadSuccessAction(response);
                 dispatch(action);
             },
@@ -81,11 +80,7 @@ export function imageUpload(formData) {
  * @returns response recieved from the backend
 */
 async function upload(formData) {
-    // log all entries of formData Object
-    for(let pair of formData.entries()){
-        console.log(pair[0] + ', ' + pair[1]);
-    }
-    console.log(route.IMAGE_UPLOAD)
+    console.log("Uploading images to: " + route.IMAGE_UPLOAD)
     return await axios({
         method: "POST",
         url: route.IMAGE_UPLOAD,
@@ -97,7 +92,6 @@ async function upload(formData) {
     .then(response => {
         if(response.status === 200) {
             let responseData = response.data
-            console.log(responseData)
             let imageData = {
                 distances: responseData.distances,
                 ids: responseData.ids,
