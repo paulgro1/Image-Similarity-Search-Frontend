@@ -100,14 +100,14 @@ async function upload(formData) {
             console.log(responseData)
             let imageData = {
                 distances: responseData.distances,
-                ids: responseData.ids,
+                ids: responseData.new_ids,
+                filenames: responseData.uploaded_filenames,
                 coordinates: responseData.coordinates,
                 similarities: responseData.similarities,
                 clusterCenters: responseData.cluster_centers,
                 nnClusterCenters: responseData.neighbour_cluster_centers,
                 nnFilenames: responseData.neighbour_filenames,
-                // nach merge: ids die als response kommen verwenden für uploaded images
-                uploadedFilenames: responseData.uploaded_filenames
+                nnIds: responseData.ids
             }
 
 
