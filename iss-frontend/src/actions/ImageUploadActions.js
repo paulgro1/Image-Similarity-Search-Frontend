@@ -106,20 +106,27 @@ async function upload(formData) {
         url: route.IMAGE_UPLOAD,
         data: formData,
         headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
         },
     })
     .then(response => {
         if(response.status === 200) {
             let responseData = response.data
-
+            console.log(responseData)
             let imageData = {
                 distances: responseData.distances,
                 ids: responseData.ids,
                 coordinates: responseData.coordinates,
-                similarities: responseData.similarities
+                similarities: responseData.similarities,
+                clusterCenters: responseData.cluster_centers,
+                nnClusterCenters: responseData.neighbour_cluster_centers,
+                nnFilenames: responseData.neighbour_filenames,
+                // nach merge: ids die als response kommen verwenden für uploaded images
+                uploadedFilenames: responseData.uploaded_filenames
             }
-            return imageData;
+
+
+            return imageData
         }
         else {
             console.log("Error occured in image upload response.")

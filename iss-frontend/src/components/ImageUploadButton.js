@@ -72,6 +72,8 @@ class ImageUploadButton extends Component {
         
         formData.append("k", this.state.sliderValue)
         imageUploadAction(formData);
+
+        //Bilder aus state löschen
     }
 }
 
@@ -89,7 +91,6 @@ class ImageUploadButton extends Component {
 
 
     render(){
-
         var showDialog = this.props.showImageUploadDialog
         if(showDialog === undefined){
             showDialog = false;
