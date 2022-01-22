@@ -9,9 +9,6 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import '../layout/css/style.css'
-import { ThermometerSun } from 'react-bootstrap-icons';
-
-
 
 
 const mapStateToProps = state => {
@@ -42,7 +39,7 @@ class CropImage extends Component {
     }
 
     canvas = {}
-    croppedFile = undefined;
+   // croppedFile = undefined;
 
 
    componentDidMount(){
@@ -88,6 +85,7 @@ class CropImage extends Component {
         const blob = await response.blob();
         const newFile = new File([blob], 'image.jpg', {type: blob.type});
         this.state.croppedFile = newFile;
+ 
       }
     }
     
@@ -115,11 +113,11 @@ class CropImage extends Component {
         const {imageUploadAction} = this.props;
         console.log("handleSubmit images from form: ");
         const croppedFile = this.state.croppedFile;
-        
+      
+        console.log("Cropped File zum Hochladen:", croppedFile)
+      
         const formData = new FormData();
         formData.append(`image[${croppedFile}]`, croppedFile);
-        
-        
         formData.append("k", this.state.sliderValue)
         imageUploadAction(formData);
 }
@@ -149,13 +147,10 @@ class CropImage extends Component {
                     <Modal.Header closeButton>
                         <Modal.Title>Crop and Upload Single Image</Modal.Title>
                     </Modal.Header>
-
                     <Modal.Body>
-                    
- 
                    <div class="modal-dialog-crop">
 
-                            <div class="crop-container" >
+                            <div className="crop-container" >
                                 <Cropper
                                     image={this.state.url}
                                     crop={this.state.crop}
@@ -167,7 +162,7 @@ class CropImage extends Component {
                                     onZoomChange={this.onZoomChange} />
                             </div>
                             </div> 
-                            <div class="controls">
+                            <div className="controls">
                                 <Slider
                                     value={this.state.zoom}
                                     min={1}
@@ -176,10 +171,8 @@ class CropImage extends Component {
                                     aria-labelledby="Zoom"
                                     onChange={(e, zoom) => this.onZoomChange(zoom)}
                                     classes={{ container: 'slider' }} />
-                                    
                                     </div>   
-                        
-                        
+
                     </Modal.Body>
                     <center><Button class="cropsubmit" variant="dark" onClick={this.handleSubmit}>
                                 Submit
