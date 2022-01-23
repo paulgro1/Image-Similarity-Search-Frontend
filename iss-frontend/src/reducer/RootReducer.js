@@ -1,8 +1,6 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
-import * as authenticationActions from '../actions/AuthenticationActions';
-
 
 const initialState = {
     images: [],
@@ -32,6 +30,7 @@ function rootReducer(state=initialState, action) {
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
+          
             return {
                 ...state,
                 showImageUploadDialog: false,
@@ -63,7 +62,6 @@ function rootReducer(state=initialState, action) {
                 error: null
             }
         case imageUploadActions.UPLOAD_SUCCESS:
-            console.log(action)
             return {
                 ...state,
                 showImageUploadDialog: false,
@@ -79,7 +77,6 @@ function rootReducer(state=initialState, action) {
             }
         case imageUploadActions.SEND_FILES_TO_STORE:
             return {
-                ...state,
                 showImageUploadDialog: true,
                 files: action.files,
                 pending: false,
@@ -133,11 +130,6 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 sliderValue: action.value
-            }
-        case authenticationActions.SET_SESSION_TOKEN:
-            return{
-                ...state,
-                sessionToken: action.sessionToken
             }
         default:
             return state

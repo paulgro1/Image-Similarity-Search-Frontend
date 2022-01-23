@@ -30,6 +30,7 @@ class CropImage extends Component {
             url: undefined,
             newFile: undefined,
             croppedimage: undefined,
+            croppedFile: undefined, 
             croppedAreaPixels: {}
           
         };
@@ -39,7 +40,7 @@ class CropImage extends Component {
     }
 
     canvas = {}
-   // croppedFile = undefined;
+
 
 
    componentDidMount(){
