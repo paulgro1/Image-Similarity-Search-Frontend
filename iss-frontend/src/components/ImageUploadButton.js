@@ -55,27 +55,27 @@ class ImageUploadButton extends Component {
         e.preventDefault();
         const files = this.state.files;
         if (files.length === 1){
-        const {showImageCropDialogAction} = this.props;
-        showImageCropDialogAction();
+            const {showImageCropDialogAction} = this.props;
+            showImageCropDialogAction();
         }
         else {
-        const {imageUploadAction} = this.props;
-        console.log("handleSubmit images from form: ");
-        console.log(this.state.files)
+            const {imageUploadAction} = this.props;
+            console.log("handleSubmit images from form: ");
+            console.log(this.state.files)
 
-        const formData = new FormData();
-        for(let i = 0; i < files.length; i++) {
-            console.log(files[i])
+            const formData = new FormData();
+            for(let i = 0; i < files.length; i++) {
+                console.log(files[i])
+                
+                formData.append(`images[${i}]`, files[i]);
+            }
             
-            formData.append(`images[${i}]`, files[i]);
-        }
-        
-        formData.append("k", this.state.sliderValue)
-        imageUploadAction(formData);
+            formData.append("k", this.state.sliderValue)
+            imageUploadAction(formData);
 
-        //Bilder aus state löschen
+            //Bilder aus state löschen
+        }
     }
-}
 
 
     async handleSelect(e){ 

@@ -36,10 +36,11 @@ export function getHideImageCropDialogAction(){
 
 
 // provides uploaded files from UploadButton in D3 Map
-export function getSendFilesToStoreAction(files){
+export function getSendFilesToStoreAction(files, source="multi"){
     return {
         type: SEND_FILES_TO_STORE,
-        files: files
+        files: files,
+        source: source
     }
 }
 

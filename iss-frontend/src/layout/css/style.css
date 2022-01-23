@@ -28,14 +28,13 @@
   padding:20px;
 }    
 
- .controls{
-top: 40%;
-justify-content: center;
-align-items: center;
-display:flex;
-
+.controls{
+  top: 40%;
+  justify-content: center;
+  align-items: center;
+  display:flex;
 } 
 
- .cropsubmit{
-bottom: 20px;
+.cropsubmit{
+  bottom: 20px;
 }

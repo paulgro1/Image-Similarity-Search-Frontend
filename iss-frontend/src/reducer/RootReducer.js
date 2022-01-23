@@ -65,6 +65,7 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: false,
+                showImageCropDialog: false,
                 pending: false,
                 uploadedImages: action.uploadedImages,
                 error: null
@@ -76,12 +77,19 @@ function rootReducer(state=initialState, action) {
                 error: action.error
             }
         case imageUploadActions.SEND_FILES_TO_STORE:
-            return {
-                showImageUploadDialog: true,
-                files: action.files,
-                pending: false,
-                error: null
+            if(action.source === "multi"){
+                return {
+                    showImageUploadDialog: true,
+                    files: action.files,
+                    pending: false,
+                    error: null
+                }
+            }else{
+                return {
+                    files: action.files
+                }
             }
+            
         case fetchImagesActions.FETCH_IMAGES_PENDING:
             return {
                 ...state,

@@ -9,6 +9,8 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import '../layout/css/style.css'
+import axios from "axios"
+import * as route from '../config/Routes'
 
 
 const mapStateToProps = state => {
@@ -23,15 +25,16 @@ class CropImage extends Component {
             files: undefined,
             sliderValue: 5,
             crop: { x: 0, y: 0 },
-            cropsize: { width: 336, height: 448 },
+            cropsize: undefined,
             zoom: 1,
-            aspect: 336 / 448,
+            aspect: undefined,
             imagetocrop: this.props.cropfile,
             url: undefined,
             newFile: undefined,
             croppedimage: undefined,
             croppedFile: undefined, 
-            croppedAreaPixels: {}
+            croppedAreaPixels: {},
+            pending: true
           
         };
         this.handleShowCrop = this.handleShowCrop.bind(this);
@@ -39,61 +42,36 @@ class CropImage extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    canvas = {}
-
-
-
-   componentDidMount(){
+    componentDidMount(){
+        axios({
+            method: "GET",
+            url: route.FETCH_IMAGE_SIZE
+        })
+        .then(response => {
+            if(response.status === 200){
+                let { width, height } = response.data
+                width = +width
+                height = +height
+                let cropsize = { "width": width, "height": height }
+                let aspect = width / height
+                this.setState({cropsize: cropsize, aspect: aspect})
+            }
+        })
         let file = this.state.imagetocrop
-        this.setState({url: URL.createObjectURL(file) })
+        this.setState({url: URL.createObjectURL(file), pending: false })
     }          
-
 
     onCropChange = (crop) => {
         this.setState({ crop: crop })
-      }
-    
-      onCropComplete = (croppedArea, croppedAreaPixels) => {
-        let img = new Image();
-        img.src = this.state.selectedImageURL;
-        const croppedX = this.state.url.width * croppedAreaPixels.x / 100;
-        const croppedY = this.state.url.height * croppedAreaPixels.y / 100;
-        const croppedWidth = this.state.url.width * croppedAreaPixels.width / 100;
-        const croppedHeight = this.state.url.height * croppedAreaPixels.height / 100;
-    
-        const canvas = document.createElement('canvas');
-        canvas.width = croppedWidth;
-        canvas.height = croppedHeight;
-        const ctx = canvas.getContext('2d');
-    
-        ctx.drawImage(
-          img,
-          croppedX,
-          croppedY,
-          croppedWidth,
-          croppedHeight,
-          0,
-          0,
-          croppedWidth,
-          croppedHeight
-        );
-
-        const croppedUrl =  canvas.toDataURL('image/jpeg');
-
-        const urlToObject= async()=> {
-        const response = await fetch(croppedUrl);
-            
-        const blob = await response.blob();
-        const newFile = new File([blob], 'image.jpg', {type: blob.type});
-        this.state.croppedFile = newFile;
- 
-      }
     }
     
-      onZoomChange = (zoom) => {
-        this.setState({ zoom })
-      }
-
+    onCropComplete = (croppedArea, croppedAreaPixels) => {
+        this.setState({croppedAreaPixels: croppedAreaPixels})
+    }
+    
+    onZoomChange = (zoom) => {
+    this.setState({ zoom })
+    }
 
     handleCloseCrop(){
         const {hideImageCropDialogAction} = this.props;
@@ -106,22 +84,55 @@ class CropImage extends Component {
         showImageCropDialogAction();
     }
 
-
-
     handleSubmit(e){
         e.preventDefault();
         const {sendFilesToStoreAction} = this.props;
         const {imageUploadAction} = this.props;
         console.log("handleSubmit images from form: ");
-        const croppedFile = this.state.croppedFile;
-      
-        console.log("Cropped File zum Hochladen:", croppedFile)
-      
-        const formData = new FormData();
-        formData.append(`image[${croppedFile}]`, croppedFile);
-        formData.append("k", this.state.sliderValue)
-        imageUploadAction(formData);
-}
+
+        const { croppedAreaPixels, cropsize } = this.state
+
+        const canvas = document.createElement('canvas');
+        canvas.width = cropsize.width;
+        canvas.height = cropsize.height;
+        const ctx = canvas.getContext('2d');
+
+        let img = new Image(this.state.cropsize.width, this.state.cropsize.height);
+        let { url } = this.state
+        img.src = url
+        img.decode()
+            .then(() => {
+                ctx.drawImage(
+                    img,
+                    croppedAreaPixels.x,
+                    croppedAreaPixels.y,
+                    croppedAreaPixels.width,
+                    croppedAreaPixels.height,
+                    0,
+                    0,
+                    cropsize.width,
+                    cropsize.height
+                );
+        
+                const croppedUrl =  canvas.toDataURL(this.state.imagetocrop.type);
+                
+                fetch(croppedUrl)
+                    .then(response => {
+                        response.blob()
+                            .then(blob => {
+                                
+                                const newFile = new File([blob], this.state.imagetocrop.name, {type: blob.type});
+                                sendFilesToStoreAction([newFile], "single")
+                                console.log("Cropped File zum Hochladen:", newFile)
+              
+                                const formData = new FormData();
+                                formData.append(`image[${newFile}]`, newFile);
+                                formData.append("k", this.state.sliderValue)
+                                imageUploadAction(formData);
+                            })
+                    })
+            })
+    }
 
 
     render(){
@@ -131,7 +142,7 @@ class CropImage extends Component {
             showCropDialog = false;
         }
 
-        var pending = this.props.pending;
+        var pending = this.state.pending;
         if(pending === undefined){
             pending = false;
         }
@@ -148,10 +159,11 @@ class CropImage extends Component {
                     <Modal.Header closeButton>
                         <Modal.Title>Crop and Upload Single Image</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                   <div class="modal-dialog-crop">
 
+                    <Modal.Body>
+                        <div className="modal-dialog-crop">
                             <div className="crop-container" >
+                                {!pending &&
                                 <Cropper
                                     image={this.state.url}
                                     crop={this.state.crop}
@@ -161,40 +173,37 @@ class CropImage extends Component {
                                     onCropChange={this.onCropChange}
                                     onCropComplete={this.onCropComplete}
                                     onZoomChange={this.onZoomChange} />
+                                }
                             </div>
-                            </div> 
-                            <div className="controls">
-                                <Slider
-                                    value={this.state.zoom}
-                                    min={1}
-                                    max={3}
-                                    step={0.1}
-                                    aria-labelledby="Zoom"
-                                    onChange={(e, zoom) => this.onZoomChange(zoom)}
-                                    classes={{ container: 'slider' }} />
-                                    </div>   
-
+                        </div> 
                     </Modal.Body>
-                    <center><Button class="cropsubmit" variant="dark" onClick={this.handleSubmit}>
-                                Submit
-                            </Button></center>
-                           
-                            
-                            {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
-                            {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
-                    <Modal.Footer>
+                     
+                    <Modal.Footer className="justify-content-center">
+                        <div className="controls container-fluid">
+                            <Slider
+                                value={this.state.zoom}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                aria-labelledby="Zoom"
+                                onChange={(e, zoom) => this.onZoomChange(zoom)}
+                                /*classes={{ container: 'slider' }}*/ />
+                        </div>   
+                        <Button className="cropsubmit" variant="dark" onClick={this.handleSubmit}>Submit</Button>
+                        {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                        {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
                     </Modal.Footer>
                 </Modal>
             
-    )
-}
+        )
+    }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
     showImageCropDialogAction: imageUploadActions.getShowImageCropDialogAction,
     hideImageCropDialogAction: imageUploadActions.getHideImageCropDialogAction,
     imageUploadAction: imageUploadActions.imageUpload,
-    sendFilesToStoreAction: imageUploadActions.getSendFilesToStoreAction
+    sendFilesToStoreAction: imageUploadActions.getSendFilesToStoreAction,
 },dispatch)
 
 
