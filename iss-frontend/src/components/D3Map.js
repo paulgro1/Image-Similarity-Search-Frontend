@@ -55,7 +55,6 @@ class D3Map extends Component {
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
         this.handleUploadedImages = this.handleUploadedImages.bind(this);
         this.storeImageUrls = this.storeImageUrls.bind(this);
-        this.setClickActive = this.setClickActive.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.handleUploadedNearestN = this.handleUploadedNearestN.bind(this);
         this.markImage = this.markImage.bind(this);
@@ -264,15 +263,9 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
-    setClickActive(value){
-        this.setState({clickActive: value});
-    }
-
     removeMark(){
         if(this.state.markedUploadedImage !== undefined) {
             var markedUploadedImage = this.state.markedUploadedImage
-            console.log('in removschleife')
-            console.log(markedUploadedImage) 
             d3.select('#image_' + markedUploadedImage.id)
             .classed('highlight_uploaded', true)
 
@@ -285,7 +278,6 @@ class D3Map extends Component {
             .classed('highlight_neighbour', false)
             .classed('hide_off', true)
             .classed('hide_on', false)
-
             this.setState({ markActive: false })
             this.setState({ openInfoView: false })
         }
@@ -296,9 +288,6 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, canvas) {
-        console.log('MARK')
-        /* console.log('image' + image)
-        console.log('id' + id) */
         console.log(this.state.sessionToken)
         this.setState({selectedImageId: image.id});
 
