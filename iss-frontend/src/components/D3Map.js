@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 import * as d3 from 'd3';
 
 import '../layout/css/style.css'
-import '../layout/css/D3MapStyle.css'
+import '../layout/css/markStyle.css'
 
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
@@ -44,7 +44,10 @@ class D3Map extends Component {
             newY: undefined,
             imgScale: 1,
             clickActive: false,
-            sessionToken: undefined
+            sessionToken: undefined,
+            openInfoView: false,
+            markedImagesIDs: [],
+            markedUploadedImage: undefined,
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -100,7 +103,8 @@ class D3Map extends Component {
                         x: imagesMeta[i].x,
                         y: imagesMeta[i].y,
                         width: 12,
-                        height: 16
+                        height: 16,
+                        uploaded: false
                     }
                     IMAGES.push(image)
                 }
@@ -235,6 +239,7 @@ class D3Map extends Component {
                 url: this.state.uploadedImagesUrls[i],
                 x: uploadedImages.coordinates[i][0],
                 y: uploadedImages.coordinates[i][1],
+                uploaded: true,
             }
             newImages.push(image)
         }
@@ -264,12 +269,25 @@ class D3Map extends Component {
     }
 
     removeMark(){
-        if(this.state.clickActive === true) {
+        if(this.state.markedUploadedImage !== undefined) {
+            var markedUploadedImage = this.state.markedUploadedImage
+            console.log('in removschleife')
+            console.log(markedUploadedImage) 
+            d3.select('#image_' + markedUploadedImage.id)
+            .classed('highlight_uploaded', true)
+
+            this.setState({ markedUploadedImage : undefined})
+        }
+        if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)
             .classed('hide', false)
             .classed('highlight_neighbour', false)
-            this.setState({ clickActive: false })
+            .classed('hide_off', true)
+            .classed('hide_on', false)
+
+            this.setState({ markActive: false })
+            this.setState({ openInfoView: false })
         }
         else{
             return
@@ -277,13 +295,22 @@ class D3Map extends Component {
         
     }
 
-    async markImage(image, id, Canvas, uploaded) {
+    async markImage(image, id, canvas) {
+        console.log('MARK')
+        /* console.log('image' + image)
+        console.log('id' + id) */
+        console.log(this.state.sessionToken)
         this.setState({selectedImageId: image.id});
+
+        if(this.state.markActive === undefined){
+            this.setState({markActive: false});
+        }
+
         if(this.state.sliderValue !== undefined){
             this.setState({sliderValue: this.state.sliderValue});
         }
 
-        if(uploaded){
+        if(image.uploaded){
             this.handleUploadedNearestN();
             var nearestNeighboursArray  = this.state.nearestNeighbours
         }
@@ -297,36 +324,73 @@ class D3Map extends Component {
                 nearestNeighboursArray.push(nearestNeighbour)
             }
         }
-        
-        if (this.state.clickActive === false) {
-            // hide all images
-            d3.selectAll('image').classed('hide', true)
 
-            /* mark clicked Image */
-            d3.select('#image_' + image.id)
-            .classed('highlight', true)
-            .classed('hide', false)
-            .classed('highlight_neighbour', false)
-            
+ 
+        if(this.state.openInfoView === false) {
 
-            /* mark next neighbours */
-            for ( let neighbour of nearestNeighboursArray) {
-                d3.select('#image_' + neighbour.id)
-                .classed('highlight', false)
-                .classed('hide', false)
-                .classed('highlight_neighbour', true)
-          
+            if(image.uploaded){
+                this.setState({markedUploadedImage: image})
             }
-            /* set State */
-            this.setState({ clickActive: true })
 
-        } else {
-            Canvas.selectAll('image')
-            .classed('hide', false)
-            .classed('highlight', false)
-            .classed('highlight_neighbour', false)
-            this.setState({ clickActive: false })
+            const markedImagesIDArray = [] 
+            markedImagesIDArray.push(parseInt(id))
+            for(const image of nearestNeighboursArray) {
+                let id = parseInt(image.id)
+                markedImagesIDArray.push(id)
+            }
+            this.setState({ markedImagesIDs: markedImagesIDArray })
+
+            if (this.state.markActive === false) {
+                // hide all images
+                d3.selectAll('image')
+                .classed('hide_on', true)
+                .classed('hide_off', false)
+                
+    
+                /* mark clicked Image */
+                d3.select('#image_' + image.id)
+                .classed('highlight', true)
+                .classed('hide_on', false)
+                .classed('hide_off', false)
+                .classed('highlight_neighbour', false)
+                .classed('highlight_uploaded', false) 
+                
+                
+    
+                /* mark next neighbours */
+                for ( let neighbour of nearestNeighboursArray) {
+                    d3.select('#image_' + neighbour.id)
+                    .classed('highlight', false)
+                    .classed('hide_on', false)
+                    .classed('hide_off', false)
+                    .classed('highlight_neighbour', true)
+                }
+                /* set State */
+                this.setState({ markActive: true })
+                this.setState({ openInfoView: true })
+                
+    
+            } else {
+                
+                canvas.selectAll('image')
+                .classed('hide', false)
+                .classed('highlight', false)
+                .classed('highlight_neighbour', false)
+                .classed('hide_off', true)
+                .classed('hide_on', false)
+                this.setState({ markActive: false })
+            }
         }
+        else {
+            const ids = this.state.markedImagesIDs
+            if(ids.includes(id)) {
+                this.handleShow(image)
+            }
+            else {
+                console.log('This Picture is not marked. Please try again!')
+                /* this.removeMark() */
+            }
+        }        
     }
     
 
@@ -421,16 +485,14 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
                     .attr('height', image => image.height)
-                    .classed('hide', false)
+                    .attr('uploaded', image => image.uploaded)
+                    .classed('hide_on', false)
+                    .classed('hide_off', true)
                     .classed('highlight', false)
                     .classed('highlight_neighbour', false)
                     /* mark next neighbours */
-                    .on("click", function(click,image) {
-                        this.markImage(click, image, svgCanvas, false);
-                    }.bind(this))
-                    /* open information-view */
-                    .on("dblclick", function(e) {
-                        this.handleShow(e);
+                    .on("click", function(click, image) {
+                        this.markImage(click, image, svgCanvas);
                     }.bind(this))
                     
                     scatter.call(zoom)
@@ -481,16 +543,15 @@ class D3Map extends Component {
                         .attr('y', function(image) {return state.newY(image.y)})
                         .attr('width', 12 * state.imgScale)
                         .attr('height', 16 * state.imgScale)
-                        .classed('hide', false)
+                        .attr('uploaded', image => image.uploaded)
+                        .classed('hide_on', false)
+                        .classed('hide_off', true)
                         .classed('highlight', false)
                         .classed('highlight_neighbour', false)
+                        .classed('highlight_uploaded', true) 
                         /* mark next neighbours */
                         .on("click", function(click,image) {
-                            markImage(click, image, scatter, true);
-                        })
-                        /* Funktion zum öffnen der Informationsansicht */
-                        .on("dblclick", function(e) {
-                            handleShow(e);
+                            markImage(click, image, scatter);
                         }) 
                 } 
 
