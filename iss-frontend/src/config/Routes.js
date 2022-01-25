@@ -9,3 +9,4 @@ export const FETCH_NEAREST_NEIGHBOURS = process.env.REACT_APP_BACKEND_SERVER  + 
 export const AUTHENTICATE = process.env.REACT_APP_BACKEND_SERVER  + 'authenticate/';
 export const FETCH_ALL_NEAREST_NEIGHBOURS = process.env.REACT_APP_BACKEND_SERVER + 'faiss/getNN/multiple/';
 export const FETCH_ALL_IMAGES_IDS = process.env.REACT_APP_BACKEND_SERVER + '/images/ids'
+export const FETCH_IMAGE_SIZE = process.env.REACT_APP_BACKEND_SERVER + "images/size"
