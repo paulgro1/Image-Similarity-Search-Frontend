@@ -42,6 +42,14 @@ class CropImage extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    // change to componentDidUpdate later!
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.files[0] !== this.state.imagetocrop && nextProps.files[0] !== undefined) {
+            this.setState({imagetocrop: nextProps.files[0]})
+            this.setState({url: URL.createObjectURL(nextProps.files[0]), pending: false })
+        }
+    }
+
     componentDidMount(){
         axios({
             method: "GET",
@@ -57,7 +65,8 @@ class CropImage extends Component {
                 this.setState({cropsize: cropsize, aspect: aspect})
             }
         })
-        let file = this.state.imagetocrop
+        let file = this.props.files[0]
+        this.setState({imagetocrop: file})
         this.setState({url: URL.createObjectURL(file), pending: false })
     }          
 
@@ -114,14 +123,14 @@ class CropImage extends Component {
                     cropsize.height
                 );
         
-                const croppedUrl =  canvas.toDataURL(this.state.imagetocrop.type);
+                const croppedUrl =  canvas.toDataURL(this.props.files[0].type);
                 
                 fetch(croppedUrl)
                     .then(response => {
                         response.blob()
                             .then(blob => {
                                 
-                                const newFile = new File([blob], this.state.imagetocrop.name, {type: blob.type});
+                                const newFile = new File([blob], this.props.files[0].name, {type: blob.type});
                                 sendFilesToStoreAction([newFile], "single")
                                 console.log("Cropped File zum Hochladen:", newFile)
               
@@ -129,6 +138,7 @@ class CropImage extends Component {
                                 formData.append(`image[${newFile}]`, newFile);
                                 formData.append("k", this.state.sliderValue)
                                 imageUploadAction(formData);
+                                this.setState({imagetocrop: undefined})
                             })
                     })
             })
@@ -151,6 +161,8 @@ class CropImage extends Component {
         if(error === undefined){
             error = false;
         }
+
+        var newURL
 
         return (
           

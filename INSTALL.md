@@ -19,6 +19,8 @@ In diesem Ordner muss die Datei .env mit folgendem Inhalt erstellt werden.
 REACT_APP_BACKEND_HOST=localhost
 REACT_APP_BACKEND_PORT=8080
 REACT_APP_BACKEND_SERVER=http://${REACT_APP_BACKEND_HOST}:${REACT_APP_BACKEND_PORT}/
+
+REACT_APP_SLIDER_VALUE_NN=30
 ```
 
 Wichtig: Jede neue Umgebungsvariable in .env muss mit "REACT_APP_" beginnen.

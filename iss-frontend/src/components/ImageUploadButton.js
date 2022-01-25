@@ -21,6 +21,7 @@ class ImageUploadButton extends Component {
         super(props)
         this.state = {
             files: undefined,
+            sliderValue: process.env.REACT_APP_SLIDER_VALUE_NN
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -28,12 +29,12 @@ class ImageUploadButton extends Component {
         this.handleSelect = this.handleSelect.bind(this);
     }
 
-    /*  // change to componentDidUpdate later!
+     // change to componentDidUpdate later!
     componentWillReceiveProps(nextProps) {
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
         }
-    } */
+    }
 
 
 
@@ -55,10 +56,12 @@ class ImageUploadButton extends Component {
         e.preventDefault();
         const files = this.state.files;
         if (files.length === 1){
+            console.log(files.length)
             const {showImageCropDialogAction} = this.props;
             showImageCropDialogAction();
         }
         else {
+            console.log(files.length)
             const {imageUploadAction} = this.props;
             console.log("handleSubmit images from form: ");
             console.log(this.state.files)
@@ -71,6 +74,8 @@ class ImageUploadButton extends Component {
             }
             
             formData.append("k", this.state.sliderValue)
+            console.log(this.state.sliderValue)
+            console.log(formData)
             imageUploadAction(formData);
 
             //Bilder aus state löschen
@@ -108,7 +113,7 @@ class ImageUploadButton extends Component {
 
 
         var crop = this.state.files && this.state.files.length === 1;
-        
+       
         
 
         return (
