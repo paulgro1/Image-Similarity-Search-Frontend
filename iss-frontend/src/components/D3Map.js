@@ -138,7 +138,7 @@ class D3Map extends Component {
             if(this.state.uploadedImages.ids.length === 1){
                 var newId = 0
             } else {
-               var newId = id 
+                var newId = id 
             }
             var nN = {
                 ids: this.state.uploadedImages.ids[newId],
@@ -150,12 +150,12 @@ class D3Map extends Component {
                 clusterCenters: this.state.uploadedImages.nnClusterCenters[newId],
             }
             var nearestNeighboursArray = []
-            console.log(nN.ids)
-            await fetchImagesActions.fetchMultipleThumbnails(this.state.sessionToken, nN.ids, function(imageUrls){
+            console.log(nN)
+            await fetchImagesActions.fetchMultipleThumbnails(this.state.sessionToken, nN.nnIds, function(imageUrls){
                 Promise.all(imageUrls).then(function(nearestNeighbourURLs){
                 for (let i=0; i < this.state.sliderValue; i++){
                     var nearestNeighbour = {
-                        id: nN.ids[i],
+                        id: nN.nnIds[i],
                         filename: nN.nnFilenames[id],
                         distances: nN.distances[i],
                         similarities: nN.similarities[i],

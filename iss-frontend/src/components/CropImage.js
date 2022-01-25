@@ -162,8 +162,6 @@ class CropImage extends Component {
             error = false;
         }
 
-        var newURL
-
         return (
           
              <Modal show={showCropDialog} onHide={this.handleCloseCrop} >
