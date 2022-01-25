@@ -41,66 +41,6 @@ export function hideInformationDialogAction() {
     }
 }
 
-/**
- * This function calls the fetchImages() function and 
- * dispatches the actions.
- */
-export function getImagesFromDb() {
-
-    return dispatch => {
-        dispatch(fetchImagesPendingAction());
-        fetchOneThumbnailMeta()
-            .then(
-                function (images) {
-                    const action = fetchImagesSuccessAction(images);
-                    dispatch(action);
-                },
-                error => {
-                    dispatch(fetchImagesErrorAction(error));
-                }
-            )
-            .catch(error => {
-                dispatch(fetchImagesErrorAction(error));
-            })
-    }
-}
-
-/**
- * This function fetches the meta-data for one thumbnail of the images for D3 map.
- * @returns array of images recieved from the backend 
- */
-export function fetchOneThumbnailMeta(sessionToken) {
-
-    var restUrl = 'http://localhost:8080/images/3/metadata';
-    console.log("Fetch image metadata from: " + restUrl);
-
-    return fetch(restUrl)
-        .then(response => response.json())
-        .then(handleOneMetaResponse)
-        .then(imageMeta => {
-            return imageMeta;
-        });
-}
-
-/**
- * This funtion handels the response from the backend.
- * @param response - response recieved from the backend
- * @returns object with meta-data for one image
- */
-function handleOneMetaResponse(response) {
-    console.log(response)
-    let image = response
-
-    image = {
-        id: image.id,
-        filename: image.filename,
-        x: image.position[0],
-        y: image.position[1],
-    }
-    return image;
-}
-
-
 export function fetchAllThumbnailMeta() {
     console.log("Fetch image metadata from: " + route.FETCH_ALL_THUMBNAIL_META);
 
@@ -137,38 +77,6 @@ export function fetchAllThumbnailMeta() {
     })
 }
 
-/*
- * This function fetches on image.
- * @returns one image recieved from the backend 
- */
-export function fetchOneImage(id, sessionToken) {
-
-    var restUrl = route.FETCH_ONE_IMAGE + id;
-    console.log("Fetch Images from: " + restUrl);
-
-    return fetch(restUrl, { 
-        method: 'GET',
-    headers: {
-        'Api-Session-Token': sessionToken
-    }})
-        .then(handleImageResponse)
-        .then(image => {
-            return image;
-        });
-}
-
-
-function handleImageResponse(response) {
-    console.log(response)
-    return response
-        .json().then(img => {
-
-            var images = new Buffer.from(img).toString("base64")
-            console.log(images)
-            return images;
-        });
-}
-
 export async function fetchAllThumbnails(sessionToken, callback) {
     var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch all thumbnails from: " + restUrl);
@@ -203,97 +111,77 @@ export async function fetchAllThumbnails(sessionToken, callback) {
 export function fetchNearestNeighbours(id, k, sessionToken) {
     console.log("Fetch " + k +" NN for image: " + id)
     
-    return fetch(route.FETCH_NEAREST_NEIGHBOURS + id, {
+    return axios({
             method: 'POST',
+            url: route.FETCH_NEAREST_NEIGHBOURS + id,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Api-Session-Token': sessionToken
-            },
-            body: JSON.stringify({
+            }, 
+            data: JSON.stringify({
                 k: parseInt(k)
             })
         })
-        .then(response => response.json())
-        .then(handleMetaNearestNeighboursResponse)
-        .then(nearestNeighbours => {
+        .then(response => {
+            response = response.data
+            var nearestNeighbours = {
+                distances: response.distances,
+                ids: response.ids,
+                clusterCenters: response.neighbour_cluster_centers,
+                similarities: response.similarities,
+                filenames: response.neighbour_filenames
+            }
+            console.log(nearestNeighbours)
             return nearestNeighbours;
-        });
+        })
 }
-
-function handleMetaNearestNeighboursResponse(response) {
-    var nearestNeighbours = response
-    console.log('Response from fetch NN')
-    console.log(response)
-    nearestNeighbours = {
-        distances: response.distances,
-        ids: response.ids,
-        clusterCenters: response.neighbour_cluster_centers,
-        similarities: response.similarities,
-        filenames: response.neighbour_filenames
-    }
-    return nearestNeighbours;
-}
-
 
 export function fetchAllNearestNeighbours(k) {
     console.log("Fetch " + k +" NN of all images")
-    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+    return axios({
             method: 'GET',
+            url: route.FETCH_ALL_NEAREST_NEIGHBOURS + k, 
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(handleMetaAllNearestNeighboursResponse)
-        .then(nearestNeighbours => {
-            return nearestNeighbours;
-        });
-}
-
-function handleMetaAllNearestNeighboursResponse(response) {
-    console.log(response)
-    return response;
+        .then(response => {
+            return response.data;
+        })
 }
 
 export function fetchNearestNeighboursWithIds(k, ids) {
     console.log("Fetch " + k +" NN of all images")
-    return fetch(route.FETCH_ALL_NEAREST_NEIGHBOURS + k, {
+    return axios({
             method: 'POST',
+            url: route.FETCH_ALL_NEAREST_NEIGHBOURS + k,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
+            data: JSON.stringify({
                 picture_ids: ids
             })
         })
-        .then(response => response.json())
-        .then(handleMetaAllNearestNeighboursResponse)
-        .then(nearestNeighbours => {
-            return nearestNeighbours;
-        });
+        .then(response => {
+            return response.data;
+        })
 }
 
 export function fetchAllImagesIds(){
     console.log('Fetch Ids of all images.')
-    return fetch(route.FETCH_ALL_IMAGES_IDS, {
+    return axios({
         method: 'GET',
+        url: route.FETCH_ALL_IMAGES_IDS, 
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(handleAllImagesIdsResponse)
-    .then(ids => {
-        return ids;
-    });
-}
-
-function handleAllImagesIdsResponse(response){
-    console.log(response)
-    return response;
+    .then(response => {
+        return response.data;
+    })
 }
 

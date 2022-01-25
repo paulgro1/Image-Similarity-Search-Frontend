@@ -130,21 +130,23 @@ class D3Map extends Component {
             console.log("Id of uploaded image: " + id)
             console.log(this.state.uploadedImages)
             var nN = {
-                distances: this.state.uploadedImages.distances[id],
                 ids: this.state.uploadedImages.ids[id],
+                filenames: this.state.uploadedImages.filenames[id],
+                nnIds: this.state.uploadedImages.nnIds[id],
+                nnFilenames: this.state.uploadedImages.nnFilenames[id],
                 similarities: this.state.uploadedImages.similarities[id],
-                filenames: this.state.uploadedImages.nnFilenames[id],
+                distances: this.state.uploadedImages.distances[id],
                 clusterCenters: this.state.uploadedImages.nnClusterCenters[id],
             }
 
             var nearestNeighboursArray = [];
             for (let i=0; i < this.state.sliderValue; i++){
                 var nearestNeighbour = {
-                    id: nN.ids[i],
-                    filename: nN.filenames[id],
+                    id: nN.nnIds[i],
+                    filename: nN.nnFilenames[id],
                     distances: nN.distances[i],
                     similarities: nN.similarities[i],
-                    url: 'http://localhost:8080/images/thumbnails/' + nN.ids[i],
+                    url: 'http://localhost:8080/images/thumbnails/' + nN.nnIds[i],
                     clusterCenter: nN.clusterCenters[i],
                 }
                 nearestNeighboursArray.push(nearestNeighbour)
@@ -233,8 +235,8 @@ class D3Map extends Component {
         var newImages = []
         for(let i = 0; i < files.length; i++){
             let image = {
-                id: this.state.IMAGES.length + i,
-                filename: "uploaded_img",
+                id: uploadedImages.ids[i],
+                filename: uploadedImages.filenames[i],
                 url: this.state.uploadedImagesUrls[i],
                 x: uploadedImages.coordinates[i][0],
                 y: uploadedImages.coordinates[i][1],
@@ -625,7 +627,6 @@ class D3Map extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showInformationDialogAction: fetchImagesActions.showInformationDialogAction,
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
-    getImagesFromDbAction: fetchImagesActions.getImagesFromDb,
     setSessionToken: authenticationActions.setSessionToken,
 },dispatch)
 
