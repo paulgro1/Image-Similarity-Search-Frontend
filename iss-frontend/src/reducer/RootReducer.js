@@ -76,7 +76,7 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 images: action.images,
-                pending: true,
+                pending: false,
                 error: null
             }
         case fetchImagesActions.FETCH_IMAGES_ERROR:

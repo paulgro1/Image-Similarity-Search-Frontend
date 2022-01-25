@@ -1,0 +1,54 @@
+.cluster0 {
+    outline: 0.5vh solid red;
+}
+.cluster1 {
+    outline: 0.5vh solid blueviolet;
+}
+
+.cluster2 {
+    outline: 0.5vh solid royalblue;
+}
+
+.cluster3 {
+    outline: 0.5vh solid turquoise;
+}
+
+.cluster4 {
+    outline: 0.5vh solid yellowgreen;
+}
+
+.cluster5 {
+    outline: 0.5vh solid orange;
+}
+
+.cluster6 {
+    outline: 0.5vh solid rosybrown;
+}
+
+.cluster7 {
+    outline: 0.5vh solid teal;
+}
+
+.cluster8 {
+    outline: 0.5vh solid indianred;
+}
+
+.cluster9 {
+    outline: 0.5vh solid orchid;
+}
+
+/* .cluster10 {
+    outline: 0.5vh solid red;
+}
+
+.cluster11 {
+    outline: 0.5vh solid red;
+}
+
+.cluster12 {
+    outline: 0.5vh solid red;
+}
+
+.cluster13 {
+    outline: 0.5vh solid red;
+} */

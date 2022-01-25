@@ -44,7 +44,8 @@ class D3Map extends Component {
             newY: undefined,
             imgScale: 1,
             clickActive: false,
-            sessionToken: undefined
+            sessionToken: undefined,
+            clusterCenterValue: undefined,
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -92,18 +93,32 @@ class D3Map extends Component {
         fetchImagesActions.fetchAllThumbnails(this.state.sessionToken, function(imageUrls) {
             Promise.all(imageUrls).then(function(imageUrls){
                 var IMAGES = []
+                var clusterCenterValues = []
+                console.log(imagesMeta)
                 for(var i = 0; i < imagesMeta.length; i++) {
+                    var clusterCenter = imagesMeta[i].clusterCenter
                     let image = {
                         id: imagesMeta[i].id,
                         filename: imagesMeta[i].filename,
                         url: imageUrls[i],
                         x: imagesMeta[i].x,
                         y: imagesMeta[i].y,
+                        clusterCenter: imagesMeta[i].clusterCenter,
+                        thumbnailSize: imagesMeta[i].thumbnailSize,
                         width: 12,
                         height: 16
                     }
                     IMAGES.push(image)
+                    if (clusterCenterValues.indexOf(clusterCenter) === -1) {
+                        clusterCenterValues.push(clusterCenter)
+                    }          
+        
+
+        
                 }
+                console.log(clusterCenterValues)
+                this.setState({cluserCenterValue: clusterCenterValues.length})
+        
                 this.setState({IMAGES: IMAGES})
                 this.drawMap(IMAGES);
             }.bind(this))
@@ -119,6 +134,10 @@ class D3Map extends Component {
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
         }
+        if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
+            this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+        }
+
     }
 
     handleUploadedNearestN(){
@@ -421,6 +440,7 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
                     .attr('height', image => image.height)
+                    .attr('clusterCenter', image => image.clusterCenter)
                     .classed('hide', false)
                     .classed('highlight', false)
                     .classed('highlight_neighbour', false)

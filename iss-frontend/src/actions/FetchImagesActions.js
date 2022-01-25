@@ -101,6 +101,30 @@ function handleOneMetaResponse(response) {
 }
 
 
+
+export const getImagesMetaFromDb = () => {
+
+    return function (dispatch) {
+        dispatch(fetchImagesPendingAction());
+        fetchAllThumbnailMeta()
+            .then(
+                function (imagesMeta) {
+                    const action = fetchImagesSuccessAction(imagesMeta);
+                    console.log('ACTION' + JSON.stringify(action))
+                    dispatch(action);
+                },
+                error => {
+                    dispatch(fetchImagesErrorAction(error));
+                }
+            )
+            .catch(error => {
+                dispatch(fetchImagesErrorAction(error));
+            })
+    }
+}
+
+
+
 export function fetchAllThumbnailMeta() {
     console.log("Fetch image metadata from: " + route.FETCH_ALL_THUMBNAIL_META);
 
@@ -121,6 +145,9 @@ export function fetchAllThumbnailMeta() {
                 filename: oneMeta.filename,
                 x: oneMeta.position[0],
                 y: oneMeta.position[1],
+                thumbnailSize: oneMeta.thumbnail_size,
+                clusterCenter: oneMeta.cluster_center
+
             }
         imagesMetaArray.push(image)
         }

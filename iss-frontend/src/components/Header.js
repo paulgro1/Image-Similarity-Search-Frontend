@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
 import ExportButton from './ExportButton';
+import ClusterButton from './Clusterbutton';
 
 import '../layout/css/HeaderStyle.css'
 
@@ -18,6 +19,7 @@ class Header extends Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
+                            <ClusterButton/>
                             <ImageUploadButton/>
                             <ExportButton/>
                             <SettingsButton/>
