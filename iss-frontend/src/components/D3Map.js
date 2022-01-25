@@ -353,10 +353,8 @@ class D3Map extends Component {
             var svgCanvas = d3.select(this.refs.canvas)
                 .append('svg')
                     .attr('id', 'canvas-svg')
-                    .attr('width', canvasWidth)
-                    .attr('height', canvasHeight)
-                    
-
+                    .attr("viewBox", `0 0 ${canvasWidth} ${canvasHeight}`)
+                    .attr("preserveAspectRatio", "xMinYMin meet")
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     
@@ -458,8 +456,7 @@ class D3Map extends Component {
                     xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
                     yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
                     this.setState({imgScale: k});
-
-
+    
                     // update image position
                     scatter.selectAll("image")
                         .attr('x', function(image) {return newX(image.x)})
