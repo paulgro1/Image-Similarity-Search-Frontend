@@ -116,6 +116,7 @@ class D3Map extends Component {
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
+            console.log(nextProps.uploadedImages)
             await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }
@@ -129,17 +130,23 @@ class D3Map extends Component {
             var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
             console.log("Id of uploaded image: " + id)
             console.log(this.state.uploadedImages)
+            if(this.state.uploadedImages.ids.length === 1){
+                var newId = 0
+            } else {
+               var newId = id 
+            }
             var nN = {
-                ids: this.state.uploadedImages.ids[id],
-                filenames: this.state.uploadedImages.filenames[id],
-                nnIds: this.state.uploadedImages.nnIds[id],
-                nnFilenames: this.state.uploadedImages.nnFilenames[id],
-                similarities: this.state.uploadedImages.similarities[id],
-                distances: this.state.uploadedImages.distances[id],
-                clusterCenters: this.state.uploadedImages.nnClusterCenters[id],
+                ids: this.state.uploadedImages.ids[newId],
+                filenames: this.state.uploadedImages.filenames[newId],
+                nnIds: this.state.uploadedImages.nnIds[newId],
+                nnFilenames: this.state.uploadedImages.nnFilenames[newId],
+                similarities: this.state.uploadedImages.similarities[newId],
+                distances: this.state.uploadedImages.distances[newId],
+                clusterCenters: this.state.uploadedImages.nnClusterCenters[newId],
             }
 
             var nearestNeighboursArray = [];
+            console.log(nN)
             for (let i=0; i < this.state.sliderValue; i++){
                 var nearestNeighbour = {
                     id: nN.nnIds[i],

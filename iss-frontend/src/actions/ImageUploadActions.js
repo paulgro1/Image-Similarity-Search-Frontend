@@ -123,7 +123,8 @@ async function upload(formData) {
                 clusterCenters: responseData.cluster_centers,
                 nnClusterCenters: responseData.neighbour_cluster_centers,
                 nnFilenames: responseData.neighbour_filenames,
-                nnIds: responseData.ids
+                nnIds: responseData.ids,
+                uploaded: true,
             }
 
 
