@@ -577,7 +577,6 @@ class D3Map extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showInformationDialogAction: fetchImagesActions.showInformationDialogAction,
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
-    getImagesFromDbAction: fetchImagesActions.getImagesFromDb,
     setSessionToken: authenticationActions.setSessionToken,
 },dispatch)
 
