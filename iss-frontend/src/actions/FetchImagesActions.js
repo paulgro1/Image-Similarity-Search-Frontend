@@ -110,7 +110,6 @@ export const getImagesMetaFromDb = () => {
             .then(
                 function (imagesMeta) {
                     const action = fetchImagesSuccessAction(imagesMeta);
-                    console.log('ACTION' + JSON.stringify(action))
                     dispatch(action);
                 },
                 error => {

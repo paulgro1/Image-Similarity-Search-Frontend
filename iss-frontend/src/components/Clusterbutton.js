@@ -1,6 +1,6 @@
 
 import React, { Component } from "react";
-import ToggleButton from 'react-bootstrap/Button';
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
@@ -17,9 +17,9 @@ class ClusterButton extends Component  {
     constructor(props){
         super(props)
         this.state = {
-            clusterCenterValues: 10,
+            clusterCenterValue: 5,
             clusterActive: false,
-            checked: undefined,
+            checked: false,
         };
         this.showCluster = this.showCluster.bind(this)
         this.setChecked = this.setChecked.bind(this)
@@ -30,17 +30,32 @@ class ClusterButton extends Component  {
         getImagesMetaFromDbAction()
     }
 
+    componentDidUpdate(nextProps) {
+        console.log(nextProps)
+        if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
+            this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+            const {getImagesMetaFromDbAction} = this.props
+            getImagesMetaFromDbAction()
+        }
+    }
+
     showCluster() {
         this.props.images.forEach(image => {
             if(!this.state.clusterActive) {
                 const element = document.getElementById("image_" + image.id)
                 element.classList.add('cluster' + image.clusterCenter)
-                this.setState({clusterActive: true})
+                this.setState({
+                    clusterActive: true,
+                    checked: true
+                })
             }
             else {
                 const element = document.getElementById("image_" + image.id)
                 element.classList.remove('cluster' + image.clusterCenter)
-                this.setState({clusterActive: false})
+                this.setState({
+                    clusterActive: false,
+                    checked: false
+                })
             }            
         });
 
@@ -48,21 +63,13 @@ class ClusterButton extends Component  {
     }
 
     setChecked(value) {
+        console.log(value)
         this.setState({checked: value})
     }
     render() {
         return (
             <div>
-                <ToggleButton
-                    id="toggle-check" 
-                    type="checkbox" 
-                    variant="secondary" 
-                    checked={this.state.checked} 
-                    value="1"
-                    onClick={this.showCluster} 
-                    onChange={(e) => this.setChecked(e.currentTarget.checked)}>
-          Cluster
-        </ToggleButton>
+                <BootstrapSwitchButton width={130} style="border" onlabel="Cluster ON" offlabel="Cluster OFF" class="btn btn-outline-primary-xs" checked={this.state.checked} onChange={this.showCluster}/>
             </div>
         )
     }

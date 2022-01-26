@@ -1,6 +1,8 @@
+import * as route from '../config/Routes';
 export const SHOW_SETTINGS_DIALOG = 'SHOW_SETTINGS_DIALOG';
 export const HIDE_SETTINGS_DIALOG = 'HIDE_SETTINGS_DIALOG';
 export const SET_SLIDER_VALUE = 'SET_SLIDER_VALUE';
+export const SET_CLUSTER_VALUE = 'SET_CLUSTERCENTER_VALUE'
 
 export function getShowSettingsDialogAction(){
     return {
@@ -21,6 +23,14 @@ export function setSliderValueAction(value){
     }
 }
 
+export function setClusterCenterValueAction(value){
+    return {
+        type: SET_CLUSTER_VALUE,
+        value: value
+    }
+}
+
+
 
 /**
  * @param value - slider value
@@ -28,7 +38,38 @@ export function setSliderValueAction(value){
 */
 export function setSliderValue(value) {
     return dispatch => {
+        console.log('NeighbourSlider')
         console.log(value)
         dispatch(setSliderValueAction(value));
     }
 }
+
+export const setClusterCenterValue = (value, sessionToken) => {
+    return function (dispatch) {
+        console.log('ClusterSlider')
+        console.log(value)
+        console.log('sessionToken')
+        console.log(sessionToken)
+        fetchSetClusterValue(value, sessionToken)
+        dispatch(setClusterCenterValueAction(value));
+    }
+}
+
+export function fetchSetClusterValue(value, sessionToken) {
+    console.log("Set new ClusterCenterValue: " + value)
+
+    return fetch(route.CHANGE_CLUSTER_VALUE, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Api-Session-Token': sessionToken
+        },
+        body: JSON.stringify({
+            nr_of_centroids: value
+        })
+    })
+    .then(response => console.log(response))
+
+}
+

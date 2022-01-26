@@ -18,11 +18,13 @@ class SettingsButton extends Component {
     constructor(props){
         super(props)
         this.state = {
-            sliderValue: 5
+            sliderValue: 5,
+            clusterCenterValue: 5,
         };
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.setValue = this.setValue.bind(this);
+        this.setNeighboursValue = this.setNeighboursValue.bind(this);
+        this.setClustersValue = this.setClustersValue.bind(this)
         this.handleSave = this.handleSave.bind(this);
     }
 
@@ -37,14 +39,21 @@ class SettingsButton extends Component {
         hideSettingsDialogAction();
     } 
 
-    setValue(value){
+    setNeighboursValue(value){
         this.setState({sliderValue: value});
+    }
+
+    setClustersValue(value){
+        this.setState({clusterCenterValue: value});
     }
 
     handleSave(e){
         e.preventDefault();
         const {setValueAction} = this.props;
         setValueAction(this.state.sliderValue);
+        const {sessionToken} = this.props
+        const {setClusterValueAction} = this.props
+        setClusterValueAction(this.state.clusterCenterValue, sessionToken)
         this.handleClose();
     }
 
@@ -69,9 +78,17 @@ class SettingsButton extends Component {
                         Number of nearest neighbours: <br/>
                         <RangeSlider
                             value={this.state.sliderValue}
-                            onChange={changeEvent => this.setValue(changeEvent.target.value)}
+                            onChange={changeEvent => this.setNeighboursValue(changeEvent.target.value)}
                             min={0}
                             max={30}
+                        />
+                        <br/>
+                        Number of Clustercenters: <br/>
+                        <RangeSlider
+                            value={this.state.clusterCenterValue}
+                            onChange={changeEvent => this.setClustersValue(changeEvent.target.value)}
+                            min={0}
+                            max={12}
                         />
                         <br/>
                         <Button onClick={this.handleSave}>Save Changes</Button>
@@ -87,8 +104,11 @@ class SettingsButton extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showSettingsDialogAction: settingsActions.getShowSettingsDialogAction,
     hideSettingsDialogAction: settingsActions.getHideSettingsDialogAction,
-    setValueAction: settingsActions.setSliderValue
+    setValueAction: settingsActions.setSliderValue,
+    setClusterValueAction: settingsActions.setClusterCenterValue
+
 },dispatch)
 
 const connectedSettingsButton = connect(mapStateToProps, mapDispatchToProps)(SettingsButton);
 export default connectedSettingsButton;
+

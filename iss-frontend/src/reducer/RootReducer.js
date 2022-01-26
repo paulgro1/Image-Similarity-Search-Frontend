@@ -115,6 +115,13 @@ function rootReducer(state=initialState, action) {
                 ...state,
                 sliderValue: action.value
             }
+        case settingsActions.SET_CLUSTER_VALUE:
+            console.log('SET_CLUSTER_VALUE')
+            console.log(action)
+            return {
+                ...state,
+                clusterCenterValue: action.value
+            }
         case authenticationActions.SET_SESSION_TOKEN:
             return{
                 ...state,
