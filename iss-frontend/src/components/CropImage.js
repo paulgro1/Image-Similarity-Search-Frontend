@@ -137,6 +137,7 @@ class CropImage extends Component {
                                 const formData = new FormData();
                                 formData.append(`image[${newFile}]`, newFile);
                                 formData.append("k", this.state.sliderValue)
+                                console.log(formData)
                                 imageUploadAction(formData);
                                 this.setState({imagetocrop: undefined})
                             })
