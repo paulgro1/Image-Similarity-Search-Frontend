@@ -3,14 +3,11 @@ import axios from 'axios';
 var request = require('request');
 var JSZip = require("jszip");
     
-
 export const FETCH_IMAGES_PENDING = 'FETCH_IMAGES_PENDING';
 export const FETCH_IMAGES_SUCCESS = 'FETCH_IMAGES_SUCCESS';
 export const FETCH_IMAGES_ERROR = 'FETCH_IMAGES_ERROR';
-
 export const SHOW_INFORMATION_DIALOG = "SHOW_INFORMATION_DIALOG";
 export const HIDE_INFORMATION_DIALOG = "HIDE_INFORMATION_DIALOG";
-
 
 export function fetchImagesPendingAction() {
     return {
@@ -53,7 +50,6 @@ export function fetchAllThumbnailMeta() {
     })
     .then(response => {
         if(response.status === 200) {
-            console.log(response)
             let data = []
             data = response.data
 
@@ -187,7 +183,6 @@ export function fetchNearestNeighbours(id, k, sessionToken) {
                 similarities: response.similarities,
                 filenames: response.neighbour_filenames
             }
-            console.log(nearestNeighbours)
             return nearestNeighbours;
         })
 }

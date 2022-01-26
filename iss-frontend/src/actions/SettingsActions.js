@@ -28,7 +28,7 @@ export function setSliderValueAction(value){
 */
 export function setSliderValue(value) {
     return dispatch => {
-        console.log(value)
+        console.log("Setting SliderValue: " + value)
         dispatch(setSliderValueAction(value));
     }
 }

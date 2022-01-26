@@ -23,7 +23,7 @@ class CropImage extends Component {
         super(props)
         this.state = {
             files: undefined,
-            sliderValue: 5,
+            sliderValue: process.env.REACT_APP_SLIDER_VALUE_NN,
             crop: { x: 0, y: 0 },
             cropsize: undefined,
             zoom: 1,

@@ -36,6 +36,8 @@ class D3Map extends Component {
             nearestNeighbours: undefined,
             allNearestNeighbours: undefined,
             uploadedImages: undefined,
+            uploadedImagesCount: 0,
+            lastUploadedImagesCount: 0,
             uploadedImagesUrls: [],
             IMAGES: undefined,
             xAxis: undefined,
@@ -58,29 +60,25 @@ class D3Map extends Component {
         this.drawMap = this.drawMap.bind(this);
         this.handleUploadedNearestN = this.handleUploadedNearestN.bind(this);
         this.markImage = this.markImage.bind(this);
-        this.markImageD3 = this.markImageD3.bind(this);
         this.handleExcelExport = this.handleExcelExport.bind(this);
     }
 
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k, this.state.sessionToken)
-        fetchImagesActions.fetchMultipleThumbnails(this.state.sessionToken, nearestNeighbours.ids[0], function(imageUrls){
-            Promise.all(imageUrls).then(function(nearestNeighbourURLs){
-            var nearestNeighboursArray = []
-            for (let i=0; i < k; i++){
-                var nearestNeighbour = {
-                    id: nearestNeighbours.ids[0][i],
-                    filename: nearestNeighbours.filenames[0][i],
-                    clusterCenter: nearestNeighbours.clusterCenters[0][i],
-                    distances: nearestNeighbours.distances[0][i],
-                    similarities: nearestNeighbours.similarities[0][i],
-                    url: nearestNeighbourURLs[i]
-                }
-                nearestNeighboursArray.push(nearestNeighbour)
+        var nearestNeighboursArray = []
+        for (let i=0; i < k; i++){
+            var nearestNeighbour = {
+                id: nearestNeighbours.ids[0][i],
+                filename: nearestNeighbours.filenames[0][i],
+                clusterCenter: nearestNeighbours.clusterCenters[0][i],
+                distances: nearestNeighbours.distances[0][i],
+                similarities: nearestNeighbours.similarities[0][i],
+                url: 'http://localhost:8080/images/thumbnails/' + nearestNeighbours.ids[0][i]
+            }
+            nearestNeighboursArray.push(nearestNeighbour)
         }
         this.setState({nearestNeighbours: nearestNeighboursArray})
-        }.bind(this))
-    }.bind(this))
+        return nearestNeighboursArray
     }
 
     async componentDidMount() {
@@ -121,7 +119,6 @@ class D3Map extends Component {
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            console.log(nextProps.uploadedImages)
             await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }
@@ -130,15 +127,15 @@ class D3Map extends Component {
         }
     }
 
-    async handleUploadedNearestN(callback){
+    async handleUploadedNearestN(){
             // handle uploaded image case
             var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
+            var newId
             console.log("Id of uploaded image: " + id)
-            console.log(this.state.uploadedImages)
             if(this.state.uploadedImages.ids.length === 1){
-                var newId = 0
+                newId = 0
             } else {
-                var newId = id 
+                newId = id - this.state.uploadedImagesCount
             }
             var nN = {
                 ids: this.state.uploadedImages.ids[newId],
@@ -150,30 +147,24 @@ class D3Map extends Component {
                 clusterCenters: this.state.uploadedImages.nnClusterCenters[newId],
             }
             var nearestNeighboursArray = []
-            console.log(nN)
-            await fetchImagesActions.fetchMultipleThumbnails(this.state.sessionToken, nN.nnIds, function(imageUrls){
-                Promise.all(imageUrls).then(function(nearestNeighbourURLs){
                 for (let i=0; i < this.state.sliderValue; i++){
                     var nearestNeighbour = {
                         id: nN.nnIds[i],
-                        filename: nN.nnFilenames[id],
+                        filename: nN.nnFilenames[i],
                         distances: nN.distances[i],
                         similarities: nN.similarities[i],
-                        url: nearestNeighbourURLs[i],
+                        url: 'http://localhost:8080/images/thumbnails/' + nN.nnIds[i],//nearestNeighbourURLs[i],
                         clusterCenter: nN.clusterCenters[i],
                     }
                     nearestNeighboursArray.push(nearestNeighbour)
                 }
                 this.setState({nearestNeighbours: nearestNeighboursArray});
-                return callback(nearestNeighboursArray)
-            }.bind(this))
-        }.bind(this))
+                return nearestNeighboursArray
     }
 
     async handleShow(e){
         const {showInformationDialogAction} = this.props;
-        console.log("In handleShow(): ")
-        console.log(e)
+        console.log("Informationview for image with the id: " + e.id)
         this.setState({selectedImageId: e.id});
         if(parseInt(e.id) >= this.state.IMAGES.length){
             this.setState({selectedImageUrl: e.url})
@@ -217,7 +208,6 @@ class D3Map extends Component {
             dataRow.push((img.similarities * 100).toFixed(2))
             data.push(dataRow)
         }
-        console.log(data)
         this.exportToSpreadsheet(data, fileName)
     } 
 
@@ -241,7 +231,6 @@ class D3Map extends Component {
     async handleUploadedImages(){
         var files = this.props.files;
         var uploadedImages = this.state.uploadedImages
-
         if(uploadedImages === undefined){
             return;
         }
@@ -249,6 +238,8 @@ class D3Map extends Component {
         if(files){
             this.storeImageUrls(files);
         }
+        this.setState({uploadedImagesCount: this.state.uploadedImagesCount + this.state.lastUploadedImagesCount})
+        this.setState({lastUploadedImagesCount: this.state.uploadedImages.ids.length})
 
         var newImages = []
         for(let i = 0; i < files.length; i++){
@@ -272,7 +263,6 @@ class D3Map extends Component {
         for(var i = 0; i < filesLength; i++) {
             imageUrls.push(URL.createObjectURL(files[i])) 
         }
-        console.log(imageUrls)
         this.setState({ uploadedImagesUrls: imageUrls });
     } 
 
@@ -305,7 +295,6 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, canvas) {
-        console.log(this.state.sessionToken)
         this.setState({selectedImageId: image.id});
 
         if(this.state.markActive === undefined){
@@ -315,26 +304,24 @@ class D3Map extends Component {
         if(this.state.sliderValue !== undefined){
             this.setState({sliderValue: this.state.sliderValue});
         }
-        console.log(image.uploaded);
+
+        var nearestNeighboursArray
         if(image.uploaded){
-            this.handleUploadedNearestN(function(nearestNeighboursArray){ 
-                    this.markImageD3(nearestNeighboursArray, image, id, canvas)
-            }.bind(this))
+            this.handleUploadedNearestN();
+            nearestNeighboursArray  = this.state.nearestNeighbours
         }
         else{
             var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue, this.state.sessionToken)
-            var nearestNeighboursArray = []
+            nearestNeighboursArray = []
             for (let i=0; i < this.state.sliderValue; i++){
                 let nearestNeighbour = {
                     id: nearestNeighbours.ids[0][i],
                 }
                 nearestNeighboursArray.push(nearestNeighbour)
             }
-            this.markImageD3(nearestNeighboursArray, image, id, canvas)
         }
-    }
 
-    async markImageD3(nearestNeighboursArray, image, id, canvas){
+ 
         if(this.state.openInfoView === false) {
 
             if(image.uploaded){
@@ -348,7 +335,7 @@ class D3Map extends Component {
                 markedImagesIDArray.push(id)
             }
             this.setState({ markedImagesIDs: markedImagesIDArray })
-            console.log(this.state.markActive)
+
             if (this.state.markActive === false) {
                 // hide all images
                 d3.selectAll('image')
@@ -401,6 +388,7 @@ class D3Map extends Component {
             }
         }        
     }
+
     
 
     drawMap(data, newImages) {
