@@ -38,7 +38,7 @@ class SettingsButton extends Component {
     } 
 
     setValue(value){
-        this.setState({sliderValue: value});
+        this.setState({sliderValue: parseInt(value)});
     }
 
     handleSave(e){

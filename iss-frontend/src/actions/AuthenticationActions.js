@@ -2,6 +2,12 @@ import * as route from '../config/Routes';
 
 export const SET_SESSION_TOKEN = "SET_SESSION_TOKEN";
 
+/**
+ * This function accepts a session token and returns an action object.
+ * @param {string} sessionToken 
+ * @returns {object}
+ */
+
 export function setSessionTokenAction(sessionToken){
     return {
         type: SET_SESSION_TOKEN,
@@ -10,8 +16,15 @@ export function setSessionTokenAction(sessionToken){
 }
 
 /**
- * This function fetches the Session Token
- * @returns Token
+ * Callback for returning the session key.
+ * @callback returnKeyCallback
+ * @param {string} key - the session key
+ */
+
+/**
+ * This function fetches the session token.
+ * @param {returnKeyCallback} callback - a callback to run
+ * @returns {function} callback wich returns the key
  */
  export async function getSessionToken(callback) {
     
@@ -34,8 +47,10 @@ export function setSessionTokenAction(sessionToken){
 }
 
 /**
- * @param sessionToken 
- * This function dispatches the setSessionTokenAction.
+ * This function dispatches the setSessionTokenAction with the session token.
+ * @param {string} sessionToken - the session token
+ * @returns {function} dispatch - a function that dispatches the action
+ * 
 */
 export function setSessionToken(sessionToken) {
     return dispatch => {

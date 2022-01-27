@@ -1,6 +1,7 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
+import * as authenticationActions from '../actions/AuthenticationActions';
 
 const initialState = {
     images: [],
@@ -90,39 +91,15 @@ function rootReducer(state=initialState, action) {
                 }
             }
             
-        case fetchImagesActions.FETCH_IMAGES_PENDING:
-            return {
-                ...state,
-                pending: true,
-                error: null
-            }
-        case fetchImagesActions.FETCH_IMAGES_SUCCESS:
-            return {
-                ...state,
-                images: action.images,
-                pending: true,
-                error: null
-            }
-        case fetchImagesActions.FETCH_IMAGES_ERROR:
-            return {
-                ...state,
-                images: undefined,
-                pending: false,
-                error: action.error
-            }
         case fetchImagesActions.SHOW_INFORMATION_DIALOG:
             return {
                 ...state,
                 showInformationDialog: true,
-                pending: false,
-                error: null
             }
         case fetchImagesActions.HIDE_INFORMATION_DIALOG:
             return {
                 ...state,
                 showInformationDialog: false,
-                pending: false,
-                error: null
             }
         case settingsActions.SHOW_SETTINGS_DIALOG:
             return {
@@ -138,6 +115,11 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 sliderValue: action.value
+            }
+        case authenticationActions.SET_SESSION_TOKEN:
+            return {
+                ...state,
+                sessionToken: action.sessionToken
             }
         default:
             return state
