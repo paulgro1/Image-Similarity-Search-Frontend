@@ -1,13 +1,12 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
-import * as authenticationActions from '../actions/AuthenticationActions';
-
 
 const initialState = {
     images: [],
     uploadPending: false,
     showImageUploadDialog: false,
+    showImageCropDialog: false,
     sliderValue: 5
 };
 
@@ -31,12 +30,31 @@ function rootReducer(state=initialState, action) {
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
+          
             return {
                 ...state,
                 showImageUploadDialog: false,
                 uploadedImages: action.uploadedImages,
                 error: null
             }
+
+        case imageUploadActions.SHOW_IMAGE_CROP_DIALOG:
+            return {
+                ...state,
+                showImageCropDialog: true,
+                uploadedImages: action.uploadedImages,
+                error: null
+            }    
+
+        case imageUploadActions.HIDE_IMAGE_CROP_DIALOG:
+            return {
+                ...state,
+                showImageCropDialog: false,
+                uploadedImages: action.uploadedImages,
+                error: null
+            }    
+
+
         case imageUploadActions.UPLOAD_PENDING:
             return {
                 ...state,
@@ -44,10 +62,10 @@ function rootReducer(state=initialState, action) {
                 error: null
             }
         case imageUploadActions.UPLOAD_SUCCESS:
-            console.log(action)
             return {
                 ...state,
                 showImageUploadDialog: false,
+                showImageCropDialog: false,
                 pending: false,
                 uploadedImages: action.uploadedImages,
                 error: null
@@ -59,13 +77,19 @@ function rootReducer(state=initialState, action) {
                 error: action.error
             }
         case imageUploadActions.SEND_FILES_TO_STORE:
-            return {
-                ...state,
-                showImageUploadDialog: true,
-                files: action.files,
-                pending: false,
-                error: null
+            if(action.source === "multi"){
+                return {
+                    showImageUploadDialog: true,
+                    files: action.files,
+                    pending: false,
+                    error: null
+                }
+            }else{
+                return {
+                    files: action.files
+                }
             }
+            
         case fetchImagesActions.FETCH_IMAGES_PENDING:
             return {
                 ...state,

@@ -17,7 +17,7 @@ class ClusterButton extends Component  {
     constructor(props){
         super(props)
         this.state = {
-            clusterCenterValue: 5,
+            clusterCenterValue: process.env.REACT_APP_SLIDER_VALUE_CLUSTER,
             clusterActive: false,
             checked: false,
         };

@@ -10,3 +10,31 @@
 #image-container>div{
   margin: 2%;
 }
+
+
+.modal-dialog-crop{
+  width: 300px;
+  height:300px !important;
+  justify-content: center;
+  /* align-items: center; */
+  padding:20px;
+}
+
+.crop-container{
+  width:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding:20px;
+}    
+
+.controls{
+  top: 40%;
+  justify-content: center;
+  align-items: center;
+  display:flex;
+} 
+
+.cropsubmit{
+  bottom: 20px;
+}

@@ -3,6 +3,8 @@ import * as route from '../config/Routes';
 
 export const SHOW_IMAGE_UPLOAD_DIALOG = 'SHOW_IMAGE_UPLOAD_DIALOG';
 export const HIDE_IMAGE_UPLOAD_DIALOG = 'HIDE_IMAGE_UPLOAD_DIALOG';
+export const SHOW_IMAGE_CROP_DIALOG = 'SHOW_IMAGE_CROP_DIALOG';
+export const HIDE_IMAGE_CROP_DIALOG = 'HIDE_IMAGE_CROP_DIALOG';
 export const UPLOAD_PENDING = 'UPLOAD PENDING';
 export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_ERROR = 'UPLOAD_ERROR';
@@ -20,11 +22,25 @@ export function getHideImageUploadDialogAction(){
     }
 }
 
+export function getShowImageCropDialogAction(){
+    return {
+        type: SHOW_IMAGE_CROP_DIALOG
+    }
+}
+
+export function getHideImageCropDialogAction(){
+    return {
+        type: HIDE_IMAGE_CROP_DIALOG
+    }
+}
+
+
 // provides uploaded files from UploadButton in D3 Map
-export function getSendFilesToStoreAction(files){
+export function getSendFilesToStoreAction(files, source="multi"){
     return {
         type: SEND_FILES_TO_STORE,
-        files: files
+        files: files,
+        source: source
     }
 }
 
@@ -60,7 +76,6 @@ export function imageUpload(formData) {
         dispatch(getUploadPendingAction());
         upload(formData)
             .then(function(response){
-                console.log("imageUpload response: " + JSON.stringify(response));
                 const action = getUploadSuccessAction(response);
                 dispatch(action);
             },
@@ -81,11 +96,7 @@ export function imageUpload(formData) {
  * @returns response recieved from the backend
 */
 async function upload(formData) {
-    // log all entries of formData Object
-    for(let pair of formData.entries()){
-        console.log(pair[0] + ', ' + pair[1]);
-    }
-    console.log(route.IMAGE_UPLOAD)
+    console.log("Uploading images to: " + route.IMAGE_UPLOAD)
     return await axios({
         method: "POST",
         url: route.IMAGE_UPLOAD,
@@ -97,17 +108,17 @@ async function upload(formData) {
     .then(response => {
         if(response.status === 200) {
             let responseData = response.data
-            console.log(responseData)
             let imageData = {
                 distances: responseData.distances,
-                ids: responseData.ids,
+                ids: responseData.new_ids,
+                filenames: responseData.uploaded_filenames,
                 coordinates: responseData.coordinates,
                 similarities: responseData.similarities,
                 clusterCenters: responseData.cluster_centers,
                 nnClusterCenters: responseData.neighbour_cluster_centers,
                 nnFilenames: responseData.neighbour_filenames,
-                // nach merge: ids die als response kommen verwenden für uploaded images
-                uploadedFilenames: responseData.uploaded_filenames
+                nnIds: responseData.ids,
+                uploaded: true,
             }
 
 

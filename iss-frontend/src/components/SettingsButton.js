@@ -104,7 +104,7 @@ class SettingsButton extends Component {
 const mapDispatchToProps = dispatch => bindActionCreators({
     showSettingsDialogAction: settingsActions.getShowSettingsDialogAction,
     hideSettingsDialogAction: settingsActions.getHideSettingsDialogAction,
-    setValueAction: settingsActions.setSliderValue,
+    setValueAction: settingsActions.setNeighboursSliderValue,
     setClusterValueAction: settingsActions.setClusterCenterValue
 
 },dispatch)

@@ -36,20 +36,16 @@ export function setClusterCenterValueAction(value){
  * @param value - slider value
  * This function dispatches the setSliderValueAction.
 */
-export function setSliderValue(value) {
+export function setNeighboursSliderValue(value) {
     return dispatch => {
-        console.log('NeighbourSlider')
-        console.log(value)
+        console.log("Settings: NeighboursSliderValue: " + value)
         dispatch(setSliderValueAction(value));
     }
 }
 
 export const setClusterCenterValue = (value, sessionToken) => {
     return function (dispatch) {
-        console.log('ClusterSlider')
-        console.log(value)
-        console.log('sessionToken')
-        console.log(sessionToken)
+        console.log("Settings: ClusterSliderValue: " + value)
         fetchSetClusterValue(value, sessionToken)
         dispatch(setClusterCenterValueAction(value));
     }

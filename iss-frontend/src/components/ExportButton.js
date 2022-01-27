@@ -91,7 +91,6 @@ class ExportButton extends Component {
                 data.push(dataRow)
             }   
         }
-        console.log(data)
         this.exportToSpreadsheet(data, fileName)
     }
 
