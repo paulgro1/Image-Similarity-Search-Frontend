@@ -114,16 +114,19 @@ export async function fetchMultipleThumbnails(sessionToken, picture_ids, callbac
      JSZip.loadAsync(body).then(function(zip) {
         var imageUrls = [];
         var regex = /(?:\.([^.]+))?$/;
+        var regexId = /^[^_]+(?=_)/;
         for(let zipEntry in zip.files) {
-            var url = zip.file(zipEntry).async("arraybuffer").then(function (data) {
+            var data = zip.file(zipEntry).async("arraybuffer").then(function (data) {
                 var ext = regex.exec(zipEntry)[0];
+                var thumbnailId = regexId.exec(zipEntry)[0];
                 var type = "image/" + ext.split('.')[1];
                 var buffer = new Uint8Array(data);
                 var blob = new Blob([buffer.buffer], {type: type});
                 let url = URL.createObjectURL(blob)
-                return url
+                var thumbnailData = {url: url, thumbnailId: thumbnailId}
+                return thumbnailData
                });
-            imageUrls.push(url)
+               imageUrls.push(data)
         }
         return callback(imageUrls)
         })
