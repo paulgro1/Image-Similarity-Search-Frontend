@@ -8,13 +8,24 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as settingsActions from '../actions/SettingsActions';
 
-
 const mapStateToProps = state => {
     return state
 }
 
+/**
+ * Class representing the settings button component.
+ * @prop {function} showSettingsDialogAction - shows modal dialog
+ * @prop {function} hideSettingsDialogAction - hides modal dialog
+ * @prop {function} setValueAction - sets the slider value
+ * 
+ * @extends {Component}
+ */
 class SettingsButton extends Component {
 
+    /**
+     * Create a ImageUploadButton component.
+     * @param {object} props - properties from redux store
+     */
     constructor(props){
         super(props)
         this.state = {
@@ -26,21 +37,36 @@ class SettingsButton extends Component {
         this.handleSave = this.handleSave.bind(this);
     }
 
+    /**
+     * This function opens the settings dialog.
+     * @param {object} e - click event
+     */
     handleShow(e){
         e.preventDefault();
         const {showSettingsDialogAction} = this.props;
         showSettingsDialogAction();
     }
 
+    /**
+     * This function closes the image upload dialog.
+     */
     handleClose(){
         const {hideSettingsDialogAction} = this.props;
         hideSettingsDialogAction();
     } 
 
+    /**
+     * This function sets the new slider value as an integer. 
+     * @param {string} value - slider value
+     */
     setValue(value){
         this.setState({sliderValue: parseInt(value)});
     }
 
+    /**
+     * This function saves the new slider value. 
+     * @param {object} e - slider event
+     */
     handleSave(e){
         e.preventDefault();
         const {setValueAction} = this.props;
@@ -48,6 +74,10 @@ class SettingsButton extends Component {
         this.handleClose();
     }
 
+    /**
+     * This function renders the settings button and modal dialog.
+     * @returns {object} - React component
+     */
     render(){
 
         var showDialog = this.props.showSettingsDialog

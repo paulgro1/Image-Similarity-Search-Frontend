@@ -14,7 +14,6 @@ export const SEND_FILES_TO_STORE = 'SEND_FILES_TO_STORE';
  * This function returns an action object to show the image upload dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getShowImageUploadDialogAction(){
     return {
         type: SHOW_IMAGE_UPLOAD_DIALOG
@@ -25,7 +24,6 @@ export function getShowImageUploadDialogAction(){
  * This function returns an action object to hide the image upload dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getHideImageUploadDialogAction(){
     return {
         type: HIDE_IMAGE_UPLOAD_DIALOG
@@ -36,7 +34,6 @@ export function getHideImageUploadDialogAction(){
  * This function returns an action object to show the image crop dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getShowImageCropDialogAction(){
     return {
         type: SHOW_IMAGE_CROP_DIALOG
@@ -47,7 +44,6 @@ export function getShowImageCropDialogAction(){
  * This function returns an action object to hide the image crop dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getHideImageCropDialogAction(){
     return {
         type: HIDE_IMAGE_CROP_DIALOG
@@ -59,7 +55,6 @@ export function getHideImageCropDialogAction(){
  * @param {object} files - uploaded files
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getSendFilesToStoreAction(files, source="multi"){
     return {
         type: SEND_FILES_TO_STORE,
@@ -72,7 +67,6 @@ export function getSendFilesToStoreAction(files, source="multi"){
  * This function returns a pending action object.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getUploadPendingAction(){
     return {
         type: UPLOAD_PENDING
@@ -84,7 +78,6 @@ export function getUploadPendingAction(){
  * @param {object} response - uploaded images
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getUploadSuccessAction(response){
     return {
         type: UPLOAD_SUCCESS,
@@ -97,7 +90,6 @@ export function getUploadSuccessAction(response){
  * @param {object} error - error message
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getUploadErrorAction(error){
     return {
         type: UPLOAD_ERROR,
@@ -110,7 +102,6 @@ export function getUploadErrorAction(error){
  * @param {object} formData - uploaded image wrapped in a form
  * @returns {function} dispatch - a function that dispatches the action
 */
-
 export function imageUpload(formData) {
     return dispatch => {
         dispatch(getUploadPendingAction());
@@ -133,7 +124,6 @@ export function imageUpload(formData) {
  * @param {object} formData - uploaded images wrapped in a form
  * @returns {object} - object with the response (image data or error)
 */
-
 async function upload(formData) {
     console.log("Uploading images to: " + route.IMAGE_UPLOAD)
     return await axios({

@@ -7,7 +7,6 @@ export const SET_SESSION_TOKEN = "SET_SESSION_TOKEN";
  * @param {string} sessionToken 
  * @returns {object}
  */
-
 export function setSessionTokenAction(sessionToken){
     return {
         type: SET_SESSION_TOKEN,

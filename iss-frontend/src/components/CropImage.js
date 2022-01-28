@@ -29,7 +29,6 @@ const mapStateToProps = state => {
  *
  * @extends {Component}
  */
-
 class CropImage extends Component {
 
     /**
@@ -206,48 +205,44 @@ class CropImage extends Component {
         }
 
         return (
-          
-             <Modal show={showCropDialog} onHide={this.handleCloseCrop} >
+           <Modal show={showCropDialog} onHide={this.handleCloseCrop} >
                     
-                    <Modal.Header closeButton>
-                        <Modal.Title>Crop and Upload Single Image</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <div className="modal-dialog-crop">
-                            <div className="crop-container" >
-                                {!pending &&
-                                <Cropper
-                                    image={this.state.url}
-                                    crop={this.state.crop}
-                                    zoom={this.state.zoom}
-                                    aspect={this.state.aspect}
-                                    cropsize={this.state.cropsize}
-                                    onCropChange={this.onCropChange}
-                                    onCropComplete={this.onCropComplete}
-                                    onZoomChange={this.onZoomChange} />
-                                }
-                            </div>
-                        </div> 
-                    </Modal.Body>
-                     
-                    <Modal.Footer className="justify-content-center">
-                        <div className="controls container-fluid">
-                            <Slider
-                                value={this.state.zoom}
-                                min={1}
-                                max={3}
-                                step={0.1}
-                                aria-labelledby="Zoom"
-                                onChange={(e, zoom) => this.onZoomChange(zoom)}
-                                /*classes={{ container: 'slider' }}*/ />
-                        </div>   
-                        <Button className="cropsubmit" variant="dark" onClick={this.handleSubmit}>Submit</Button>
-                        {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
-                        {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
-                    </Modal.Footer>
-                </Modal>
-            
+                <Modal.Header closeButton>
+                    <Modal.Title>Crop and Upload Single Image</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modal-dialog-crop">
+                        <div className="crop-container" >
+                            {!pending &&
+                            <Cropper
+                                image={this.state.url}
+                                crop={this.state.crop}
+                                zoom={this.state.zoom}
+                                aspect={this.state.aspect}
+                                cropsize={this.state.cropsize}
+                                onCropChange={this.onCropChange}
+                                onCropComplete={this.onCropComplete}
+                                onZoomChange={this.onZoomChange} />
+                            }
+                        </div>
+                    </div> 
+                </Modal.Body>
+                <Modal.Footer className="justify-content-center">
+                    <div className="controls container-fluid">
+                        <Slider
+                            value={this.state.zoom}
+                            min={1}
+                            max={3}
+                            step={0.1}
+                            aria-labelledby="Zoom"
+                            onChange={(e, zoom) => this.onZoomChange(zoom)}
+                        />
+                    </div>   
+                    <Button className="cropsubmit" variant="dark" onClick={this.handleSubmit}>Submit</Button>
+                    {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                    {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
+                </Modal.Footer>
+            </Modal>            
         )
     }
 }

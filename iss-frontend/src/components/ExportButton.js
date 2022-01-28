@@ -13,8 +13,16 @@ const mapStateToProps = state => {
     return state
 }
 
+/**
+ * Class representing the export button component.
+ * @extends {Component}
+ */
 class ExportButton extends Component {
 
+    /**
+     * Create a ExportButton component.
+     * @param {object} props - properties from redux store
+     */
     constructor(props){
         super(props)
         this.state = {
@@ -26,23 +34,40 @@ class ExportButton extends Component {
         this.handleExcelExportAllImages = this.handleExcelExportAllImages.bind(this);
     }
 
-    // change to componentDidUpdate later!
+    /**
+     * This function updates the props.
+     * @param {object} nextProps - properties from redux store
+     */
     async componentWillReceiveProps(nextProps) {
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
         }
     }
 
+    /**
+     * This function is called when the component first mounts.
+     * It handels the session token and initializes the d3 map.
+     */
     async componentDidMount(){
         const imageIds = await fetchImagesActions.fetchAllImagesIds()
         this.setState({imageIds: imageIds})
     }
 
+    /**
+     * This function fetches k nearest neighbours for all image.
+     * @param {number} k - slider value
+     */
     async getAllNearestNeighbours(k){
         var nearestNeighbours  = await fetchImagesActions.fetchAllNearestNeighbours(k)
         this.setState({allNearestNeighbours: nearestNeighbours});
     }
 
+    /**
+     * This function handels the Excel export of all images.
+     * If there are more than 100 images, the function will split
+     * the images into chunks of 100 and sends the request to the backend.
+     * It defines the data and filename for the spreadsheed.
+     */
     async handleExcelExportAllImages(){
         var imgIds = this.state.imageIds;
         if(imgIds.length < 100){
@@ -94,7 +119,12 @@ class ExportButton extends Component {
         this.exportToSpreadsheet(data, fileName)
     }
 
-    //source: https://medium.com/an-idea/export-excel-files-client-side-5b3cc5153cf7
+    /**
+     * This function exports the spreadsheed.
+     * Source: https://medium.com/an-idea/export-excel-files-client-side-5b3cc5153cf7
+     * @param {object} data - data for the spreadsheet
+     * @param {string} fileName - name for Excel file
+     */
     exportToSpreadsheet (data, fileName) {
         const fileType ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
@@ -111,6 +141,10 @@ class ExportButton extends Component {
         FileSaver.saveAs(fileData, fileName + fileExtension);
     };
 
+    /**
+     * This function renders the export button.
+     * @returns {object} - React component
+     */
     render(){
         return (
             <div>

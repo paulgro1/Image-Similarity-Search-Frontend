@@ -10,7 +10,6 @@ export const HIDE_INFORMATION_DIALOG = "HIDE_INFORMATION_DIALOG";
  * This function returns an action object.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function showInformationDialogAction() {
     return {
         type: SHOW_INFORMATION_DIALOG,
@@ -21,7 +20,6 @@ export function showInformationDialogAction() {
  * This function returns an action object.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function hideInformationDialogAction() {
     return {
         type: HIDE_INFORMATION_DIALOG,
@@ -73,7 +71,6 @@ export function fetchAllThumbnailMeta() {
  * @param {string} sessionToken - token for current session
  * @returns {string} - one fullsize image blob url, which was received from the backend 
  */
-
 export function fetchOneImage(id, sessionToken) {
     var restUrl = route.FETCH_ONE_IMAGE + id;
     console.log("Fetch One Image from: " + restUrl);
@@ -102,7 +99,6 @@ export function fetchOneImage(id, sessionToken) {
  * @param {returnURLsCallback} callback - a callback to run
  * @returns {function} - callback wich returns the image URLs
  */
-
 export async function fetchMultipleThumbnails(sessionToken, picture_ids, callback) {
     var restUrl = route.FETCH_MULTIPLE_THUMBNAILS;
     console.log("Fetch multiple thumbnails with the ids: " + picture_ids + " from: " + restUrl);
@@ -144,7 +140,6 @@ export async function fetchMultipleThumbnails(sessionToken, picture_ids, callbac
  * @param {returnURLsCallback} callback - a callback to run
  * @returns {function} - callback wich returns the image URLs
  */
-
 export async function fetchAllThumbnails(sessionToken, callback) {
     var restUrl = route.FETCH_THUMBNAILS;
     console.log("Fetch all thumbnails from: " + restUrl);
@@ -214,7 +209,6 @@ export function fetchNearestNeighbours(id, k, sessionToken) {
  * @param {number} k - integer number of nearest neighbours to fetch
  * @returns {object} - object with nearest neighbours
  */
-
 export function fetchAllNearestNeighbours(k) {
     console.log("Fetch " + k +" NN of all images")
     return axios({
@@ -237,7 +231,6 @@ export function fetchAllNearestNeighbours(k) {
  * @param {number[]} ids - ids of images
  * @returns {object} - object with nearest neighbours
  */
-
 export function fetchNearestNeighboursWithIds(k, ids) {
     console.log("Fetch " + k +" NN of " + ids.length + " images.")
     return axios({

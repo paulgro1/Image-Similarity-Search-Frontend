@@ -6,7 +6,6 @@ export const SET_SLIDER_VALUE = 'SET_SLIDER_VALUE';
  * This function returns an action object to show the settings dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getShowSettingsDialogAction(){
     return {
         type: SHOW_SETTINGS_DIALOG
@@ -17,7 +16,6 @@ export function getShowSettingsDialogAction(){
  * This function returns an action object to hide the settings dialog.
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function getHideSettingsDialogAction(){
     return {
         type: HIDE_SETTINGS_DIALOG
@@ -29,7 +27,6 @@ export function getHideSettingsDialogAction(){
  * @param {number} value - slider value (number of nearest neighbours)
  * @returns {object} - action object that will be send to the RootReducer
  */
-
 export function setSliderValueAction(value){
     return {
         type: SET_SLIDER_VALUE,
@@ -43,7 +40,6 @@ export function setSliderValueAction(value){
  * @param {number} value - slider value
  * @returns {function} dispatch - a function that dispatches the action
 */
-
 export function setSliderValue(value) {
     return dispatch => {
         console.log("Setting SliderValue: " + value)

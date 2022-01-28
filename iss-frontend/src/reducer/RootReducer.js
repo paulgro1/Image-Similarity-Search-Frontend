@@ -12,15 +12,17 @@ const initialState = {
 };
 
 /**
- * @param state - default: the initial state of the application
- * @param action - an action given to the store
- * 
+ * This function handles the properties of the application.
  * Everytime the rootReducer is called, redux passes the current state
  * and the action that was send to the store to the rootReducer.
+ * @param {object} state - default: the initial state of the application
+ * @param {object} action - an action sent to the store
+ * @returns {object} - updated props
  */
 
 function rootReducer(state=initialState, action) {
     console.log("Action in Reducer: " + action.type);
+    console.log(typeof action)
 
     switch(action.type){
         case imageUploadActions.SHOW_IMAGE_UPLOAD_DIALOG:
