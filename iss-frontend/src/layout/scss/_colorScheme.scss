@@ -1,0 +1,33 @@
+// Sass Variablen
+
+// colors for mark-function
+$markColor: rgb(10, 85, 184);
+$neighbourColor: rgb(101, 166, 250);
+$uploadedColor: rgb(241, 23, 114);
+
+// Colors for Cluster
+$cluster0: red;
+$cluster1: blueviolet;
+$cluster2: rgb(65, 105, 225);
+$cluster3: turquoise;
+$cluster4: rgb(154, 205, 50);
+$cluster5: orange;
+$cluster6: slategrey;
+$cluster7: teal;
+$cluster8: indianred;
+$cluster9: rgb(65, 53, 80);
+$cluster10: rgb(131, 230, 255);
+$cluster11: rgb(141, 0, 0);
+$cluster12: rgb(11, 255, 52);
+$cluster13: rgb(255, 230, 0);
+$cluster14: rgb(199, 40, 194);
+
+
+
+@function tint($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}

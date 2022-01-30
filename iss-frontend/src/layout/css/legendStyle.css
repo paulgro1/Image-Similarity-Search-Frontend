@@ -1,0 +1,84 @@
+#legend {
+  position: absolute;
+  right: 0;
+  margin-bottom: 0.5rem;
+  padding: 1%;
+  background-color: #f8f9fa;
+  border: 1px solid #198754;
+  border-radius: 4px;
+}
+#legend li {
+  margin-left: 10px;
+}
+#legend #marks {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+#legend #marks #selected {
+  color: #0a55b8;
+}
+#legend #marks #neighbours {
+  color: #65a6fa;
+}
+#legend #marks #uploaded {
+  color: #f11772;
+}
+#legend #cluster {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+#legend #cluster h5 {
+  margin-top: 0.3rem;
+  text-align: center;
+}
+#legend #cluster #cluster0 {
+  color: red;
+}
+#legend #cluster #cluster1 {
+  color: blueviolet;
+}
+#legend #cluster #cluster2 {
+  color: royalblue;
+}
+#legend #cluster #cluster3 {
+  color: turquoise;
+}
+#legend #cluster #cluster4 {
+  color: yellowgreen;
+}
+#legend #cluster #cluster5 {
+  color: orange;
+}
+#legend #cluster #cluster6 {
+  color: slategrey;
+}
+#legend #cluster #cluster7 {
+  color: teal;
+}
+#legend #cluster #cluster8 {
+  color: indianred;
+}
+#legend #cluster #cluster9 {
+  color: #413550;
+}
+#legend #cluster #cluster10 {
+  color: #83e6ff;
+}
+#legend #cluster #cluster11 {
+  color: #8d0000;
+}
+#legend #cluster #cluster12 {
+  color: #0bff34;
+}
+#legend #cluster #cluster13 {
+  color: #ffe600;
+}
+#legend #cluster #cluster14 {
+  color: #c728c2;
+}
+
+/*# sourceMappingURL=legendStyle.css.map */

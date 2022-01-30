@@ -1,0 +1,109 @@
+@use "colorScheme"as colors;
+
+#legend {
+    position: absolute;
+    right: 0;
+    margin-bottom: 0.5rem;
+    padding: 1%;
+    background-color: #f8f9fa;
+    border: 1px solid #198754;
+    border-radius: 4px;
+
+
+    li {
+        margin-left: 10px;
+    }
+
+    #marks {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-around;
+        align-items: flex-start;
+
+        #selected {
+            color: colors.$markColor
+        }
+
+        #neighbours {
+            color: colors.$neighbourColor
+        }
+
+        #uploaded {
+            color: colors.$uploadedColor
+        }
+    }
+
+    #cluster {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-around;
+        align-items: flex-start;
+
+        h5 {
+            margin-top: 0.3rem;
+            text-align: center;
+
+        }
+
+        #cluster0 {
+            color: colors.$cluster0;
+        }
+
+        #cluster1 {
+            color: colors.$cluster1;
+        }
+
+        #cluster2 {
+            color: colors.$cluster2;
+        }
+
+        #cluster3 {
+            color: colors.$cluster3;
+        }
+
+        #cluster4 {
+            color: colors.$cluster4;
+        }
+
+        #cluster5 {
+            color: colors.$cluster5;
+        }
+
+        #cluster6 {
+            color: colors.$cluster6;
+        }
+
+        #cluster7 {
+            color: colors.$cluster7;
+        }
+
+        #cluster8 {
+            color: colors.$cluster8;
+        }
+
+        #cluster9 {
+            color: colors.$cluster9;
+        }
+
+        #cluster10 {
+            color: colors.$cluster10;
+        }
+
+        #cluster11 {
+            color: colors.$cluster11;
+        }
+
+        #cluster12 {
+            color: colors.$cluster12;
+        }
+
+        #cluster13 {
+            color: colors.$cluster13;
+        }
+
+        #cluster14 {
+            color: colors.$cluster14;
+        }
+
+    }
+}

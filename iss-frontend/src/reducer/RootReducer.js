@@ -1,13 +1,15 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
+import * as authenticationActions from '../actions/AuthenticationActions'
 
 const initialState = {
     images: [],
     uploadPending: false,
     showImageUploadDialog: false,
     showImageCropDialog: false,
-    sliderValue: 5
+    sliderValue: 5,
+    clusterCenterValue: 5
 };
 
 /**

@@ -1,15 +1,13 @@
 .highlight {
   opacity: 1;
-  outline: 0.5vh solid rgb(21, 119, 247);
-  box-shadow: 0 5px 5px rgba(0,0,0,0.15);
+  outline: 0.5vh solid #0a55b8;
   /*transition: ease 0.5s;
   transform: perspective(200px) translateZ(20px);*/
 }
 
 .highlight_neighbour {
   opacity: 1;
-  outline: 0.5vh solid rgb(148, 189, 243);
-  box-shadow: 0 5px 5px rgba(0,0,0,0.15);
+  outline: 0.5vh solid #65a6fa;
   /* transition: ease 0.5s;
   transform: perspective(200px) translateZ(20px); */
 }
@@ -26,5 +24,7 @@
 
 .highlight_uploaded {
   opacity: 1;
-  outline: 0.5vh solid rgb(241, 23, 114);
+  outline: 0.5vh solid #f11772;
 }
+
+/*# sourceMappingURL=markStyle.css.map */

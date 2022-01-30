@@ -87,8 +87,8 @@ class SettingsButton extends Component {
                         <RangeSlider
                             value={this.state.clusterCenterValue}
                             onChange={changeEvent => this.setClustersValue(changeEvent.target.value)}
-                            min={0}
-                            max={12}
+                            min={1}
+                            max={15}
                         />
                         <br/>
                         <Button onClick={this.handleSave}>Save Changes</Button>

@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 
 import '../layout/css/style.css'
 import '../layout/css/markStyle.css'
+import '../layout/css/legendStyle.css'
 
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
@@ -19,6 +20,7 @@ import * as XLSX from "xlsx";
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as authenticationActions from '../actions/AuthenticationActions'
+import * as settingsActions from '../actions/SettingsActions'
 
 const mapStateToProps = state => {
     return state;
@@ -47,7 +49,7 @@ class D3Map extends Component {
             imgScale: 1,
             clickActive: false,
             sessionToken: undefined,
-            clusterCenterValue: undefined,
+            clusterCenterValue: 5,
             openInfoView: false,
             markedImagesIDs: [],
             markedUploadedImage: undefined,
@@ -93,7 +95,7 @@ class D3Map extends Component {
             } else {
                 axios.defaults.headers.common['Api-Session-Token'] = null;
             }
-        }.bind(this))
+        }.bind(this))        
         var imagesMeta =  await fetchImagesActions.fetchAllThumbnailMeta(this.state.sessionToken)
         fetchImagesActions.fetchAllThumbnails(this.state.sessionToken, function(imageUrls) {
             Promise.all(imageUrls).then(function(imageUrls){
@@ -122,7 +124,7 @@ class D3Map extends Component {
 
         
                 }
-                console.log(clusterCenterValues)
+                
                 this.setState({cluserCenterValue: clusterCenterValues.length})
         
                 this.setState({IMAGES: IMAGES})
@@ -291,13 +293,14 @@ class D3Map extends Component {
     }
 
     removeMark(){
-        if(this.state.markedUploadedImage !== undefined) {
-            var markedUploadedImage = this.state.markedUploadedImage
-            d3.select('#image_' + markedUploadedImage.id)
-            .classed('highlight_uploaded', true)
-
-            this.setState({ markedUploadedImage : undefined})
+        //show uploaded again
+        if(this.state.uploadedImages !== undefined) {
+            for(let id of this.state.uploadedImages.ids) {
+                d3.select('#image_' + id)
+                .classed('highlight_uploaded', true)
+            }
         }
+
         if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)
@@ -308,10 +311,10 @@ class D3Map extends Component {
             this.setState({ markActive: false })
             this.setState({ openInfoView: false })
         }
+
         else{
             return
         }
-        
     }
 
     async markImage(image, id, canvas) {
@@ -350,7 +353,7 @@ class D3Map extends Component {
 
             const markedImagesIDArray = [] 
             markedImagesIDArray.push(parseInt(id))
-            for(const image of nearestNeighboursArray) {
+            for(let image of nearestNeighboursArray) {
                 let id = parseInt(image.id)
                 markedImagesIDArray.push(id)
             }
@@ -361,8 +364,15 @@ class D3Map extends Component {
                 d3.selectAll('image')
                 .classed('hide_on', true)
                 .classed('hide_off', false)
+
+                // hide uploaded images
+                if(this.state.uploadedImages !== undefined) {
+                    for(let id of this.state.uploadedImages.ids) {
+                        d3.select('#image_' + id)
+                        .classed('highlight_uploaded', false)
+                    }
+                }
                 
-    
                 /* mark clicked Image */
                 d3.select('#image_' + image.id)
                 .classed('highlight', true)
@@ -370,8 +380,6 @@ class D3Map extends Component {
                 .classed('hide_off', false)
                 .classed('highlight_neighbour', false)
                 .classed('highlight_uploaded', false) 
-                
-                
     
                 /* mark next neighbours */
                 for ( let neighbour of nearestNeighboursArray) {
@@ -402,6 +410,7 @@ class D3Map extends Component {
             if(ids.includes(id)) {
                 this.handleShow(image)
             }
+
             else {
                 console.log('This Picture is not marked. Please try again!')
                 /* this.removeMark() */
@@ -588,64 +597,89 @@ class D3Map extends Component {
         if(this.state.nearestNeighbours){
             similarImages = this.state.nearestNeighbours;
         }
+
+        var selectedCluster = []
+        for(let i=0; i<this.state.clusterCenterValue; i++) {
+            var clusterValue = "cluster" + i 
+            var clusterLegendItem = <li id={clusterValue}>Cluster-ID: {i}</li>
+            selectedCluster.push(clusterLegendItem) 
+        }
+
+        var showCluster = this.props.showCluster
+        if(showCluster === undefined) {
+            showCluster = false
+        }
         
         return(    
             <div>
                 <div ref="canvas">
-                <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Informations</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Container>
-                            <Row>
-                                <Col lg={4}>
-                                    <Image src={this.state.selectedImageUrl} width={192} height={256}/>
-                                </Col>
-                                <Col lg={8}>
-                                    <h3>Top {this.state.sliderValue} Similar Images:</h3>
-                                    The number below the images shows the percentual similarity to the selected image based on the euclidean distance. <br/>
-                                    <br/>
-                                    <div id="image-container">
-                                        {similarImages.map(img => {
-                                            var url = img.url
-                                            var euclideanDistance = img.similarities * 100
+                    <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Informations</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Container>
+                                <Row>
+                                    <Col lg={4}>
+                                        <Image src={this.state.selectedImageUrl} width={192} height={256}/>
+                                    </Col>
+                                    <Col lg={8}>
+                                        <h3>Top {this.state.sliderValue} Similar Images:</h3>
+                                        The number below the images shows the percentual similarity to the selected image based on the euclidean distance. <br/>
+                                        <br/>
+                                        <div id="image-container">
+                                            {similarImages.map(img => {
+                                                var url = img.url
+                                                var euclideanDistance = img.similarities * 100
 
-                                            return (
-                                                <div key={url}>
-                                                    <Image src={url}/> <br/>
-                                                    {euclideanDistance.toFixed(2)} %
-                                                </div>
-                                            )
-                                        })} 
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg={4}>
-                                    <h4>Image Properties:</h4>
-                                    <div>
-                                        Filename: {this.state.selectedImageFilename}<br/>
-                                        {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
-                                    </div>
-                                    <br></br> 
-                                </Col>
-                                <Col lg={8}>
-                                    <Button variant="outline-success" onClick={this.handleExcelExport}>
-                                        Export Data
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
-                </Modal>
+                                                return (
+                                                    <div key={url}>
+                                                        <Image src={url}/> <br/>
+                                                        {euclideanDistance.toFixed(2)} %
+                                                    </div>
+                                                )
+                                            })} 
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col lg={4}>
+                                        <h4>Image Properties:</h4>
+                                        <div>
+                                            Filename: {this.state.selectedImageFilename}<br/>
+                                            {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
+                                        </div>
+                                        <br></br> 
+                                    </Col>
+                                    <Col lg={8}>
+                                        <Button variant="outline-success" onClick={this.handleExcelExport}>
+                                            Export Data
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Modal.Body>
+                        <Modal.Footer>
+                        </Modal.Footer>
+                    </Modal>
+
+                    
+
+                    <div id='legend'>
+                        <h4>Information:</h4>
+                        <div id="marks">
+                            <li id='selected'>selected Image</li>
+                            <li id='neighbours'>next Neighbours</li>
+                            <li id='uploaded'>uploaded Image(s)</li>
+                        </div>
+                        <div id="cluster" onshow={showCluster}>
+                            <h5>Cluster: {this.state.clusterCenterValue}</h5>
+                            {selectedCluster}
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
-            
         )
-
     }
 }
 
@@ -653,6 +687,8 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     showInformationDialogAction: fetchImagesActions.showInformationDialogAction,
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
     setSessionToken: authenticationActions.setSessionToken,
+    getImagesMetaFromDbAction: fetchImagesActions.getImagesMetaFromDb,
+    setClusterValueAction: settingsActions.setClusterCenterValue
 },dispatch)
 
 const connectedD3Map = connect(mapStateToProps, mapDispatchToProps) (D3Map);

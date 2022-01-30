@@ -1,54 +1,61 @@
 .cluster0 {
-    outline: 0.4vh solid red;
+  outline: 0.4vh solid red;
 }
+
 .cluster1 {
-    outline: 0.4vh solid blueviolet;
+  outline: 0.4vh solid blueviolet;
 }
 
 .cluster2 {
-    outline: 0.4vh solid royalblue;
+  outline: 0.4vh solid royalblue;
 }
 
 .cluster3 {
-    outline: 0.4vh solid turquoise;
+  outline: 0.4vh solid turquoise;
 }
 
 .cluster4 {
-    outline: 0.4vh solid yellowgreen;
+  outline: 0.4vh solid yellowgreen;
 }
 
 .cluster5 {
-    outline: 0.4vh solid orange;
+  outline: 0.4vh solid orange;
 }
 
 .cluster6 {
-    outline: 0.4vh solid slategrey;
+  outline: 0.4vh solid slategrey;
 }
 
 .cluster7 {
-    outline: 0.4vh solid teal;
+  outline: 0.4vh solid teal;
 }
 
 .cluster8 {
-    outline: 0.4vh solid indianred;
+  outline: 0.4vh solid indianred;
 }
 
 .cluster9 {
-    outline: 0.4vh solid orchid;
+  outline: 0.4vh solid #413550;
 }
 
-/* .cluster10 {
-    outline: 0.5vh solid red;
+.cluster10 {
+  outline: 0.4vh solid #83e6ff;
 }
 
 .cluster11 {
-    outline: 0.5vh solid red;
+  outline: 0.4vh solid #8d0000;
 }
 
 .cluster12 {
-    outline: 0.5vh solid red;
+  outline: 0.4vh solid #0bff34;
 }
 
 .cluster13 {
-    outline: 0.5vh solid red;
-} */
+  outline: 0.4vh solid #ffe600;
+}
+
+.cluster14 {
+  outline: 0.4vh solid #c728c2;
+}
+
+/*# sourceMappingURL=clusterStyle.css.map */
