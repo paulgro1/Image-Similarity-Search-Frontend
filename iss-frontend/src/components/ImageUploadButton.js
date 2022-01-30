@@ -1,4 +1,3 @@
-
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -10,13 +9,28 @@ import React, { Component } from 'react';
 import CropButton from './CropImage';
 
 
-
 const mapStateToProps = state => {
     return state
 }
 
+/**
+ * Class representing the image upload button component.
+ * @prop {function} imageUploadAction - uploads an image
+ * @prop {function} showImageUploadDialogAction - shows modal dialog
+ * @prop {function} hideImageUploadDialogAction - hides modal dialog
+ * @prop {function} showImageCropDialogAction - shows crop image modal dialog
+ * @prop {function} sendFilesToStoreAction - sends files to redux store
+ * @prop {object} error - error message
+ * @prop {boolean} pending - image upload pending
+ * 
+ * @extends {Component}
+ */
 class ImageUploadButton extends Component {
 
+    /**
+     * Create a ImageUploadButton component.
+     * @param {object} props - properties from redux store
+     */
     constructor(props){
         super(props)
         this.state = {
@@ -29,27 +43,39 @@ class ImageUploadButton extends Component {
         this.handleSelect = this.handleSelect.bind(this);
     }
 
-    // change to componentDidUpdate later!
+    /**
+     * This function updates the props.
+     * @param {object} nextProps - properties from redux store
+     */
     componentWillReceiveProps(nextProps) {
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
         }
     }
 
-
-
-
+    /**
+     * This function opens the image upload dialog.
+     * @param {object} e - click event
+     */
     handleShow(e){
         e.preventDefault();
         const {showImageUploadDialogAction} = this.props;
         showImageUploadDialogAction();
     }
 
+    /**
+     * This function closes the image upload dialog.
+     */
     handleClose(){
         const {hideImageUploadDialogAction} = this.props;
         hideImageUploadDialogAction();
     } 
 
+    /**
+     * This function submits the uploaded images and uploads them. 
+     * If only one image was uploaded the crop dialog will be shown.
+     * @param {object} e - click event
+     */
     handleSubmit(e){
         e.preventDefault();
         const files = this.state.files;
@@ -71,11 +97,13 @@ class ImageUploadButton extends Component {
             }
             formData.append("k", this.state.sliderValue)
             imageUploadAction(formData);
-            //Bilder aus state löschen
         }
     }
 
-
+    /**
+     * This function stores the selected images in the state.
+     * @param {object} e 
+     */
     async handleSelect(e){ 
         const {sendFilesToStoreAction} = this.props;
         sendFilesToStoreAction(e.target.files)
@@ -85,7 +113,10 @@ class ImageUploadButton extends Component {
         })
     }
 
-
+    /**
+     * This function renders the image upload button and modal dialog.
+     * @returns {object} - React component
+     */
     render(){
         var showDialog = this.props.showImageUploadDialog
         if(showDialog === undefined){
@@ -102,43 +133,38 @@ class ImageUploadButton extends Component {
             error = false;
         }
 
-
         var crop = this.state.files && this.state.files.length === 1;
        
-        
-
         return (
-     <div>
-            <Button variant="outline-success" onClick={this.handleShow}>
-                Upload Image
-            </Button>
+            <div>
+                <Button variant="outline-success" onClick={this.handleShow}>
+                    Upload Image
+                </Button>
 
-            <Modal show={showDialog} onHide={this.handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Image Upload</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        <Form.Group>
-                            <input type='file' onChange={this.handleSelect} multiple />
-                        </Form.Group>
-                        <Button variant="dark" onClick={this.handleSubmit}>
-                            Submit
-                        </Button>
-        
-                        {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
-                        {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                </Modal.Footer>
-            </Modal>
-            {crop && <CropButton cropfile={this.state.files[0]}></CropButton> }
-        </div>
-
-
-    )
-}
+                <Modal show={showDialog} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Image Upload</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group>
+                                <input type='file' onChange={this.handleSelect} multiple />
+                            </Form.Group>
+                            <Button variant="dark" onClick={this.handleSubmit}>
+                                Submit
+                            </Button>
+            
+                            {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                            {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    </Modal.Footer>
+                </Modal>
+                {crop && <CropButton cropfile={this.state.files[0]}></CropButton> }
+            </div>
+        )
+    }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({

@@ -20,12 +20,26 @@ import * as XLSX from "xlsx";
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as authenticationActions from '../actions/AuthenticationActions'
 
+
 const mapStateToProps = state => {
     return state;
 }
 
+/**
+ * Class representing the d3 map component.
+ * @prop {object} files - uploaded images
+ * @prop {function} setSessionToken - sets the token for current session
+ * @prop {function} showInformationDialogAction - shows modal dialog
+ * @prop {function} hideInformationDialogAction - hides modal dialog
+ *
+ * @extends {Component}
+ */
 class D3Map extends Component {
-
+    
+    /**
+     * Create a D3Map component.
+     * @param {object} props - properties from redux store
+     */
     constructor(props){
         super(props);
         this.state = {
@@ -53,7 +67,6 @@ class D3Map extends Component {
         }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.setValue = this.setValue.bind(this);
         this.getNearestNeighbours = this.getNearestNeighbours.bind(this);
         this.handleUploadedImages = this.handleUploadedImages.bind(this);
         this.storeImageUrls = this.storeImageUrls.bind(this);
@@ -64,6 +77,12 @@ class D3Map extends Component {
         this.handleExcelExport = this.handleExcelExport.bind(this);
     }
 
+    /**
+     * This function fetches k nearest neighbours for one image.
+     * @param {number} id - image id
+     * @param {number} k - slider value
+     * @returns {object} - nearest neighbours
+     */
     async getNearestNeighbours(id, k) {
         var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(id, k, this.state.sessionToken)
         fetchImagesActions.fetchMultipleThumbnails(this.state.sessionToken, nearestNeighbours.ids[0], function(imageUrls){
@@ -90,6 +109,10 @@ class D3Map extends Component {
     }.bind(this))
     }
 
+    /**
+     * This function is called when the component first mounts.
+     * It handels the session token and initializes the d3 map.
+     */
     async componentDidMount() {
         await authenticationActions.getSessionToken(function(sessionToken){
             if (sessionToken) {
@@ -125,7 +148,10 @@ class D3Map extends Component {
         }.bind(this));
     }
 
-    // change to componentDidUpdate later!
+    /**
+     * This function updates the props.
+     * @param {object} nextProps - properties from redux store
+     */
     async componentWillReceiveProps(nextProps) {
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
             await this.setState({uploadedImages: nextProps.uploadedImages})
@@ -136,6 +162,10 @@ class D3Map extends Component {
         }
     }
 
+    /**
+     * This function handels the nearest neighbours for an uploaded image.
+     * @returns {object} - nearest neighbours of the uploaded image
+     */
     async handleUploadedNearestN(callback){
             // handle uploaded image case
             var id = parseInt(this.state.selectedImageId) - this.state.IMAGES.length;
@@ -179,6 +209,10 @@ class D3Map extends Component {
         }.bind(this))
     }
 
+    /**
+     * This function opens the information dialog.
+     * @param {object} e - click event
+     */
     async handleShow(e){
         const {showInformationDialogAction} = this.props;
         console.log("Informationview for image with the id: " + e.id)
@@ -201,12 +235,19 @@ class D3Map extends Component {
         } 
     }
 
+    /**
+     * This function hides the information dialog.
+     */
     handleClose(){
         const {hideInformationDialogAction} = this.props;
         hideInformationDialogAction();
 
     } 
 
+    /**
+     * This function handels the Excel export.
+     * It defines the data and filename for the spreadsheed.
+     */
     handleExcelExport(){
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
         var data = [
@@ -228,7 +269,12 @@ class D3Map extends Component {
         this.exportToSpreadsheet(data, fileName)
     } 
 
-    //source: https://medium.com/an-idea/export-excel-files-client-side-5b3cc5153cf7
+    /**
+     * This function exports the spreadsheed.
+     * Source: https://medium.com/an-idea/export-excel-files-client-side-5b3cc5153cf7
+     * @param {object} data - data for the spreadsheet
+     * @param {string} fileName - name for Excel file
+     */
     exportToSpreadsheet (data, fileName) {
         const fileType ="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
@@ -245,6 +291,10 @@ class D3Map extends Component {
         FileSaver.saveAs(fileData, fileName + fileExtension);
     };
 
+    /**
+     * This function handels the uploaded images.
+     * @returns - returns nothing if there are no uploaded images.
+     */
     async handleUploadedImages(){
         var files = this.props.files;
         var uploadedImages = this.state.uploadedImages
@@ -273,6 +323,10 @@ class D3Map extends Component {
         this.drawMap(this.state.IMAGES, newImages);
     }
 
+    /**
+     * This function generates URLs for the uploaded images and sets them in the state.
+     * @param {object} files - uploaded images
+     */
     storeImageUrls(files){
         const imageFiles = files; 
         const filesLength = imageFiles.length;
@@ -283,10 +337,10 @@ class D3Map extends Component {
         this.setState({ uploadedImagesUrls: imageUrls });
     } 
 
-    setValue(value){
-        this.setState({sliderValue: value});
-    }
-
+    /**
+     * This function removes a mark from an image.
+     * @returns - nothing if markActive in state is false
+     */
     removeMark(){
         if(this.state.markedUploadedImage !== undefined) {
             var markedUploadedImage = this.state.markedUploadedImage
@@ -307,10 +361,15 @@ class D3Map extends Component {
         }
         else{
             return
-        }
-        
+        }  
     }
 
+    /**
+     * This function handles the highlighting of images.
+     * @param {object} image - selected image
+     * @param {number} id - id of selected image
+     * @param {object} canvas - d3 canvas object
+     */
     async markImage(image, id, canvas) {
         this.setState({selectedImageId: image.id});
 
@@ -409,11 +468,14 @@ class D3Map extends Component {
         }        
     }
 
-    
-
+    /**
+     * This function draws the d3 map.
+     * @param {object} data - images which should be displayed on the map
+     * @param {object} newImages - if new images were uploaded: uploaded images, otherwise: undefined
+     */
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
-            addImages(newImages, this.markImage, this.handleShow, this.state)
+            addImages(newImages, this.markImage, this.state)
         } else {
             var margin = {top: 10, right: 30, bottom: 30, left: 60}
             var canvasWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - margin.left - margin.right
@@ -430,151 +492,172 @@ class D3Map extends Component {
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     
 
-                // x-Axis
-                var x = d3.scaleLinear()
-                    .domain([-50, 60])
-                    .range([ 0, canvasWidth ])  
-                var xAxis = svgCanvas.append("g")
-                    .call(d3.axisBottom(x).ticks(tick_amount))
+            // x-Axis
+            var x = d3.scaleLinear()
+                .domain([-50, 60])
+                .range([ 0, canvasWidth ])  
+            var xAxis = svgCanvas.append("g")
+                .call(d3.axisBottom(x).ticks(tick_amount))
                     
-                xAxis.select(".domain")
-                    .attr("stroke-width","0")
+            xAxis.select(".domain")
+                .attr("stroke-width","0")
                     
-                this.setState({xAxis: x, newX: x})
-                // y-Axis
-                var y = d3.scaleLinear()
-                    .domain([-60, 40])
-                    .range([ canvasHeight, 0]);
-                var yAxis = svgCanvas.append("g")
-                    .call(d3.axisLeft(y).ticks(tick_amount));
+            this.setState({xAxis: x, newX: x})
 
-                yAxis.select(".domain")
-                    .attr("stroke-width","0")
+            // y-Axis
+            var y = d3.scaleLinear()
+                .domain([-60, 40])
+                .range([ canvasHeight, 0]);
+            var yAxis = svgCanvas.append("g")
+                .call(d3.axisLeft(y).ticks(tick_amount));
+
+            yAxis.select(".domain")
+                .attr("stroke-width","0")
+            
+            this.setState({yAxis: y, newY: y})
+
+
+            // Add a clipPath: everything out of this area won't be drawn.
+            svgCanvas
+                .append("defs")
+                .append("SVG:clipPath")
+                .attr("id", "clip")
+                .append("SVG:rect")
+                .attr("width", canvasWidth )
+                .attr("height", canvasHeight )
+                .attr("x", 0)
+                .attr("y", 0)
                     
-                this.setState({yAxis: y, newY: y})
 
-
-                // Add a clipPath: everything out of this area won't be drawn.
-                svgCanvas
-                    .append("defs")
-                    .append("SVG:clipPath")
-                    .attr("id", "clip")
-                    .append("SVG:rect")
-                    .attr("width", canvasWidth )
-                    .attr("height", canvasHeight )
-                    .attr("x", 0)
-                    .attr("y", 0)
-                    
-
-                // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
-                var zoom = d3.zoom()
+            // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+            var zoom = d3.zoom()
                 .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
                 .extent([[0, 0], [canvasWidth, canvasHeight]]) 
                 .on("zoom", updateChart.bind(this))   
 
-                // Create the scatter variable: where both the circles and the brush take place
-                var scatter = svgCanvas.append('g')
-                    .attr('id', 'scatter')
-                    .attr("clip-path", "url(#clip)")
+            // Create the scatter variable: where both the circles and the brush take place
+            var scatter = svgCanvas.append('g')
+                .attr('id', 'scatter')
+                .attr("clip-path", "url(#clip)")
                     
 
-                // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
-                scatter.append("rect")
-                    .attr("width", canvasWidth)
-                    .attr("height", canvasHeight)
-                    .style("fill", "none")
-                    .style("pointer-events", "all")
-                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-                    .on("click", function() {
-                        this.removeMark(svgCanvas)                
-                    }.bind(this))
+            // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+            scatter.append("rect")
+                .attr("width", canvasWidth)
+                .attr("height", canvasHeight)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                .on("click", function() {
+                    this.removeMark(svgCanvas)                
+                }.bind(this))
                 
-                scatter.selectAll('image')
-                    .data(data)
-                    .enter()
-                    .append('image')
-                    .attr('id',image => "image_" +  image.id)
-                    .attr('filename', image => image.filename)
-                    .attr('xlink:href', image => image.url)
-                    .attr('x', function(image) {return x(image.x)})
-                    .attr('y', function(image) {return y(image.y)})
-                    .attr('width', image => image.width)
-                    .attr('height', image => image.height)
-                    .attr('uploaded', image => image.uploaded)
-                    .classed('hide_on', false)
-                    .classed('hide_off', true)
-                    .classed('highlight', false)
-                    .classed('highlight_neighbour', false)
-                    /* mark next neighbours */
-                    .on("click", function(click, image) {
-                        this.markImage(click, image, svgCanvas);
-                    }.bind(this))
+            scatter.selectAll('image')
+                .data(data)
+                .enter()
+                .append('image')
+                .attr('id',image => "image_" +  image.id)
+                .attr('filename', image => image.filename)
+                .attr('xlink:href', image => image.url)
+                .attr('x', function(image) {return x(image.x)})
+                .attr('y', function(image) {return y(image.y)})
+                .attr('width', image => image.width)
+                .attr('height', image => image.height)
+                .attr('uploaded', image => image.uploaded)
+                .classed('hide_on', false)
+                .classed('hide_off', true)
+                .classed('highlight', false)
+                .classed('highlight_neighbour', false)
+                /* mark next neighbours */
+                .on("click", function(click, image) {
+                    this.markImage(click, image, svgCanvas);
+                }.bind(this))
                     
-                    scatter.call(zoom)
-            }  
-                // A function that updates the chart when the user zoom and thus new boundaries are available
-                function updateChart() {
-                    k = d3.event.transform.k
-                    // recover the new scale
-                    var newX = d3.event.transform.rescaleX(x);
-                    var newY = d3.event.transform.rescaleY(y);
+            scatter.call(zoom)
+        }  
+
+        /** 
+         * This function updates the chart when the user zoom and thus new boundaries are available.
+        */
+        function updateChart() {
+            k = d3.event.transform.k
+            // recover the new scale
+            var newX = d3.event.transform.rescaleX(x);
+            var newY = d3.event.transform.rescaleY(y);
                    
-                    this.setState({newX: newX});
-                    this.setState({newY: newY});
-                    // update axes with these new boundaries
-                    xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
-                    yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
-                    this.setState({imgScale: k});
+            this.setState({newX: newX});
+            this.setState({newY: newY});
+            // update axes with these new boundaries
+            xAxis.call(d3.axisBottom(newX).ticks(tick_amount))
+            yAxis.call(d3.axisLeft(newY).ticks(tick_amount))
+            this.setState({imgScale: k});
     
-                    // update image position
-                    scatter.selectAll("image")
-                        .attr('x', function(image) {return newX(image.x)})
-                        .attr('y', function(image) {return newY(image.y)})  
+            // update image position
+            scatter.selectAll("image")
+                .attr('x', function(image) {return newX(image.x)})
+                .attr('y', function(image) {return newY(image.y)})  
                     
-                    scatter.selectAll("image")
-                        .attr('width', 12*k)
-                        .attr('height', 16*k)
-                }
+            scatter.selectAll("image")
+                .attr('width', 12*k)
+                .attr('height', 16*k)
+        }
 
-                function addImages(data, markImage, handleShow, state){
-                    var prevSvg = d3.select('#uploadedImages')
-                    if(prevSvg !== null){
-                        removeUploadedImages()
-                    }
+        /** 
+         * This function includes uploaded images in the d3 map.
+         * @param {object} data - uploaded images
+         * @param {function} markImage - function to highlight images
+         * @param {object} state - current state
+        */
+        function addImages(data, markImage, state){
+            console.log(data)
+            console.log(typeof markImage)
+            console.log(typeof state)
+            var prevSvg = d3.select('#uploadedImages')
+            if(prevSvg !== null){
+                removeUploadedImages()
+            }
 
-                    var scatter = d3.select('#scatter')
-                        .append('svg')
-                        .attr('id', 'uploadedImages')
+            var scatter = d3.select('#scatter')
+                .append('svg')
+                .attr('id', 'uploadedImages')
                     
-                    scatter.selectAll('image')
-                        .data(data)
-                        .enter()
-                        .append('image')
-                        .attr('id', image => "image_" + image.id)
-                        .attr('filename', image => image.filename)
-                        .attr('xlink:href', image => image.url)
-                        .attr('x', function(image) {return state.newX(image.x)})
-                        .attr('y', function(image) {return state.newY(image.y)})
-                        .attr('width', 12 * state.imgScale)
-                        .attr('height', 16 * state.imgScale)
-                        .attr('uploaded', image => image.uploaded)
-                        .classed('hide_on', false)
-                        .classed('hide_off', true)
-                        .classed('highlight', false)
-                        .classed('highlight_neighbour', false)
-                        .classed('highlight_uploaded', true) 
-                        /* mark next neighbours */
-                        .on("click", function(click,image) {
-                            markImage(click, image, scatter);
-                        }) 
-                } 
+            scatter.selectAll('image')
+                .data(data)
+                .enter()
+                .append('image')
+                .attr('id', image => "image_" + image.id)
+                .attr('filename', image => image.filename)
+                .attr('xlink:href', image => image.url)
+                .attr('x', function(image) {return state.newX(image.x)})
+                .attr('y', function(image) {return state.newY(image.y)})
+                .attr('width', 12 * state.imgScale)
+                .attr('height', 16 * state.imgScale)
+                .attr('uploaded', image => image.uploaded)
+                .classed('hide_on', false)
+                .classed('hide_off', true)
+                .classed('highlight', false)
+                .classed('highlight_neighbour', false)
+                .classed('highlight_uploaded', true) 
+                /* mark next neighbours */
+                .on("click", function(click,image) {
+                    markImage(click, image, scatter);
+                }) 
+        } 
 
-                function removeUploadedImages(){
-                    d3.select('#uploadedImages')
-                        .remove()
-                }
+        /** 
+         * This function removes previously uploaded images from the d3 map.
+        */
+        function removeUploadedImages(){
+            d3.select('#uploadedImages')
+                .remove()
+        }
     }
 
+    /**
+     * This function renders the d3 map (canvas) and the modal dialog with the detailed informations
+     * about an image and the nearest neighbours.
+     * @returns {object} - React component
+     */
     render(){
         var showDialog = this.props.showInformationDialog
         if(showDialog === undefined){
@@ -590,56 +673,56 @@ class D3Map extends Component {
         return(    
             <div>
                 <div ref="canvas">
-                <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Informations</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Container>
-                            <Row>
-                                <Col lg={4}>
-                                    <Image src={this.state.selectedImageUrl} width={192} height={256}/>
-                                </Col>
-                                <Col lg={8}>
-                                    <h3>Top {this.state.sliderValue} Similar Images:</h3>
-                                    The number below the images shows the percentual similarity to the selected image based on the euclidean distance. <br/>
-                                    <br/>
-                                    <div id="image-container">
-                                        {similarImages.map(img => {
-                                            var url = img.url
-                                            var euclideanDistance = img.similarities * 100
+                    <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Informations</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Container>
+                                <Row>
+                                    <Col lg={4}>
+                                        <Image src={this.state.selectedImageUrl} width={192} height={256}/>
+                                    </Col>
+                                    <Col lg={8}>
+                                        <h3>Top {this.state.sliderValue} Similar Images:</h3>
+                                        The number below the images shows the percentual similarity to the selected image based on the euclidean distance. <br/>
+                                        <br/>
+                                        <div id="image-container">
+                                            {similarImages.map(img => {
+                                                var url = img.url
+                                                var euclideanDistance = img.similarities * 100
 
-                                            return (
-                                                <div key={url}>
-                                                    <Image src={url}/> <br/>
-                                                    {euclideanDistance.toFixed(2)} %
-                                                </div>
-                                            )
-                                        })} 
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg={4}>
-                                    <h4>Image Properties:</h4>
-                                    <div>
-                                        Filename: {this.state.selectedImageFilename}<br/>
-                                        {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
-                                    </div>
-                                    <br></br> 
-                                </Col>
-                                <Col lg={8}>
-                                    <Button variant="outline-success" onClick={this.handleExcelExport}>
-                                        Export Data
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
-                </Modal>
-            </div>
+                                                return (
+                                                    <div key={url}>
+                                                        <Image src={url}/> <br/>
+                                                        {euclideanDistance.toFixed(2)} %
+                                                    </div>
+                                                )
+                                            })} 
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col lg={4}>
+                                        <h4>Image Properties:</h4>
+                                        <div>
+                                            Filename: {this.state.selectedImageFilename}<br/>
+                                            {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
+                                        </div>
+                                        <br></br> 
+                                    </Col>
+                                    <Col lg={8}>
+                                        <Button variant="outline-success" onClick={this.handleExcelExport}>
+                                            Export Data
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        </Modal.Body>
+                        <Modal.Footer>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
             </div>
             
         )

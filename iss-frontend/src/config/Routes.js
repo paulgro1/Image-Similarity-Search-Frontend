@@ -1,4 +1,6 @@
-// TODO: korrekte Routen einfügen
+/**
+ * All request routes.
+ */
 export const IMAGE_UPLOAD = process.env.REACT_APP_BACKEND_SERVER + 'upload';
 export const FETCH_THUMBNAILS = process.env.REACT_APP_BACKEND_SERVER  + 'images/thumbnails/all';
 export const FETCH_MULTIPLE_THUMBNAILS = process.env.REACT_APP_BACKEND_SERVER  + 'images/thumbnails/multiple';

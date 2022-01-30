@@ -1,6 +1,7 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
+import * as authenticationActions from '../actions/AuthenticationActions';
 
 const initialState = {
     images: [],
@@ -11,15 +12,17 @@ const initialState = {
 };
 
 /**
- * @param state - default: the initial state of the application
- * @param action - an action given to the store
- * 
+ * This function handles the properties of the application.
  * Everytime the rootReducer is called, redux passes the current state
  * and the action that was send to the store to the rootReducer.
+ * @param {object} state - default: the initial state of the application
+ * @param {object} action - an action sent to the store
+ * @returns {object} - updated props
  */
 
 function rootReducer(state=initialState, action) {
     console.log("Action in Reducer: " + action.type);
+    console.log(typeof action)
 
     switch(action.type){
         case imageUploadActions.SHOW_IMAGE_UPLOAD_DIALOG:
@@ -90,39 +93,15 @@ function rootReducer(state=initialState, action) {
                 }
             }
             
-        case fetchImagesActions.FETCH_IMAGES_PENDING:
-            return {
-                ...state,
-                pending: true,
-                error: null
-            }
-        case fetchImagesActions.FETCH_IMAGES_SUCCESS:
-            return {
-                ...state,
-                images: action.images,
-                pending: true,
-                error: null
-            }
-        case fetchImagesActions.FETCH_IMAGES_ERROR:
-            return {
-                ...state,
-                images: undefined,
-                pending: false,
-                error: action.error
-            }
         case fetchImagesActions.SHOW_INFORMATION_DIALOG:
             return {
                 ...state,
                 showInformationDialog: true,
-                pending: false,
-                error: null
             }
         case fetchImagesActions.HIDE_INFORMATION_DIALOG:
             return {
                 ...state,
                 showInformationDialog: false,
-                pending: false,
-                error: null
             }
         case settingsActions.SHOW_SETTINGS_DIALOG:
             return {
@@ -138,6 +117,11 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 sliderValue: action.value
+            }
+        case authenticationActions.SET_SESSION_TOKEN:
+            return {
+                ...state,
+                sessionToken: action.sessionToken
             }
         default:
             return state
