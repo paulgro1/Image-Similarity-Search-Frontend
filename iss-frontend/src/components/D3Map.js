@@ -153,7 +153,7 @@ class D3Map extends Component {
      * @param {object} nextProps - properties from redux store
      */
     async componentWillReceiveProps(nextProps) {
-        if (nextProps.uploadedImages !== this.state.uploadedImages) {
+        if (nextProps.uploadedImages !== this.state.uploadedImages && nextProps.uploadedImages !== undefined) { 
             await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }

@@ -29,7 +29,6 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: true,
-                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
@@ -37,7 +36,6 @@ function rootReducer(state=initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: false,
-                uploadedImages: action.uploadedImages,
                 error: null
             }
 
