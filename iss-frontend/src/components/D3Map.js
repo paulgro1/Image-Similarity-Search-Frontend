@@ -399,6 +399,13 @@ class D3Map extends Component {
             }
         }
 
+        /**
+        * This function handles the highlighting of images.
+        * @param {object} nearestNeighboursArray - array of the NearestNeighbours, of the selected image
+        * @param {object} image - selected image
+        * @param {number} id - id of selected image
+        * @param {object} canvas - d3 canvas object
+        */
         async markImageD3(nearestNeighboursArray, image, id, canvas){
  
         if(this.state.openInfoView === false) {
