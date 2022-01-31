@@ -611,8 +611,7 @@ class D3Map extends Component {
         }
         
         return(    
-            <div>
-                <div ref="canvas">
+                <div id="canvas" ref="canvas">
                     <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                         <Modal.Header closeButton>
                             <Modal.Title>Informations</Modal.Title>
@@ -678,7 +677,6 @@ class D3Map extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
         )
     }
 }

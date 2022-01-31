@@ -3,6 +3,8 @@ import React, { Component } from "react";
 
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
+import * as d3 from 'd3';
+
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import '../layout/css/clusterStyle.css'
@@ -34,7 +36,7 @@ class ClusterButton extends Component  {
         console.log(this.props)
     }
 
-    componentDidUpdate(nextProps) {
+    componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});

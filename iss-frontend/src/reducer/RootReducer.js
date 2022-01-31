@@ -20,7 +20,7 @@ const initialState = {
  * and the action that was send to the store to the rootReducer.
  */
 
-function rootReducer(state=initialState, action) {
+function rootReducer(state= initialState, action) {
     console.log("Action in Reducer: " + action.type);
 
     switch(action.type){

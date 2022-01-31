@@ -1,17 +1,20 @@
 .cluster0 {
   outline: 0.4vh solid red;
+  box-shadow: 100px 50px 50px black;
 }
 
 .cluster1 {
   outline: 0.4vh solid blueviolet;
+  box-shadow: 100px 50px 50px black;
 }
 
 .cluster2 {
-  outline: 0.4vh solid royalblue;
+  outline: 0.4vh solid #ff98a9;
+  box-shadow: 100px 50px 50px black;
 }
 
 .cluster3 {
-  outline: 0.4vh solid turquoise;
+  outline: 0.4vh solid #3cff00;
 }
 
 .cluster4 {
@@ -35,7 +38,7 @@
 }
 
 .cluster9 {
-  outline: 0.4vh solid #413550;
+  outline: 0.4vh solid #0a8b26;
 }
 
 .cluster10 {
@@ -43,19 +46,19 @@
 }
 
 .cluster11 {
-  outline: 0.4vh solid #8d0000;
+  outline: 0.4vh solid #3d0303;
 }
 
 .cluster12 {
-  outline: 0.4vh solid #0bff34;
+  outline: 0.4vh solid #00f7ff;
 }
 
 .cluster13 {
-  outline: 0.4vh solid #ffe600;
+  outline: 0.4vh solid #ff00f7;
 }
 
 .cluster14 {
-  outline: 0.4vh solid #c728c2;
+  outline: 0.4vh solid #ffee00;
 }
 
 /*# sourceMappingURL=clusterStyle.css.map */

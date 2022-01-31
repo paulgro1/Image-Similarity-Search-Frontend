@@ -1,3 +1,10 @@
+html, body{
+  margin:0;
+  padding:0;
+  height:100%;
+  overflow:hidden;
+  }
+
 #image-container {
   width: 480px !important;
   height: 150px !important;

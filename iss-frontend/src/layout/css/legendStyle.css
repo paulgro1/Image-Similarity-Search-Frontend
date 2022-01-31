@@ -1,7 +1,7 @@
 #legend {
   position: absolute;
   right: 0;
-  margin-bottom: 0.5rem;
+  bottom: 0;
   padding: 1%;
   background-color: #f8f9fa;
   border: 1px solid #198754;
@@ -42,10 +42,10 @@
   color: blueviolet;
 }
 #legend #cluster #cluster2 {
-  color: royalblue;
+  color: #ff98a9;
 }
 #legend #cluster #cluster3 {
-  color: turquoise;
+  color: #3cff00;
 }
 #legend #cluster #cluster4 {
   color: yellowgreen;
@@ -63,22 +63,22 @@
   color: indianred;
 }
 #legend #cluster #cluster9 {
-  color: #413550;
+  color: #0a8b26;
 }
 #legend #cluster #cluster10 {
   color: #83e6ff;
 }
 #legend #cluster #cluster11 {
-  color: #8d0000;
+  color: #3d0303;
 }
 #legend #cluster #cluster12 {
-  color: #0bff34;
+  color: #00f7ff;
 }
 #legend #cluster #cluster13 {
-  color: #ffe600;
+  color: #ff00f7;
 }
 #legend #cluster #cluster14 {
-  color: #c728c2;
+  color: #ffee00;
 }
 
 /*# sourceMappingURL=legendStyle.css.map */
