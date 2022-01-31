@@ -19,6 +19,8 @@ import * as XLSX from "xlsx";
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as authenticationActions from '../actions/AuthenticationActions'
+import { X } from 'react-bootstrap-icons';
+import add from 'd3-quadtree/src/add';
 
 const mapStateToProps = state => {
     return state;
@@ -329,6 +331,7 @@ class D3Map extends Component {
         }
     }
     
+    
 
     drawMap(data, newImages) {
         if(this.state.uploadedImages){
@@ -349,7 +352,6 @@ class D3Map extends Component {
 
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                    
 
                 // x-Axis
                 var x = d3.scaleLinear()
@@ -410,6 +412,28 @@ class D3Map extends Component {
                         this.removeMark(svgCanvas)                
                     }.bind(this))
                 
+                // //Collision Detection D3 Quadtree
+                // var tree = d3.quadtree()
+                //     .x(x)
+                //     .y(y)
+                //     .extent([0, 0], [canvasWidth, canvasHeight])
+                   
+
+                // console.log(tree.data());
+
+                // Raster wird erstellt und Zellen in Array gespeichert
+                const cells = [];
+                const n = (canvasWidth / 10) * (canvasHeight / 10);
+                const squareWidth = canvasWidth / (canvasWidth / 10);
+                let squareID = -1;
+                for (let j = 0; j < canvasWidth; j + squareWidth) {
+                    for (let k = 0; k < canvasHeight; k + squareWidth) {
+                    cells.push(
+                        new Square(j, j + squareWidth, k, k + squareWidth, squareID + 1)
+                    );
+                    }
+                }
+
                 scatter.selectAll('image')
                     .data(data)
                     .enter()
@@ -421,9 +445,11 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
                     .attr('height', image => image.height)
+                    .attr("cellID", function(image){ calcCell(image)})
                     .classed('hide', false)
                     .classed('highlight', false)
                     .classed('highlight_neighbour', false)
+                    // .each(function(image){add(tree, image.x, image.y)})
                     /* mark next neighbours */
                     .on("click", function(click,image) {
                         this.markImage(click, image, svgCanvas, false);
@@ -433,7 +459,10 @@ class D3Map extends Component {
                         this.handleShow(e);
                     }.bind(this))
                     
+                    // console.log(tree.data());
+
                     scatter.call(zoom)
+
             }  
                 // A function that updates the chart when the user zoom and thus new boundaries are available
                 function updateChart() {
@@ -441,7 +470,7 @@ class D3Map extends Component {
                     // recover the new scale
                     var newX = d3.event.transform.rescaleX(x);
                     var newY = d3.event.transform.rescaleY(y);
-                   
+                    
                     this.setState({newX: newX});
                     this.setState({newY: newY});
                     // update axes with these new boundaries
@@ -497,6 +526,23 @@ class D3Map extends Component {
                 function removeUploadedImages(){
                     d3.select('#uploadedImages')
                         .remove()
+                }
+
+                //Funktion, um Quadtree nach allen Punkten in bestimmten Rechteck zu durchsuchen
+                function search(quadtree, xmin, ymin, xmax, ymax) {
+                    const results = [];
+                    quadtree.visit((node, x1, y1, x2, y2) => {
+                        if (!node.length) {
+                        do {
+                            let d = node.data;
+                            if (d[0] >= xmin && d[0] < xmax && d[1] >= ymin && d[1] < ymax) {
+                            results.push(d);
+                            }
+                        } while (node = node.next);
+                        }
+                        return x1 >= xmax || y1 >= ymax || x2 < xmin || y2 < ymin;
+                    });
+                    return results;
                 }
     }
 
