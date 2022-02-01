@@ -5,6 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
 import ExportButton from './ExportButton';
+import InstructionsButton from './InstructionsButton';
 
 import '../layout/css/HeaderStyle.css'
 
@@ -29,6 +30,7 @@ class Header extends Component {
                             <ImageUploadButton/>
                             <ExportButton/>
                             <SettingsButton/>
+                            <InstructionsButton/>
                         </Nav>
                     </Navbar.Collapse> 
                 </Navbar>
