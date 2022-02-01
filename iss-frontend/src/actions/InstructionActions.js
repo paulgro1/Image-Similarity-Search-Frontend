@@ -3,7 +3,6 @@ export const HIDE_INSTRUCTIONS_DIALOG = 'HIDE_INSTRUCTIONS_DIALOG'
 
 
 
-
 /**
  * This function returns an action object to show the instructions dialog.
  * @returns {object} - action object that will be send to the RootReducer

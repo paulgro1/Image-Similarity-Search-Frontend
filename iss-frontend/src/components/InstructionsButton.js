@@ -121,7 +121,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              Double Click to get the detail view, nearest neighbors, similarity, option to export data
+              Double Click to get the detail view, nearest neighbours, similarity, option to export data
             </Col>
             </Row>
 
@@ -133,7 +133,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              Click here to set number of nearest neighbors with a Slider
+              Click here to set number of nearest neighbours with a Slider
             </Col>
             </Row>
            
@@ -145,7 +145,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              Click here to export (clicked) nearest neighbors in a table
+              Click here to export (clicked) nearest neighbours in a table
             </Col>
             </Row>
 
