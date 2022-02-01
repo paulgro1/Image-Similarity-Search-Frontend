@@ -49,7 +49,7 @@ class D3Map extends Component {
             imgScale: 1,
             clickActive: false,
             sessionToken: undefined,
-            clusterCenterValue: 5,
+            clusterCenterValue: '',
             openInfoView: false,
             markedImagesIDs: [],
             markedUploadedImage: undefined,
@@ -125,13 +125,21 @@ class D3Map extends Component {
         
                 }
                 
-                this.setState({cluserCenterValue: clusterCenterValues.length})
+                /* var value = clusterCenterValues.length
+                this.setState({cluserCenterValue: value}) */
         
                 this.setState({IMAGES: IMAGES})
                 this.drawMap(IMAGES);
             }.bind(this))
         }.bind(this));
     }
+
+
+    /* componentDidUpdate(nextProps) {
+        if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
+            this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+        }
+    } */
 
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
@@ -318,6 +326,7 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, canvas) {
+
         this.setState({selectedImageId: image.id});
 
         if(this.state.markActive === undefined){
@@ -328,6 +337,8 @@ class D3Map extends Component {
             this.setState({sliderValue: this.state.sliderValue});
         }
 
+        if(this.state.markActive === false) {
+            
         var nearestNeighboursArray
         if(image.uploaded){
             this.handleUploadedNearestN();
@@ -344,6 +355,7 @@ class D3Map extends Component {
             }
         }
 
+        } 
  
         if(this.state.openInfoView === false) {
 
@@ -412,8 +424,7 @@ class D3Map extends Component {
             }
 
             else {
-                console.log('This Picture is not marked. Please try again!')
-                /* this.removeMark() */
+                this.removeMark() 
             }
         }        
     }
@@ -599,7 +610,7 @@ class D3Map extends Component {
         }
 
         var selectedCluster = []
-        for(let i=0; i<this.state.clusterCenterValue; i++) {
+        for(let i=0; i < this.state.clusterCenterValue; i++) {
             var clusterValue = "cluster" + i 
             var clusterLegendItem = <li id={clusterValue}>Cluster-ID: {i}</li>
             selectedCluster.push(clusterLegendItem) 

@@ -47,6 +47,24 @@ class SettingsButton extends Component {
         this.setState({clusterCenterValue: value});
     }
 
+    componentDidMount() {
+        const {sessionToken} = this.props
+        const {setClusterValueAction} = this.props
+        const {setValueAction} = this.props
+        setValueAction()
+        setClusterValueAction(this.state.clusterCenterValue, sessionToken )
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
+            this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+        }
+        if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
+            this.setState({sliderValue: nextProps.sliderValue});
+        }
+
+    }
+
     handleSave(e){
         e.preventDefault();
         const {setValueAction} = this.props;

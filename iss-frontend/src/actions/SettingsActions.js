@@ -47,13 +47,9 @@ export const setClusterCenterValue = (value, sessionToken) => {
     return function (dispatch) {
         console.log("Settings: ClusterSliderValue: " + value)
         fetchSetClusterValue(value, sessionToken).then(function () {
-
                 dispatch(setClusterCenterValueAction(value))
             }
-
-
         )
-
     }
 }
 

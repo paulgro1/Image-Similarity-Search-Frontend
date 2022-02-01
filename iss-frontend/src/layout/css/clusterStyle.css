@@ -1,16 +1,13 @@
 .cluster0 {
   outline: 0.4vh solid red;
-  box-shadow: 100px 50px 50px black;
 }
 
 .cluster1 {
   outline: 0.4vh solid blueviolet;
-  box-shadow: 100px 50px 50px black;
 }
 
 .cluster2 {
   outline: 0.4vh solid #ff98a9;
-  box-shadow: 100px 50px 50px black;
 }
 
 .cluster3 {

@@ -1,7 +1,8 @@
 #legend {
   position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
+  margin-top: 56px;
   padding: 1%;
   background-color: #f8f9fa;
   border: 1px solid #198754;

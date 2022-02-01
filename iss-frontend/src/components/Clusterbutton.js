@@ -3,14 +3,13 @@ import React, { Component } from "react";
 
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
-import * as d3 from 'd3';
-
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import '../layout/css/clusterStyle.css'
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as settingsAction from '../actions/SettingsActions'
+
 
 const mapStateToProps = state => {
     return state
@@ -33,16 +32,18 @@ class ClusterButton extends Component  {
     componentDidMount () {
         const {getImagesMetaFromDbAction} = this.props
         getImagesMetaFromDbAction()
-        console.log(this.props)
     }
 
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+            this.hideCluster()
             const {getImagesMetaFromDbAction} = this.props
             getImagesMetaFromDbAction()
         }
+
+        
     }
 
     showCluster() {
@@ -52,7 +53,7 @@ class ClusterButton extends Component  {
                 clusterActive: true,
                 checked: true,
                 images: IMAGES
-            }, function () {
+            },  () => {
                 IMAGES.forEach(image => {
                     const element = document.getElementById("image_" + image.id)
                     element.classList.add('cluster' + image.clusterCenter)
@@ -66,11 +67,15 @@ class ClusterButton extends Component  {
     }
 
     hideCluster() {
+        var images = this.state.images
+        if(this.state.images === undefined) {
+            images = this.props.images
+        }
         this.setState({
             clusterActive: false,
             checked: false
-        }, function() {
-            this.state.images.forEach(image => {
+        }, () => {
+            images.forEach(image => {
                 const element = document.getElementById("image_" + image.id)
                 element.classList.remove('cluster' + image.clusterCenter)
                 
@@ -79,7 +84,6 @@ class ClusterButton extends Component  {
     }
 
     setChecked(value) {
-        console.log(value)
         this.setState({checked: value})
     }
     render() {

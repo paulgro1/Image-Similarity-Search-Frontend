@@ -22,6 +22,7 @@ const initialState = {
 
 function rootReducer(state= initialState, action) {
     console.log("Action in Reducer: " + action.type);
+    console.log(state)
 
     switch(action.type){
         case imageUploadActions.SHOW_IMAGE_UPLOAD_DIALOG:
