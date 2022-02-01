@@ -133,7 +133,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              Set number of nearest neighbors with a Slider
+              Click here to set number of nearest neighbors with a Slider
             </Col>
             </Row>
            
@@ -145,7 +145,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              Export (clicked) nearest neighbors in a table
+              Click here to export (clicked) nearest neighbors in a table
             </Col>
             </Row>
 
@@ -157,7 +157,7 @@ class InstructionsButton extends Component {
             </div>
             </Col>
             <Col xs={12} md={8}>
-              You have the choice between Single- and Multiupload
+              Click here to choose between Single- and Multiupload
             </Col>
             </Row>
     
