@@ -353,6 +353,8 @@ class D3Map extends Component {
                 .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+                 
+
                 // x-Axis
                 var x = d3.scaleLinear()
                     .domain([-50, 60])
@@ -375,6 +377,18 @@ class D3Map extends Component {
                     .attr("stroke-width","0")
                     
                 this.setState({yAxis: y, newY: y})
+
+                // // Raster wird erstellt und Zellen in Array gespeichert
+                // const cells = [];
+                // const squareWidth = canvasWidth / (canvasWidth / 10);
+                // let squareID = -1;
+                // for (let j = 0; j <= canvasWidth; j + squareWidth) {
+                //     for (let k = 0; k <= canvasHeight; k + squareWidth) {
+                //     cells.push(
+                //         new Cell(j, j + squareWidth, k, k + squareWidth, squareID + 1)
+                //     );
+                //     }
+                // }
 
 
                 // Add a clipPath: everything out of this area won't be drawn.
@@ -412,28 +426,12 @@ class D3Map extends Component {
                         this.removeMark(svgCanvas)                
                     }.bind(this))
                 
-                // //Collision Detection D3 Quadtree
-                // var tree = d3.quadtree()
-                //     .x(x)
-                //     .y(y)
-                //     .extent([0, 0], [canvasWidth, canvasHeight])
-                   
-
-                // console.log(tree.data());
-
-                // Raster wird erstellt und Zellen in Array gespeichert
-                const cells = [];
-                const n = (canvasWidth / 10) * (canvasHeight / 10);
-                const squareWidth = canvasWidth / (canvasWidth / 10);
-                let squareID = -1;
-                for (let j = 0; j < canvasWidth; j + squareWidth) {
-                    for (let k = 0; k < canvasHeight; k + squareWidth) {
-                    cells.push(
-                        new Square(j, j + squareWidth, k, k + squareWidth, squareID + 1)
-                    );
-                    }
-                }
-
+                //D3.js Quadtree
+                const tree = d3.quadtree()
+                    .extent([[0, 0], [canvasWidth, canvasHeight]])
+                    .x(x)
+                    .y(y);
+                    
                 scatter.selectAll('image')
                     .data(data)
                     .enter()
@@ -445,11 +443,11 @@ class D3Map extends Component {
                     .attr('y', function(image) {return y(image.y)})
                     .attr('width', image => image.width)
                     .attr('height', image => image.height)
-                    .attr("cellID", function(image){ calcCell(image)})
+                    // .attr("cellID", function(image){ calcCell(image)})
                     .classed('hide', false)
                     .classed('highlight', false)
                     .classed('highlight_neighbour', false)
-                    // .each(function(image){add(tree, image.x, image.y)})
+                    .each(function(image){tree.add(image.x, image.y)})
                     /* mark next neighbours */
                     .on("click", function(click,image) {
                         this.markImage(click, image, svgCanvas, false);
@@ -458,14 +456,81 @@ class D3Map extends Component {
                     .on("dblclick", function(e) {
                         this.handleShow(e);
                     }.bind(this))
+
+
+                    // console.log(this.state.IMAGES.x);
                     
-                    // console.log(tree.data());
+                    console.log(tree.data());
+
+                    console.log(canvasHeight + " & " + canvasWidth);
+
+                    // console.log(search(tree, 300, 50, 500, 250));
+
+
+                    // scatter.append("rect")
+                    // .attr('x', 300)
+                    // .attr('y', 50)
+                    // .attr("width", 200)
+                    // .attr("height", 200)
+                    // .style("fill", "none")
+                    // .style("stroke", "red")
+                    // .style("stroke-width", 3);
+
+                    
+
+                    var rect = svgCanvas.selectAll(".node")
+                        .data(nodes(tree))
+                        .enter().append("rect")
+                        .attr("class", "node")
+                        .attr("x", function(d) { return d.x1; })
+                        .attr("y", function(d) { return d.y1; })
+                        .attr("width", function(d) { return d.x2 - d.x1; })
+                        .attr("height", function(d) { return d.y2 - d.y1; });
 
                     scatter.call(zoom)
 
+                    
+                    
+
             }  
+
+                    //PDS Collect a list of nodes to draw rectangles, adding extent and depth data
+                    function nodes(quadtree) {
+                    var nodes = [];
+                    quadtree.depth = 0; // root
+                    quadtree.visit(function(node, x1, y1, x2, y2) {
+                        node.x1 = x1;
+                        node.y1 = y1;
+                        node.x2 = x2;
+                        node.y2 = y2;
+                        nodes.push(node);
+                        for (var i=0; i<4; i++) {
+                            if (node.nodes[i]) node.nodes[i].depth = node.depth+1;
+                        }
+                    });
+                    return nodes;
+                    }
+
+                //Funktion, um nach bestimmten Rechteck im Quadtree zu suchen
+                function search(quadtree, xmin, ymin, xmax, ymax) {
+                    const results = [];
+                    quadtree.visit((node, x1, y1, x2, y2) => {
+                        if (!node.length) {
+                        do {
+                            let d = node.data;
+                            if (d[0] >= xmin && d[0] < xmax && d[1] >= ymin && d[1] < ymax) {
+                            results.push(d);
+                            }
+                        } while (node = node.next);
+                        }
+                        return x1 >= xmax || y1 >= ymax || x2 < xmin || y2 < ymin;
+                    });
+                    return results;
+                    }
+
                 // A function that updates the chart when the user zoom and thus new boundaries are available
                 function updateChart() {
+
                     k = d3.event.transform.k
                     // recover the new scale
                     var newX = d3.event.transform.rescaleX(x);
@@ -528,22 +593,47 @@ class D3Map extends Component {
                         .remove()
                 }
 
-                //Funktion, um Quadtree nach allen Punkten in bestimmten Rechteck zu durchsuchen
-                function search(quadtree, xmin, ymin, xmax, ymax) {
-                    const results = [];
-                    quadtree.visit((node, x1, y1, x2, y2) => {
-                        if (!node.length) {
-                        do {
-                            let d = node.data;
-                            if (d[0] >= xmin && d[0] < xmax && d[1] >= ymin && d[1] < ymax) {
-                            results.push(d);
-                            }
-                        } while (node = node.next);
-                        }
-                        return x1 >= xmax || y1 >= ymax || x2 < xmin || y2 < ymin;
-                    });
-                    return results;
-                }
+                // function Cell(x, y, xMin, xMax, yMin, yMax, id) {
+                    // this.x = xMax - (xMax - xMin / 2);
+                    // this.y = yMax - (yMax - yMin / 2);
+                    // this.xMin = xMin;
+                    // this.xMax = xMax;
+                    // this.yMin = yMin;
+                    // this.yMax = yMax;
+                    // this.id = id;
+                    // }
+
+                    // function calcCell(image, cells) {
+                    // // if (image.cell != null) {
+                    // //   var xDiff = image.cell.x - image.x;
+                    // //   var yDiff = image.cell.y - image.y;
+                    // //   if (xDiff < 100 || yDiff < 100) {
+                    // //     return image.cell;
+                    // //   }
+                    // // }
+                    // for (const cell of cells) {
+                    //     if (
+                    //     image.x > cell.xMin &&
+                    //     image.x < cell.xMax &&
+                    //     image.y > cell.yMin &&
+                    //     image.y < cell.yMax
+                    //     ) {
+                    //     console.log(cell.id);
+                    //     cellGroup(cell);
+                    //     return cell.id;
+                    //     } else {
+                    //     return;
+                    //     }
+                    // }
+                    // }
+
+                    // function cellGroup(cell) {
+                    // var id = cell.id;
+                    // var cellGroup = new Set();
+                    // scatter.selectAll("[cellID=" + id + "]").each(function () {
+                    //     cellGroup.add(this);
+                    // });
+                    // }
     }
 
     render(){
