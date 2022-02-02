@@ -9,7 +9,8 @@ const initialState = {
     showImageUploadDialog: false,
     showImageCropDialog: false,
     sliderValue: 5,
-    clusterCenterValue: 5
+    clusterCenterValue: 5,
+    markedImagesIDs: []
 };
 
 /**
@@ -82,6 +83,7 @@ function rootReducer(state= initialState, action) {
         case imageUploadActions.SEND_FILES_TO_STORE:
             if(action.source === "multi"){
                 return {
+                    ...state,
                     showImageUploadDialog: true,
                     files: action.files,
                     pending: false,
@@ -89,6 +91,7 @@ function rootReducer(state= initialState, action) {
                 }
             }else{
                 return {
+                    ...state,
                     files: action.files
                 }
             }
@@ -143,11 +146,22 @@ function rootReducer(state= initialState, action) {
                 sliderValue: action.value
             }
         case settingsActions.SET_CLUSTER_VALUE:
-            console.log('SET_CLUSTER_VALUE')
-            console.log(action)
             return {
                 ...state,
                 clusterCenterValue: action.value
+            }
+        case settingsActions.SET_CLUSTERSWITCH:
+            console.log(action)
+            return {
+                ...state,
+                clusterActive: action.value
+            }
+        case settingsActions.SET_MARK_ACTIVE:
+            console.log(action)
+            return {
+                ...state,
+                markActive: action.markActive,
+                markedImagesIDs: action.markedImagesIDs,
             }
         case authenticationActions.SET_SESSION_TOKEN:
             return{

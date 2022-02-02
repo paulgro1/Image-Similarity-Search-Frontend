@@ -50,6 +50,7 @@ class D3Map extends Component {
             clickActive: false,
             sessionToken: undefined,
             clusterCenterValue: '',
+            clusterActive: undefined,
             openInfoView: false,
             markedImagesIDs: [],
             markedUploadedImage: undefined,
@@ -143,7 +144,6 @@ class D3Map extends Component {
 
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
             await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
@@ -154,6 +154,10 @@ class D3Map extends Component {
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
         }
+        if (nextProps.clusterActive !== this.state.clusterActive && nextProps.clusterActive !== undefined) {
+            this.setState({clusterActive: nextProps.clusterActive});
+        }
+
 
     }
 
@@ -309,6 +313,12 @@ class D3Map extends Component {
             }
         }
 
+        if(this.props.clusterActive) {
+                this.props.images.forEach(image => {
+                const element = document.getElementById("image_" + image.id)
+                element.classList.add('cluster' + image.clusterCenter)
+            })
+        }
         if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)
@@ -318,6 +328,9 @@ class D3Map extends Component {
             .classed('hide_on', false)
             this.setState({ markActive: false })
             this.setState({ openInfoView: false })
+            const {setMarkActivAction} = this.props
+            setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
+
         }
 
         else{
@@ -326,6 +339,9 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, canvas) {
+        if(!image.uploaded) {
+            console.log('blabla')
+        }
 
         this.setState({selectedImageId: image.id});
 
@@ -339,23 +355,25 @@ class D3Map extends Component {
 
         if(this.state.markActive === false) {
             
-        var nearestNeighboursArray
-        if(image.uploaded){
-            this.handleUploadedNearestN();
-            nearestNeighboursArray  = this.state.nearestNeighbours
-        }
-        else{
-            var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue, this.state.sessionToken)
-            nearestNeighboursArray = []
-            for (let i=0; i < this.state.sliderValue; i++){
-                let nearestNeighbour = {
-                    id: nearestNeighbours.ids[0][i],
-                }
-                nearestNeighboursArray.push(nearestNeighbour)
+            var nearestNeighboursArray
+            if(image.uploaded){
+                this.handleUploadedNearestN();
+                nearestNeighboursArray  = this.state.nearestNeighbours
             }
+            else{
+                var nearestNeighbours  = await fetchImagesActions.fetchNearestNeighbours(parseInt(image.id), this.state.sliderValue, this.state.sessionToken)
+                nearestNeighboursArray = []
+                for (let i=0; i < this.state.sliderValue; i++){
+                    let nearestNeighbour = {
+                        id: nearestNeighbours.ids[0][i],
+                    }
+                    nearestNeighboursArray.push(nearestNeighbour)
+                }
+            }
+
         }
 
-        } 
+        
  
         if(this.state.openInfoView === false) {
 
@@ -384,6 +402,14 @@ class D3Map extends Component {
                         .classed('highlight_uploaded', false)
                     }
                 }
+
+                // hide cluster
+                if(this.props.clusterActive) {
+                        this.props.images.forEach(image => {
+                        const element = document.getElementById("image_" + image.id)
+                        element.classList.remove('cluster' + image.clusterCenter)
+                    })
+                }
                 
                 /* mark clicked Image */
                 d3.select('#image_' + image.id)
@@ -401,9 +427,12 @@ class D3Map extends Component {
                     .classed('hide_off', false)
                     .classed('highlight_neighbour', true)
                 }
-                /* set State */
+                /* set State + props */
+                
                 this.setState({ markActive: true })
                 this.setState({ openInfoView: true })
+                const {setMarkActivAction} = this.props
+                setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
                 
     
             } else {
@@ -415,6 +444,14 @@ class D3Map extends Component {
                 .classed('hide_off', true)
                 .classed('hide_on', false)
                 this.setState({ markActive: false })
+
+                //if cluster is active show clustermark after remove imageMark
+                if(this.props.clusterActive) {
+                    this.props.images.forEach(image => {
+                    const element = document.getElementById("image_" + image.id)
+                    element.classList.add('cluster' + image.clusterCenter)
+                })
+            }
             }
         }
         else {
@@ -598,6 +635,7 @@ class D3Map extends Component {
     }
 
     render(){
+        
         var showDialog = this.props.showInformationDialog
         if(showDialog === undefined){
             showDialog = false;
@@ -697,7 +735,9 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     hideInformationDialogAction: fetchImagesActions.hideInformationDialogAction,
     setSessionToken: authenticationActions.setSessionToken,
     getImagesMetaFromDbAction: fetchImagesActions.getImagesMetaFromDb,
-    setClusterValueAction: settingsActions.setClusterCenterValue
+    setClusterValueAction: settingsActions.setClusterCenterValue,
+    setClusterSwitchAction: settingsActions.setClusterSwitch,
+    setMarkActivAction: settingsActions.setMarkActive
 },dispatch)
 
 const connectedD3Map = connect(mapStateToProps, mapDispatchToProps) (D3Map);

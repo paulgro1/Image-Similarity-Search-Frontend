@@ -10,7 +10,6 @@ import '../layout/css/clusterStyle.css'
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as settingsAction from '../actions/SettingsActions'
 
-
 const mapStateToProps = state => {
     return state
 }
@@ -47,40 +46,56 @@ class ClusterButton extends Component  {
     }
 
     showCluster() {
-        if (!this.state.clusterActive) {
-            var IMAGES = this.props.images
-            this.setState({
-                clusterActive: true,
-                checked: true,
-                images: IMAGES
-            },  () => {
-                IMAGES.forEach(image => {
-                    const element = document.getElementById("image_" + image.id)
-                    element.classList.add('cluster' + image.clusterCenter)
+        const {setClusterSwitchAction} = this.props
+        
+            if (!this.state.clusterActive) {
+                var IMAGES = this.props.images
+                this.setState({
+                    clusterActive: true,
+                    checked: true,
+                    images: IMAGES
+                },  () => {
+                    if(this.props.markActive) {
+                        this.props.markedImagesIDs.forEach(id => {
+                            const image = document.getElementById("image_" + id)
+                            image.classList.add('cluster' + image.__data__.clusterCenter)
+                        })
+                    }
+                    else {
+                        IMAGES.forEach(image => {
+                            const element = document.getElementById("image_" + image.id)
+                            element.classList.add('cluster' + image.clusterCenter)
+                        });
+                    }
                     
-                });
-            })
-            
-        } else {
-            this.hideCluster()
-        }
+                    console.log(this.state.clusterActive)
+                    setClusterSwitchAction(this.state.clusterActive)
+                })
+                
+            } else {
+                this.hideCluster()
+            }
     }
 
     hideCluster() {
-        var images = this.state.images
-        if(this.state.images === undefined) {
-            images = this.props.images
-        }
-        this.setState({
-            clusterActive: false,
-            checked: false
-        }, () => {
-            images.forEach(image => {
-                const element = document.getElementById("image_" + image.id)
-                element.classList.remove('cluster' + image.clusterCenter)
-                
+        const {setClusterSwitchAction} = this.props
+            var images = this.state.images
+            if(this.state.images === undefined) {
+                images = this.props.images
+            }
+            this.setState({
+                clusterActive: false,
+                checked: false
+            }, () => {
+                images.forEach(image => {
+                    const element = document.getElementById("image_" + image.id)
+                    element.classList.remove('cluster' + image.clusterCenter)
+                    
+                })
+                console.log(this.state.clusterActive)
+                setClusterSwitchAction(this.state.clusterActive)
             })
-        })
+            
     }
 
     setChecked(value) {
@@ -98,6 +113,7 @@ class ClusterButton extends Component  {
 const mapDispatchToProps = dispatch => bindActionCreators({
     getImagesMetaFromDbAction: fetchImagesActions.getImagesMetaFromDb,
     setClusterCenterValueAction: settingsAction.setClusterCenterValue,
+    setClusterSwitchAction: settingsAction.setClusterSwitch,
 },dispatch)
 
 const connectedClusterButton = connect(mapStateToProps, mapDispatchToProps)(ClusterButton);
