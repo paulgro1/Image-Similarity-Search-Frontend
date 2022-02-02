@@ -34,7 +34,6 @@ class ClusterButton extends Component  {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
             this.hideCluster()
@@ -67,8 +66,6 @@ class ClusterButton extends Component  {
                             element.classList.add('cluster' + image.clusterCenter)
                         });
                     }
-                    
-                    console.log(this.state.clusterActive)
                     setClusterSwitchAction(this.state.clusterActive)
                 })
                 
@@ -92,7 +89,6 @@ class ClusterButton extends Component  {
                     element.classList.remove('cluster' + image.clusterCenter)
                     
                 })
-                console.log(this.state.clusterActive)
                 setClusterSwitchAction(this.state.clusterActive)
             })
             

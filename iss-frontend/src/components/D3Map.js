@@ -330,7 +330,6 @@ class D3Map extends Component {
             this.setState({ openInfoView: false })
             const {setMarkActivAction} = this.props
             setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
-
         }
 
         else{
@@ -339,10 +338,6 @@ class D3Map extends Component {
     }
 
     async markImage(image, id, canvas) {
-        if(!image.uploaded) {
-            console.log('blabla')
-        }
-
         this.setState({selectedImageId: image.id});
 
         if(this.state.markActive === undefined){
