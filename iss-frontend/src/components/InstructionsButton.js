@@ -102,7 +102,7 @@ class InstructionsButton extends Component {
 
           <div class="col">
           <Col xs={12} md={8}>
-              Zoom In and Out
+              Zoom in and out
             </Col>
             </div>
 
@@ -126,7 +126,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
           <Col xs={12} md={8}>
-              Slide through the Dataset
+              Slide through the dataset
             </Col>
             </div>
             </Row>
@@ -147,7 +147,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click to get the nearest Neighbours
+              Click to get the nearest neighbours
             </Col>
             </div>
           </Row>
@@ -168,7 +168,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Two Clicks on marked Image to get the Detail View, nearest Neighbours, Similarity, Option to export Data
+              Two clicks on marked image to get the detail view, nearest neighbours, similarity, option to export data
             </Col>
             </div>
             </Row>
@@ -189,7 +189,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to set Number of nearest Neighbours and/or  with a Slider
+              Click here to set number of nearest neighbours and/or  with a slider
             </Col>
             </div>
             </Row>
@@ -210,7 +210,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to export (marked) nearest Neighbours in a Table
+              Click here to export (marked) nearest neighbours in a table
             </Col>
             </div>
             </Row>
@@ -233,7 +233,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to choose between Single- and Multiupload
+              Click here to choose between single- and multiupload
             </Col>
             </div>
             </Row>
