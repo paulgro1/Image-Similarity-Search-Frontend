@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { Gear } from "react-bootstrap-icons";
+
 import { Col, Row, Container } from "react-bootstrap";
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -15,6 +15,8 @@ import leftclick from '../InstructionIcons/left-click.png';
 import settingsButton from '../InstructionIcons/settingsButton.png';
 import uploadImageButton from '../InstructionIcons/uploadImageButton.png';
 import exportButton from '../InstructionIcons/exportButton.png';
+import ClusterOn from '../InstructionIcons/ClusterOnButton.png';
+import ClusterOff from '../InstructionIcons/ClusterOffButton.png';
 
 const mapStateToProps = state => {
     return state
@@ -74,11 +76,11 @@ class InstructionsButton extends Component {
                 </svg>
                 </Button>
 
-                <Modal show={showDialog} onHide={this.handleClose} >
+                <Modal show={showDialog} onHide={this.handleClose} scrollable={true} >
                     <Modal.Header closeButton>
                         <Modal.Title>Instructions</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body className="show-grid">
+                    <Modal.Body className="show-grid ">
         <Container>
           
         <table class="table table-striped">
@@ -100,7 +102,7 @@ class InstructionsButton extends Component {
 
           <div class="col">
           <Col xs={12} md={8}>
-              Zoom in and out
+              Zoom In and Out
             </Col>
             </div>
 
@@ -124,7 +126,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
           <Col xs={12} md={8}>
-              Slide through the dataset
+              Slide through the Dataset
             </Col>
             </div>
             </Row>
@@ -145,7 +147,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click to get the nearest neighbours
+              Click to get the nearest Neighbours
             </Col>
             </div>
           </Row>
@@ -166,7 +168,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Two Clicks on marked image to get the detail view, nearest neighbours, similarity, option to export data
+              Two Clicks on marked Image to get the Detail View, nearest Neighbours, Similarity, Option to export Data
             </Col>
             </div>
             </Row>
@@ -180,14 +182,14 @@ class InstructionsButton extends Component {
             <div class="col">
             <Col xs={6} md={4}>
             <div class="col-xs-1" align="center">
-            <img src={settingsButton} height={50} width={50} alt="setting buttom"/>
+            <img src={settingsButton} height={45} width={45} alt="setting buttom"/>
             </div>
             </Col>
             </div>
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to set number of nearest neighbours and/or  with a Slider
+              Click here to set Number of nearest Neighbours and/or  with a Slider
             </Col>
             </div>
             </Row>
@@ -201,14 +203,14 @@ class InstructionsButton extends Component {
             <div class="col">
             <Col xs={6} md={4}>
             <div class="col-xs-1" align="center">
-            <img src={exportButton} height={50} width={50} alt="export button"/>
+            <img src={exportButton} height={42} width={45} alt="export button"/>
             </div>
             </Col>
             </div>
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to export (clicked) nearest neighbours in a table
+              Click here to export (marked) nearest Neighbours in a Table
             </Col>
             </div>
             </Row>
@@ -223,7 +225,7 @@ class InstructionsButton extends Component {
             <Col xs={6} md={4} >
 
             <div class="col-xs-1" align="center">
-            <img src={uploadImageButton} height={50} width={120} alt="uploaded image button"/>
+            <img src={uploadImageButton} height={40} width={100} alt="uploaded image button"/>
             </div>
 
             </Col>
@@ -236,6 +238,34 @@ class InstructionsButton extends Component {
             </div>
             </Row>
             </div>
+
+
+            <div class="row">
+
+            <Row>
+            <div class="col">
+            <Col xs={6} md={4} >
+
+            <div class="col-xs-1" align="center">
+            <img src={ClusterOn} height={40} width={100} alt="cluster on button"/>
+            <img src={ClusterOff} height={40} width={100} alt="cluster off button"/>
+            </div>
+
+            </Col>
+            </div>
+
+            <div class="col">
+            <Col xs={12} md={8}>
+              Turn On or Off the different Clusters and their Colors  
+            </Col>
+            </div>
+            </Row>
+            </div>
+
+
+
+
+
 
             </div>
     </table>

@@ -54,3 +54,7 @@
 .col-xs-1 {
   align-content: center;
 }
+
+#bordercontainer {
+  height: 300px;
+}
