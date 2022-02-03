@@ -125,29 +125,17 @@ class D3Map extends Component {
         
 
         
-                }
-                
-                /* var value = clusterCenterValues.length
-                this.setState({cluserCenterValue: value}) */
-        
+                }        
                 this.setState({IMAGES: IMAGES})
                 this.drawMap(IMAGES);
             }.bind(this))
         }.bind(this));
     }
 
-
-    /* componentDidUpdate(nextProps) {
-        if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
-            this.setState({clusterCenterValue: nextProps.clusterCenterValue});
-        }
-    } */
-
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            await this.setState({uploadedImages: nextProps.uploadedImages})
+            this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
@@ -161,12 +149,7 @@ class D3Map extends Component {
         }
         if (nextProps.images !== this.state.IMAGES && nextProps.images !== undefined) {
             this.setState({IMAGES: nextProps.images});
-        }
-        
-        /* if (nextProps.markedImagesIDs !== this.state.markedImagesIDs && nextProps.markedImagesIDs !== undefined) {
-            this.setState({markedImagesIDs: nextProps.markedImagesIDs});
-        } */
-        
+        }       
 
     }
 
@@ -339,8 +322,8 @@ class D3Map extends Component {
         }
             this.setState({ markActive: false })
             this.setState({ openInfoView: false })
-            const {setMarkActivAction} = this.props
-            await setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
+            const {setMarkActiveAction} = this.props
+            await setMarkActiveAction(this.state.markActive,this.state.markedImagesIDs)
         }
 
         else{
@@ -449,8 +432,8 @@ class D3Map extends Component {
                 /* set State + props */
                 this.setState({ markActive: true })
                 this.setState({ openInfoView: true })
-                const {setMarkActivAction} = this.props
-                await setMarkActivAction(this.state.markActive, this.state.markedImagesIDs)
+                const {setMarkActiveAction} = this.props
+                await setMarkActiveAction(this.state.markActive, this.state.markedImagesIDs)
                 
     
             } else {
@@ -677,6 +660,7 @@ class D3Map extends Component {
             showCluster = false
         }
         
+        
         return(    
                 <div id="canvas" ref="canvas">
                     <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
@@ -756,7 +740,7 @@ const mapDispatchToProps = dispatch => bindActionCreators({
     getImagesMetaFromDbAction: fetchImagesActions.getImagesMetaFromDb,
     setClusterValueAction: settingsActions.setClusterCenterValue,
     setClusterSwitchAction: settingsActions.setClusterSwitch,
-    setMarkActivAction: settingsActions.setMarkActive
+    setMarkActiveAction: settingsActions.setMarkActive
 },dispatch)
 
 const connectedD3Map = connect(mapStateToProps, mapDispatchToProps) (D3Map);

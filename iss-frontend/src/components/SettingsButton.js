@@ -56,7 +56,6 @@ class SettingsButton extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
             
@@ -82,6 +81,27 @@ class SettingsButton extends Component {
         var showDialog = this.props.showSettingsDialog
         if(showDialog === undefined){
             showDialog = false;
+        }
+        if(this.props.markActive) {
+            return(
+                <div>
+                    <Button variant="outline-success" onClick={this.handleShow}> 
+                    <Gear/>
+                </Button>
+                 <Modal show={showDialog} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Settings</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="alert alert-danger" role="alert">
+                            Please unmark images before adjusting the settings.
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    </Modal.Footer>
+                </Modal>
+                </div>
+            )
         }
 
         return (
