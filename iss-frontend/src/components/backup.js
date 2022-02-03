@@ -132,7 +132,6 @@ class D3Map extends Component {
 
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
             this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
@@ -281,10 +280,6 @@ class D3Map extends Component {
         this.drawMap(this.state.IMAGES, newImages);
     }
 
-    /**
-     * This function generates URLs for the uploaded images and sets them in the state.
-     * @param {object} files - uploaded images
-     */
     storeImageUrls(files){
         const imageFiles = files; 
         const filesLength = imageFiles.length;
@@ -294,19 +289,6 @@ class D3Map extends Component {
         }
         this.setState({ uploadedImagesUrls: imageUrls });
     } 
-
-    /**
-     * This function removes a mark from an image.
-     * @returns - nothing if markActive in state is false
-     */
-
-    /**
-     * This function handles the highlighting of images.
-     * @param {object} image - selected image
-     * @param {number} id - id of selected image
-     * @param {object} canvas - d3 canvas object
-     */
-
 
     setValue(value){
         this.setState({sliderValue: value});
