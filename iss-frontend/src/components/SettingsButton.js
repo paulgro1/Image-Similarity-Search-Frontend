@@ -56,8 +56,10 @@ class SettingsButton extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
+            
         }
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
             this.setState({sliderValue: nextProps.sliderValue});
@@ -97,7 +99,7 @@ class SettingsButton extends Component {
                         <RangeSlider
                             value={this.state.sliderValue}
                             onChange={changeEvent => this.setNeighboursValue(changeEvent.target.value)}
-                            min={0}
+                            min={1}
                             max={30}
                         />
                         <br/>

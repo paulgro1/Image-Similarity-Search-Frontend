@@ -49,10 +49,11 @@ class D3Map extends Component {
             imgScale: 1,
             clickActive: false,
             sessionToken: undefined,
-            clusterCenterValue: '',
+            clusterCenterValue: undefined,
             clusterActive: undefined,
             openInfoView: false,
             markedImagesIDs: [],
+            markedImages: [],
             markedUploadedImage: undefined,
         }
         this.handleShow = this.handleShow.bind(this);
@@ -144,6 +145,7 @@ class D3Map extends Component {
 
     // change to componentDidUpdate later!
     async componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
             await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
@@ -157,7 +159,14 @@ class D3Map extends Component {
         if (nextProps.clusterActive !== this.state.clusterActive && nextProps.clusterActive !== undefined) {
             this.setState({clusterActive: nextProps.clusterActive});
         }
-
+        if (nextProps.images !== this.state.IMAGES && nextProps.images !== undefined) {
+            this.setState({IMAGES: nextProps.images});
+        }
+        
+        /* if (nextProps.markedImagesIDs !== this.state.markedImagesIDs && nextProps.markedImagesIDs !== undefined) {
+            this.setState({markedImagesIDs: nextProps.markedImagesIDs});
+        } */
+        
 
     }
 
@@ -304,7 +313,7 @@ class D3Map extends Component {
         this.setState({sliderValue: value});
     }
 
-    removeMark(){
+    async removeMark(){
         //show uploaded again
         if(this.state.uploadedImages !== undefined) {
             for(let id of this.state.uploadedImages.ids) {
@@ -313,12 +322,7 @@ class D3Map extends Component {
             }
         }
 
-        if(this.props.clusterActive) {
-                this.props.images.forEach(image => {
-                const element = document.getElementById("image_" + image.id)
-                element.classList.add('cluster' + image.clusterCenter)
-            })
-        }
+        
         if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)
@@ -326,10 +330,17 @@ class D3Map extends Component {
             .classed('highlight_neighbour', false)
             .classed('hide_off', true)
             .classed('hide_on', false)
+
+            if(this.props.clusterActive) {
+                this.props.images.forEach(image => {
+                const element = document.getElementById("image_" + image.id)
+                element.classList.add('cluster' + image.clusterCenter)
+            })
+        }
             this.setState({ markActive: false })
             this.setState({ openInfoView: false })
             const {setMarkActivAction} = this.props
-            setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
+            await setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
         }
 
         else{
@@ -368,23 +379,43 @@ class D3Map extends Component {
 
         }
 
-        
- 
         if(this.state.openInfoView === false) {
 
             if(image.uploaded){
                 this.setState({markedUploadedImage: image})
             }
 
-            const markedImagesIDArray = [] 
+            const markedImagesIDArray = []
             markedImagesIDArray.push(parseInt(id))
             for(let image of nearestNeighboursArray) {
                 let id = parseInt(image.id)
                 markedImagesIDArray.push(id)
             }
-            this.setState({ markedImagesIDs: markedImagesIDArray })
+            this.setState({ markedImagesIDs: markedImagesIDArray})
+            
 
             if (this.state.markActive === false) {
+        
+                if(this.state.clusterActive) {
+                    // show clusterMark from markedImages and hide from others
+                    this.state.IMAGES.forEach(image => {
+                        if(markedImagesIDArray.includes(image.id)) {
+                            const element = document.getElementById("image_" + image.id)
+                            element.classList.add('cluster' + image.clusterCenter)
+                        }
+                        else {
+                            const element = document.getElementById("image_" + image.id)
+                            element.classList.remove('cluster' + image.clusterCenter)
+                        }
+                    })
+                
+                } else {
+                    this.state.IMAGES.forEach(image => {
+                        const element = document.getElementById("image_" + image.id)
+                        element.classList.remove('cluster' + image.clusterCenter)
+                    })
+                }
+
                 // hide all images
                 d3.selectAll('image')
                 .classed('hide_on', true)
@@ -396,14 +427,6 @@ class D3Map extends Component {
                         d3.select('#image_' + id)
                         .classed('highlight_uploaded', false)
                     }
-                }
-
-                // hide cluster
-                if(this.props.clusterActive) {
-                        this.props.images.forEach(image => {
-                        const element = document.getElementById("image_" + image.id)
-                        element.classList.remove('cluster' + image.clusterCenter)
-                    })
                 }
                 
                 /* mark clicked Image */
@@ -422,12 +445,12 @@ class D3Map extends Component {
                     .classed('hide_off', false)
                     .classed('highlight_neighbour', true)
                 }
-                /* set State + props */
                 
+                /* set State + props */
                 this.setState({ markActive: true })
                 this.setState({ openInfoView: true })
                 const {setMarkActivAction} = this.props
-                setMarkActivAction(this.state.markActive,this.state.markedImagesIDs)
+                await setMarkActivAction(this.state.markActive, this.state.markedImagesIDs)
                 
     
             } else {
@@ -441,8 +464,8 @@ class D3Map extends Component {
                 this.setState({ markActive: false })
 
                 //if cluster is active show clustermark after remove imageMark
-                if(this.props.clusterActive) {
-                    this.props.images.forEach(image => {
+                if(this.state.clusterActive) {
+                    this.props.IMAGES.forEach(image => {
                     const element = document.getElementById("image_" + image.id)
                     element.classList.add('cluster' + image.clusterCenter)
                 })
@@ -710,12 +733,13 @@ class D3Map extends Component {
 
                     <div id='legend'>
                         <h4>Information:</h4>
+                        <h5>Neighbours: {this.state.sliderValue}</h5>
                         <div id="marks">
                             <li id='selected'>selected Image</li>
                             <li id='neighbours'>next Neighbours</li>
                             <li id='uploaded'>uploaded Image(s)</li>
                         </div>
-                        <div id="cluster" onshow={showCluster}>
+                        <div id="cluster">
                             <h5>Cluster: {this.state.clusterCenterValue}</h5>
                             {selectedCluster}
                         </div>

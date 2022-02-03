@@ -22,7 +22,8 @@ class ClusterButton extends Component  {
             clusterCenterValue: process.env.REACT_APP_SLIDER_VALUE_CLUSTER,
             clusterActive: false,
             checked: false,
-            images:[]
+            images:[],
+            oldMarkedImages: undefined
         };
         this.showCluster = this.showCluster.bind(this)
         this.setChecked = this.setChecked.bind(this)
@@ -30,34 +31,43 @@ class ClusterButton extends Component  {
 
     componentDidMount () {
         const {getImagesMetaFromDbAction} = this.props
-        getImagesMetaFromDbAction()
+        const images = getImagesMetaFromDbAction()
+        this.setState({images: images})
     }
 
-    componentWillReceiveProps(nextProps) {
+    async componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+        if (nextProps.images !== this.state.images && nextProps.images !== undefined) {
+            this.setState({images: nextProps.images});
+        }
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
             this.hideCluster()
             const {getImagesMetaFromDbAction} = this.props
-            getImagesMetaFromDbAction()
-        }
-
-        
+            await getImagesMetaFromDbAction()
+        }        
     }
+
 
     showCluster() {
         const {setClusterSwitchAction} = this.props
-        
+        const oldMarkedImages = []
             if (!this.state.clusterActive) {
                 var IMAGES = this.props.images
                 this.setState({
                     clusterActive: true,
                     checked: true,
+                    oldImages: IMAGES,
                     images: IMAGES
                 },  () => {
                     if(this.props.markActive) {
                         this.props.markedImagesIDs.forEach(id => {
                             const image = document.getElementById("image_" + id)
                             image.classList.add('cluster' + image.__data__.clusterCenter)
+                            oldMarkedImages.push(image)
+                        })
+                        this.setState({
+                            oldMarkedImages: oldMarkedImages
                         })
                     }
                     else {
@@ -76,14 +86,20 @@ class ClusterButton extends Component  {
 
     hideCluster() {
         const {setClusterSwitchAction} = this.props
+        if(this.state.images !== undefined) {
             var images = this.state.images
-            if(this.state.images === undefined) {
-                images = this.props.images
-            }
+            console.log(images)
             this.setState({
                 clusterActive: false,
                 checked: false
             }, () => {
+                if(this.state.oldMarkedImages !== undefined){
+                    this.state.oldMarkedImages.forEach(image => {
+                        console.log(image)
+                        image.classList.remove('cluster' + image.clusterCenter)
+                    })
+                }
+                console.log(images)
                 images.forEach(image => {
                     const element = document.getElementById("image_" + image.id)
                     element.classList.remove('cluster' + image.clusterCenter)
@@ -91,6 +107,8 @@ class ClusterButton extends Component  {
                 })
                 setClusterSwitchAction(this.state.clusterActive)
             })
+        }
+        else{ return} 
             
     }
 

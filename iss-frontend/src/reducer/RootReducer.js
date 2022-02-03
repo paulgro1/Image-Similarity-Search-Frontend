@@ -146,18 +146,17 @@ function rootReducer(state= initialState, action) {
                 sliderValue: action.value
             }
         case settingsActions.SET_CLUSTER_VALUE:
+            console.log(action)
             return {
                 ...state,
                 clusterCenterValue: action.value
             }
         case settingsActions.SET_CLUSTERSWITCH:
-            console.log(action)
             return {
                 ...state,
                 clusterActive: action.value
             }
         case settingsActions.SET_MARK_ACTIVE:
-            console.log(action)
             return {
                 ...state,
                 markActive: action.markActive,

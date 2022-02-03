@@ -69,8 +69,6 @@ export const setClusterCenterValue = (value, sessionToken) => {
 }
 
 export const fetchSetClusterValue = (value, sessionToken) => {
-    console.log("Set new ClusterCenterValue: " + value)
-
     return fetch(route.CHANGE_CLUSTER_VALUE, {
         method: 'POST',
         headers: {
@@ -91,6 +89,7 @@ export const setClusterSwitch = (value) => {
 }
 
 export const setMarkActive = (markActive, markedImagesIDs) => {
+    console.log(markedImagesIDs)
     return (dispatch) => {
         dispatch(setMarkActiveAction(markActive, markedImagesIDs))
     }
