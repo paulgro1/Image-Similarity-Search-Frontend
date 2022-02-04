@@ -126,7 +126,7 @@ class ClusterButton extends Component  {
             return(
                 <div>
                 
-                <Button variant="warning" width={130} >Unmark before</Button> 
+                <Button variant="warning" width={130} >Unmark please</Button> 
             </div>
             )
         }
