@@ -631,7 +631,7 @@ class D3Map extends Component {
 
             // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
             var zoom = d3.zoom()
-                .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+                .scaleExtent([.1, 80])  // This control how much you can unzoom (x0.5) and zoom (x20)
                 .extent([[0, 0], [canvasWidth, canvasHeight]]) 
                 .on("zoom", updateChart.bind(this))   
 

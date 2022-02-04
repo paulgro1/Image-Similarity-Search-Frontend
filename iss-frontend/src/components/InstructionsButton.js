@@ -195,7 +195,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data
+           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data.<br/>
            When the picture is already selected, a single click is enough
             </Col>
             </div>
@@ -253,7 +253,7 @@ class InstructionsButton extends Component {
             <Col xs={6} md={4} >
 
             <div class="col-xs-1" align="center">
-            <img src={uploadImageButton} height={40} width={100} alt="uploaded image button"/>
+            <img src={uploadImageButton} height={40} width={100} alt="uploadbutton"/>
             </div>
 
             </Col>
