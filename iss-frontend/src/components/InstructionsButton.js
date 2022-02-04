@@ -23,7 +23,13 @@ const mapStateToProps = state => {
     return state
 }
 
-
+/**
+ * Class representing the instructions button component.
+ * @prop {function} showInstructionsDialogAction - shows the instructions dialog
+ * @prop {function} hideInstructionsDialogAction - hides the instructions dialog
+ * 
+ * @extends {Component}
+ */
 class InstructionsButton extends Component {
 
     /**

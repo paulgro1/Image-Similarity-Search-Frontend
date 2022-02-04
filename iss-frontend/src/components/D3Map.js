@@ -374,22 +374,16 @@ class D3Map extends Component {
     } 
 
     /**
-     * This function removes a mark from an image.
-     * @returns - nothing if markActive in state is false
+     * This function sets the slider value.
      */
-
-    /**
-     * This function handles the highlighting of images.
-     * @param {object} image - selected image
-     * @param {number} id - id of selected image
-     * @param {object} canvas - d3 canvas object
-     */
-
-
     setValue(value){
         this.setState({sliderValue: value});
     }
 
+    /**
+     * This function removes a mark from an image.
+     * @returns - nothing if markActive in state is false
+     */
     async removeMark(){
         //show uploaded again
         if(this.state.uploadedImages !== undefined) {
@@ -399,7 +393,6 @@ class D3Map extends Component {
             }
         }
 
-        
         if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)

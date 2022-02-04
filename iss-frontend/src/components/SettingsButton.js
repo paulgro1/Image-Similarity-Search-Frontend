@@ -57,14 +57,25 @@ class SettingsButton extends Component {
         hideSettingsDialogAction();
     } 
 
+    /**
+     * This function sets the nearest neighbours value.
+     * @param {number} value 
+     */
     setNeighboursValue(value){
         this.setState({sliderValue: value});
     }
 
+    /**
+     * This function sets the clusters value.
+     * @param {number} value 
+     */
     setClustersValue(value){
         this.setState({clusterCenterValue: value});
     }
 
+    /** 
+     * This function is called when the component first mounts.
+     */
     componentDidMount() {
         const {sessionToken} = this.props
         const {setClusterValueAction} = this.props
@@ -73,6 +84,10 @@ class SettingsButton extends Component {
         setClusterValueAction(this.state.clusterCenterValue, sessionToken )
     }
 
+    /**
+     * This function updates the props.
+     * @param {object} nextProps - properties from redux store
+     */
     componentWillReceiveProps(nextProps) {
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});

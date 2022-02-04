@@ -38,6 +38,11 @@ export function setSliderValueAction(value){
     }
 }
 
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - slider value (number of clusters)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function setClusterCenterValueAction(value) {
     return {
         type: SET_CLUSTER_VALUE,
@@ -45,6 +50,11 @@ export function setClusterCenterValueAction(value) {
     }
 }
 
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - switch value (on or off)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function setClusterSwitchAction(value) {
     return {
         type: SET_CLUSTERSWITCH,
@@ -52,6 +62,12 @@ export function setClusterSwitchAction(value) {
     }
 }
 
+/**
+ * This function returns an action object to set the slider value.
+ * @param {boolean} markActive - marked true or false
+ * @param {object} markedImagesIDs - IDs of marked images
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function setMarkActiveAction(markActive, markedImagesIDs) {
     return {
         type: SET_MARK_ACTIVE,
@@ -59,7 +75,6 @@ export function setMarkActiveAction(markActive, markedImagesIDs) {
         markedImagesIDs: markedImagesIDs
     }
 }
-
 
 /**
  * This function dispatches the setSliderValueAction.
@@ -73,6 +88,12 @@ export function setNeighboursSliderValue(value) {
     }
 }
 
+/**
+ * This function dispatches the setSliderValueAction.
+ * @param {number} value - slider value
+ * @param {string} sessionToken - token of current user session
+ * @returns {function} dispatch - a function that dispatches the action
+*/
 export const setClusterCenterValue = (value, sessionToken) => {
     return function (dispatch) {
         console.log("Settings: ClusterSliderValue: " + value)
@@ -82,6 +103,12 @@ export const setClusterCenterValue = (value, sessionToken) => {
     }
 }
 
+/**
+ * This function dispatches the setSliderValueAction.
+ * @param {number} value - slider value
+ * @param {string} sessionToken - token of current user session
+ * @returns {object} backend response
+*/
 export const fetchSetClusterValue = (value, sessionToken) => {
     return fetch(route.CHANGE_CLUSTER_VALUE, {
         method: 'POST',
@@ -96,12 +123,23 @@ export const fetchSetClusterValue = (value, sessionToken) => {
     })
 }
 
+/**
+ * This function dispatches the setClusterSwitchAction.
+ * @param {number} value - slider value
+ * @returns {function} dispatch - a function that dispatches the action
+*/
 export const setClusterSwitch = (value) => {
     return (dispatch) => {
         dispatch(setClusterSwitchAction(value))
     }
 }
 
+/**
+ * This function dispatches the setMarkActiveAction.
+ * @param {boolean} markActive - marked true or false
+ * @param {object} markedImagesIDs - IDs of marked images
+ * @returns {object} dispatch - a function that dispatches the action
+ */
 export const setMarkActive = (markActive, markedImagesIDs) => {
     return (dispatch) => {
         dispatch(setMarkActiveAction(markActive, markedImagesIDs))
