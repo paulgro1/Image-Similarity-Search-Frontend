@@ -6,19 +6,32 @@ export const SET_CLUSTER_VALUE = 'SET_CLUSTERCENTER_VALUE'
 export const SET_CLUSTERSWITCH = 'SET_CLUSTERSWITCH'
 export const SET_MARK_ACTIVE = 'SET_MARK_ACTIVE'
 
-export function getShowSettingsDialogAction() {
+/**
+ * This function returns an action object to show the settings dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function getShowSettingsDialogAction(){
     return {
         type: SHOW_SETTINGS_DIALOG
     }
 }
 
-export function getHideSettingsDialogAction() {
+/**
+ * This function returns an action object to hide the settings dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function getHideSettingsDialogAction(){
     return {
         type: HIDE_SETTINGS_DIALOG
     }
 }
 
-export function setSliderValueAction(value) {
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - slider value (number of nearest neighbours)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function setSliderValueAction(value){
     return {
         type: SET_SLIDER_VALUE,
         value: value
@@ -49,9 +62,10 @@ export function setMarkActiveAction(markActive, markedImagesIDs) {
 
 
 /**
- * @param value - slider value
  * This function dispatches the setSliderValueAction.
- */
+ * @param {number} value - slider value
+ * @returns {function} dispatch - a function that dispatches the action
+*/
 export function setNeighboursSliderValue(value) {
     return dispatch => {
         console.log("Settings: NeighboursSliderValue: " + value)

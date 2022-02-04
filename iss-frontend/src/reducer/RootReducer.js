@@ -1,7 +1,7 @@
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
-import * as authenticationActions from '../actions/AuthenticationActions'
+import * as authenticationActions from '../actions/AuthenticationActions';
 
 const initialState = {
     images: [],
@@ -14,11 +14,12 @@ const initialState = {
 };
 
 /**
- * @param state - default: the initial state of the application
- * @param action - an action given to the store
- * 
+ * This function handles the properties of the application.
  * Everytime the rootReducer is called, redux passes the current state
  * and the action that was send to the store to the rootReducer.
+ * @param {object} state - default: the initial state of the application
+ * @param {object} action - an action sent to the store
+ * @returns {object} - updated props
  */
 
 function rootReducer(state= initialState, action) {
@@ -29,7 +30,6 @@ function rootReducer(state= initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: true,
-                uploadedImages: action.uploadedImages,
                 error: null
             }
         case imageUploadActions.HIDE_IMAGE_UPLOAD_DIALOG:
@@ -37,7 +37,6 @@ function rootReducer(state= initialState, action) {
             return {
                 ...state,
                 showImageUploadDialog: false,
-                uploadedImages: action.uploadedImages,
                 error: null
             }
 

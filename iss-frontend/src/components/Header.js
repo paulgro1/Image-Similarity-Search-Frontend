@@ -9,10 +9,16 @@ import ClusterButton from './Clusterbutton';
 
 import '../layout/css/HeaderStyle.css'
 
-
+/**
+ * Class representing the header component.
+ * @extends {Component}
+ */
 class Header extends Component {
 
-
+    /**
+     * This function renders the header.
+     * @returns {object} - React component
+     */
     render() {
         return(
             <div>

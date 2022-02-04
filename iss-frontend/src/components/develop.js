@@ -441,7 +441,6 @@ class D3Map extends Component {
                             element.classList.add('cluster' + image.clusterCenter)
                         }
                         else {
-                            console.log('bin hier!')
                             const element = document.getElementById("image_" + image.id)
                             element.classList.remove('cluster' + image.clusterCenter)
                         }

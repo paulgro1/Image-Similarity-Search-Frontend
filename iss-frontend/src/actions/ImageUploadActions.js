@@ -10,32 +10,51 @@ export const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS';
 export const UPLOAD_ERROR = 'UPLOAD_ERROR';
 export const SEND_FILES_TO_STORE = 'SEND_FILES_TO_STORE';
 
+/**
+ * This function returns an action object to show the image upload dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getShowImageUploadDialogAction(){
     return {
         type: SHOW_IMAGE_UPLOAD_DIALOG
     }
 }
 
+/**
+ * This function returns an action object to hide the image upload dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getHideImageUploadDialogAction(){
     return {
         type: HIDE_IMAGE_UPLOAD_DIALOG
     }
 }
 
+/**
+ * This function returns an action object to show the image crop dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getShowImageCropDialogAction(){
     return {
         type: SHOW_IMAGE_CROP_DIALOG
     }
 }
 
+/**
+ * This function returns an action object to hide the image crop dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getHideImageCropDialogAction(){
     return {
         type: HIDE_IMAGE_CROP_DIALOG
     }
 }
 
-
-// provides uploaded files from UploadButton in D3 Map
+/**
+ * This function returns an action object wich provides uploaded files from UploadButton in D3 Map.
+ * @param {object} files - uploaded files
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getSendFilesToStoreAction(files, source="multi"){
     return {
         type: SEND_FILES_TO_STORE,
@@ -44,12 +63,21 @@ export function getSendFilesToStoreAction(files, source="multi"){
     }
 }
 
+/**
+ * This function returns a pending action object.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getUploadPendingAction(){
     return {
         type: UPLOAD_PENDING
     }
 }
 
+/**
+ * This function returns an action object wich provides the uploaded images.
+ * @param {object} response - uploaded images
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getUploadSuccessAction(response){
     return {
         type: UPLOAD_SUCCESS,
@@ -57,6 +85,11 @@ export function getUploadSuccessAction(response){
     }
 }
 
+/**
+ * This function returns an error action object.
+ * @param {object} error - error message
+ * @returns {object} - action object that will be send to the RootReducer
+ */
 export function getUploadErrorAction(error){
     return {
         type: UPLOAD_ERROR,
@@ -65,11 +98,9 @@ export function getUploadErrorAction(error){
 }
 
 /**
- * @param token - user session token
- * @param formData - uploaded image wrapped in a form
- * 
- * This function calls the upload() function and 
- * dispatches the actions.
+ * This function handles the image upload and dispatches the actions.
+ * @param {object} formData - uploaded image wrapped in a form
+ * @returns {function} dispatch - a function that dispatches the action
 */
 export function imageUpload(formData) {
     return dispatch => {
@@ -89,11 +120,9 @@ export function imageUpload(formData) {
 }
 
 /**
- * @param formData - uploaded image wrapped in a form
- * 
- * This function sends the image included in the formData to the
- * backend. 
- * @returns response recieved from the backend
+ * This function sends images wrapped in a formData object to the backend. 
+ * @param {object} formData - uploaded images wrapped in a form
+ * @returns {object} - object with the response (image data or error)
 */
 async function upload(formData) {
     console.log("Uploading images to: " + route.IMAGE_UPLOAD)
