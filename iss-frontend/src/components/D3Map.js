@@ -428,9 +428,10 @@ class D3Map extends Component {
                 
                 //D3.js Quadtree
                 const tree = d3.quadtree()
-                    .extent([[0, 0], [canvasWidth, canvasHeight]])
-                    .x(x)
-                    .y(y);
+                    .extent([[-canvasWidth, canvasHeight], [canvasWidth, canvasHeight]]);
+                
+                
+                // dataXY = d3.range(352).map();
                     
                 scatter.selectAll('image')
                     .data(data)
@@ -447,7 +448,8 @@ class D3Map extends Component {
                     .classed('hide', false)
                     .classed('highlight', false)
                     .classed('highlight_neighbour', false)
-                    .each(function(image){tree.add(image.x, image.y)})
+                    // .each(function(image){dataXY.push([image.x, image.y])})
+                    .each(function(image){tree.add([Number(image.x) + canvasWidth / 2, Number(image.y) + canvasHeight / 2]);})
                     /* mark next neighbours */
                     .on("click", function(click,image) {
                         this.markImage(click, image, svgCanvas, false);
@@ -460,56 +462,78 @@ class D3Map extends Component {
 
                     // console.log(this.state.IMAGES.x);
                     
-                    console.log(tree.data());
+                //Alle Daten im Quadtree
+                // tree.addAll(dataXY);
+                
+                console.log(tree.data());
 
-                    console.log(canvasHeight + " & " + canvasWidth);
+               
 
-                    // console.log(search(tree, 300, 50, 500, 250));
+                console.log(tree.data()[0][0]);
+                console.log(tree.data()[0][1]);
+
+                
+                //Dummy Kreise um Koordinaten zu überprüfen
+                for(let i = 0; i < tree.size(); i ++){
+                    // console.log("i was here" + i);
+                    scatter.append("circle")
+                        .attr('cx', tree.data()[i][0])
+                        .attr('cy', tree.data()[i][1])
+                        .attr('r', 1)
+                        .attr('fill', 'red');
+                }
+
+                
+                // //Alle Daten im bestimmten Bereich
+                // console.log(search(tree, -canvasWidth, -canvasHeight, canvasWidth, canvasHeight));
+
+                //     //Dummy Rechteck für obige Suchanfrage
+                //     scatter.append("rect")
+                //         .attr('x', 0)
+                //         .attr('y', 0)
+                //         .attr("width", canvasWidth - 100)
+                //         .attr("height", canvasHeight -50)
+                //         .style("fill", "none")
+                //         .style("stroke", "red")
+                //         .style("stroke-width", 3);
 
 
-                    // scatter.append("rect")
-                    // .attr('x', 300)
-                    // .attr('y', 50)
-                    // .attr("width", 200)
-                    // .attr("height", 200)
-                    // .style("fill", "none")
-                    // .style("stroke", "red")
-                    // .style("stroke-width", 3);
 
                     
+                
+                    // //Versuch, Quadtree zu zeichnen
+                    // var rect = svgCanvas.selectAll(".node")
+                    //     .data(nodes(tree))
+                    //     .enter().append("rect")
+                    //     .attr("class", "node")
+                    //     .attr("x", function(d) { return d.x1; })
+                    //     .attr("y", function(d) { return d.y1; })
+                    //     .attr("width", function(d) { return d.x2 - d.x1; })
+                    //     .attr("height", function(d) { return d.y2 - d.y1; });
 
-                    var rect = svgCanvas.selectAll(".node")
-                        .data(nodes(tree))
-                        .enter().append("rect")
-                        .attr("class", "node")
-                        .attr("x", function(d) { return d.x1; })
-                        .attr("y", function(d) { return d.y1; })
-                        .attr("width", function(d) { return d.x2 - d.x1; })
-                        .attr("height", function(d) { return d.y2 - d.y1; });
-
-                    scatter.call(zoom)
-
-                    
-                    
-
+                    // scatter.call(zoom);
             }  
 
-                    //PDS Collect a list of nodes to draw rectangles, adding extent and depth data
-                    function nodes(quadtree) {
-                    var nodes = [];
-                    quadtree.depth = 0; // root
-                    quadtree.visit(function(node, x1, y1, x2, y2) {
-                        node.x1 = x1;
-                        node.y1 = y1;
-                        node.x2 = x2;
-                        node.y2 = y2;
-                        nodes.push(node);
-                        for (var i=0; i<4; i++) {
-                            if (node.nodes[i]) node.nodes[i].depth = node.depth+1;
-                        }
-                    });
-                    return nodes;
-                    }
+                function remapXY(quadtree, x, y){
+                    quadtree.add(x + canvasHeight / 2, y + canvasWidth / 2);
+                }
+
+                    // //Collect a list of nodes to draw rectangles, adding extent and depth data
+                    // function nodes(quadtree) {
+                    // var nodes = [];
+                    // quadtree.depth = 0; // root
+                    // quadtree.visit(function(node, x1, y1, x2, y2) {
+                    //     node.x1 = x1;
+                    //     node.y1 = y1;
+                    //     node.x2 = x2;
+                    //     node.y2 = y2;
+                    //     nodes.push(node);
+                    //     for (var i=0; i<4; i++) {
+                    //         if (node.nodes[i]) node.nodes[i].depth = node.depth+1;
+                    //     }
+                    // });
+                    // return nodes;
+                    // }
 
                 //Funktion, um nach bestimmten Rechteck im Quadtree zu suchen
                 function search(quadtree, xmin, ymin, xmax, ymax) {
