@@ -216,7 +216,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to define the numbers of nearest neighbours and/or clusters with a valueble slider
+              Click here to define the numbers of nearest neighbours and/or clusters with a slider
             </Col>
             </div>
             </Row>
