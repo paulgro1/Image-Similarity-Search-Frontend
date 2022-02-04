@@ -17,6 +17,7 @@ import uploadImageButton from '../InstructionIcons/uploadImageButton.png';
 import exportButton from '../InstructionIcons/exportButton.png';
 import ClusterOn from '../InstructionIcons/ClusterOnButton.png';
 import ClusterOff from '../InstructionIcons/ClusterOffButton.png';
+import scrollInfo from '../InstructionIcons/scroll-2.png';
 
 const mapStateToProps = state => {
     return state
@@ -76,20 +77,48 @@ class InstructionsButton extends Component {
                 </svg>
                 </Button>
 
-                <Modal show={showDialog} onHide={this.handleClose} scrollable={true} >
+                <Modal show={showDialog} onHide={this.handleClose} scrollable={true}>
                     <Modal.Header closeButton>
+                    
                         <Modal.Title>Instructions</Modal.Title>
+                        &nbsp;
+                        <img src={scrollInfo} height={20} width={20} alt="scroll info" />
+                       
                     </Modal.Header>
                     <Modal.Body className="show-grid ">
         <Container>
           
         <table class="table table-striped">
-
         <div class="container-fluid" id="bordercontainer">
+   
 
 
-       <div class="row">
-          <Row>
+
+   
+        <div class="row">
+
+<Row>
+<div class="col" align="center" >
+          <Col xs={12} md={8}>
+          The settings can not be changed while images are marked
+            </Col>
+            </div>
+</Row>
+</div>
+
+<div class="row">
+
+<Row><div class="col" align="center">
+          <Col xs={12} md={8}>
+          To reset the marking of the images, click on the white area
+            </Col>
+            </div>
+</Row>
+</div>
+   
+   
+    <div class="row">
+       <Row>
 
           <div class="col">
 
@@ -102,15 +131,13 @@ class InstructionsButton extends Component {
 
           <div class="col">
           <Col xs={12} md={8}>
-              Zoom in and out
+            Scroll with your mouse up and down to zoom in and out
             </Col>
             </div>
 
           </Row>
 
           </div>
-
-
 
 
           <div class="row">
@@ -126,7 +153,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
           <Col xs={12} md={8}>
-              Slide through the dataset
+            Click left and pan to slide through the dataset
             </Col>
             </div>
             </Row>
@@ -147,7 +174,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click to get the nearest neighbours
+            One left click on an image to get the nearest neighbours
             </Col>
             </div>
           </Row>
@@ -168,7 +195,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Two clicks on marked image to get the detail view, nearest neighbours, similarity, option to export data
+           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data
             </Col>
             </div>
             </Row>
@@ -189,7 +216,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to set number of nearest neighbours and/or  with a slider
+              Click here to define the numbers of nearest neighbours and/or clusters with a valueble slider
             </Col>
             </div>
             </Row>
@@ -233,7 +260,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Click here to choose between single- and multiupload
+              Click here to choose between single- and multiupload, than the option is given to crop a single image 
             </Col>
             </div>
             </Row>
@@ -256,14 +283,11 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              Turn On or Off the different Clusters and their Colors  
+              The clusters and their colors can be activated or deactivated with a right click on these buttons
             </Col>
             </div>
             </Row>
             </div>
-
-
-
 
 
 
