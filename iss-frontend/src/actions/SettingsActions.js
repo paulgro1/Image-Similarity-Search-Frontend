@@ -103,7 +103,6 @@ export const setClusterSwitch = (value) => {
 }
 
 export const setMarkActive = (markActive, markedImagesIDs) => {
-    console.log(markedImagesIDs)
     return (dispatch) => {
         dispatch(setMarkActiveAction(markActive, markedImagesIDs))
     }
