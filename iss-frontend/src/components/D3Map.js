@@ -134,7 +134,7 @@ class D3Map extends Component {
     async componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         if (nextProps.uploadedImages !== this.state.uploadedImages) {
-            this.setState({uploadedImages: nextProps.uploadedImages})
+            await this.setState({uploadedImages: nextProps.uploadedImages})
             this.handleUploadedImages();
         }
         if (nextProps.sliderValue !== this.state.sliderValue && nextProps.sliderValue !== undefined) {
