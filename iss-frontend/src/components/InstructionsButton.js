@@ -196,6 +196,7 @@ class InstructionsButton extends Component {
             <div class="col">
             <Col xs={12} md={8}>
            Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data
+           When the picture is already selected, a single click is enough
             </Col>
             </div>
             </Row>
@@ -283,8 +284,7 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              The clusters and their colors can be activated or deactivated with a right click on these buttons
-            </Col>
+            The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image            </Col>
             </div>
             </Row>
             </div>
