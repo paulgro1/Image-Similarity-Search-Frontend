@@ -131,7 +131,8 @@ class InstructionsButton extends Component {
 
           <div class="col">
           <Col xs={12} md={8}>
-            Scroll with your mouse up and down to zoom in and out
+            Scroll with your mouse up and down to zoom in and out.<br/>
+            Or Double click on the canvas to zoom in.
             </Col>
             </div>
 
