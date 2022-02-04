@@ -46,6 +46,7 @@ class D3Map extends Component {
         super(props);
         this.state = {
             selectedImageId: undefined,
+            selectedImageCluster: undefined,
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
             sliderValue: 5,
@@ -247,6 +248,7 @@ class D3Map extends Component {
             this.setState({selectedImageUrl: fullsizeURL});
         }
         this.setState({selectedImageFilename: e.filename});
+        this.setState({selectedImageCluster: e.clusterCenter});
         if(parseInt(this.state.selectedImageId) >= this.state.IMAGES.length){
             this.handleUploadedNearestN(function(){
                 return
@@ -273,13 +275,24 @@ class D3Map extends Component {
      */
     handleExcelExport(){
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
-        var data = [
-            [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
-            ['Image Id: ' + this.state.selectedImageId],
-            ['Cluster Center: TODO'],
-            [],
-            ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
-        ]
+        var clusterCenter = this.state.selectedImageCluster;
+        if(clusterCenter === undefined){
+            var data = [
+                [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
+                ['Image Id: ' + this.state.selectedImageId],
+                [],
+                ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
+            ]
+        } else {
+            var data = [
+                [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
+                ['Image Id: ' + this.state.selectedImageId],
+                ['Cluster Center: ' + this.state.selectedImageCluster],
+                [],
+                ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
+            ]
+        }
+        
         for(let img of this.state.nearestNeighbours){
             let dataRow = []
             dataRow.push(img.id)
