@@ -6,6 +6,7 @@ import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
 import ExportButton from './ExportButton';
 import ClusterButton from './Clusterbutton';
+import InstructionsButton from './InstructionsButton';
 
 import '../layout/css/HeaderStyle.css'
 
@@ -31,6 +32,7 @@ class Header extends Component {
                             <ImageUploadButton/>
                             <ExportButton/>
                             <SettingsButton/>
+                            <InstructionsButton/>
                         </Nav>
                     </Navbar.Collapse> 
                 </Navbar>

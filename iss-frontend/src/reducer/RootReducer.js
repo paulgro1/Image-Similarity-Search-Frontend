@@ -2,6 +2,7 @@ import * as imageUploadActions from '../actions/ImageUploadActions';
 import * as fetchImagesActions from '../actions/FetchImagesActions';
 import * as settingsActions from '../actions/SettingsActions';
 import * as authenticationActions from '../actions/AuthenticationActions';
+import * as instrcutionsActions from '../actions/InstructionActions'
 
 const initialState = {
     images: [],
@@ -164,6 +165,21 @@ function rootReducer(state= initialState, action) {
                 ...state,
                 sessionToken: action.sessionToken
             }
+
+        case instrcutionsActions.SHOW_INSTRUCTIONS_DIALOG:
+            return {
+                ...state,
+                showInstructionsDialog: true,
+            }
+
+        case instrcutionsActions.HIDE_INSTRUCTIONS_DIALOG:  
+            return {
+                ...state,
+                showInstructionsDialog: false,
+                }
+
+
+
         default:
             return state
     }

@@ -45,3 +45,24 @@ html, body{
 .cropsubmit{
   bottom: 20px;
 }
+
+#bordercontainer {
+  padding: 10px;
+} 
+
+#bordercontainer .col {
+  border: 1pt solid #f1f1f1;
+}
+
+ .col img{
+  align-content: center;
+} 
+
+.col-xs-1 {
+  align-content: center;
+}
+
+#bordercontainer {
+  height: 300px;
+  font-size: 10pt;
+}
