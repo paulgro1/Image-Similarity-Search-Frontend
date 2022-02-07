@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 
 import * as instructionsActions from '../actions/InstructionActions';
 
-import '../layout/css/instructionStyle.css'
 import scrollimage from '../InstructionIcons/scroll.svg';
 import warning from '../InstructionIcons/warning.svg';
 import leftclickandpan from '../InstructionIcons/left-click-2.svg';
