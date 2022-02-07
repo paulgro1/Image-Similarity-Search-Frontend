@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+
+import Tooltip from "@material-ui/core/Tooltip";
 import Button from 'react-bootstrap/Button';
 import { Download } from "react-bootstrap-icons";
 
@@ -149,11 +151,15 @@ class ExportButton extends Component {
      */
     render(){
         return (
-            <div id="navButton">
-                <Button variant="outline-success" onClick={this.handleExcelExportAllImages}> 
-                    <Download/>
-                </Button>
-            </div>
+            
+            <Tooltip title="Click here to download all image metadata" placement="bottom">
+                <div id="navButton">
+                    <Button variant="outline-success" onClick={this.handleExcelExportAllImages}> 
+                        <Download/>
+                    </Button>
+                </div>
+            </Tooltip>
+                
         )
     }
 }

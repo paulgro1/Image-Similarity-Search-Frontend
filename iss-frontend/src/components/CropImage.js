@@ -12,7 +12,6 @@ import '../layout/css/style.css'
 import '../layout/css/cropStyle.css'
 import axios from "axios"
 import * as route from '../config/Routes'
-import { light } from '@material-ui/core/styles/createPalette';
 
 
 const mapStateToProps = state => {

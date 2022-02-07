@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { Gear } from "react-bootstrap-icons";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -155,9 +156,14 @@ class SettingsButton extends Component {
 
         return (
             <div>
-                <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
-                    <Gear/>
-                </Button>
+                <Tooltip title="Click here to set values of cluster and neighbours" placement="bottom">
+                    <div>
+                        <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
+                            <Gear/>
+                        </Button>
+                    </div>
+                </Tooltip>
+
                 <div id="settingModal">
                     <Modal show={showDialog} onHide={this.handleClose}>
                         <Modal.Header id="settingsHeader" closeButton>
