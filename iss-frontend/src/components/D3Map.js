@@ -277,15 +277,16 @@ class D3Map extends Component {
     handleExcelExport(){
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
         var clusterCenter = this.state.selectedImageCluster;
+        var data = []
         if(clusterCenter === undefined){
-            var data = [
+            data = [
                 [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
                 ['Image Id: ' + this.state.selectedImageId],
                 [],
                 ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
             ]
         } else {
-            var data = [
+            data = [
                 [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
                 ['Image Id: ' + this.state.selectedImageId],
                 ['Cluster Center: ' + this.state.selectedImageCluster],
