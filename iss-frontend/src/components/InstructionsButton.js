@@ -19,8 +19,6 @@ import ClusterOn from '../InstructionIcons/ClusterOnButton.png';
 import ClusterOff from '../InstructionIcons/ClusterOffButton.png';
 import scrollInfo from '../InstructionIcons/scroll-2.png';
 
-import '../layout/css/instructionsStyle.css'
-
 
 const mapStateToProps = state => {
     return state
