@@ -15,8 +15,22 @@ const mapStateToProps = state => {
     return state
 }
 
+/**
+ * Class representing the cluster button component.
+ * @prop {object} images - uploaded images
+ * @prop {boolean} markActive - marked true or false
+ * @prop {object} markedImagesIDs - IDs of marked images
+ * @prop {function} getImagesMetaFromDbAction - fetches the meta data of all images
+ * @prop {function} setClusterSwitchAction - sets the cluster switch value
+ *
+ * @extends {Component}
+ */
 class ClusterButton extends Component  {
 
+    /**
+     * Create a ClusterButton component.
+     * @param {object} props - properties from redux store
+     */
     constructor(props){
         super(props)
         this.state = {
@@ -30,12 +44,19 @@ class ClusterButton extends Component  {
         this.setChecked = this.setChecked.bind(this)
     }
 
+    /**
+     * This function is called when the component first mounts.
+     */
     componentDidMount () {
         const {getImagesMetaFromDbAction} = this.props
         const images = getImagesMetaFromDbAction()
         this.setState({images: images})
     }
 
+    /**
+     * This function updates the props.
+     * @param {object} nextProps - properties from redux store
+     */
     async componentWillReceiveProps(nextProps) {
         if (nextProps.clusterCenterValue !== this.state.clusterCenterValue && nextProps.clusterCenterValue !== undefined) {
             this.setState({clusterCenterValue: nextProps.clusterCenterValue});
@@ -46,7 +67,9 @@ class ClusterButton extends Component  {
         }        
     }
 
-
+    /**
+     * This function shows the clusters of the images.
+     */
     showCluster() {
         const {setClusterSwitchAction} = this.props
         const oldMarkedImages = []
@@ -90,6 +113,9 @@ class ClusterButton extends Component  {
             }
     }
 
+    /**
+     * This function hides the clusters.
+     */
     hideCluster() {
         const {setClusterSwitchAction} = this.props
         if(this.state.images !== undefined) {
@@ -116,10 +142,20 @@ class ClusterButton extends Component  {
             
     }
 
+    /**
+     * This function sets images "checked" true or false.
+     * @param {boolean} value 
+     */
     setChecked(value) {
         this.setState({checked: value})
     }
 
+    /**
+     * This function renders the cluster button.
+     * If images are marked it returns a warning so that the user 
+     * umarks the images before switching clusters on or off.
+     * @returns {object} - React component
+     */
     render() {
 
         if(this.props.markActive) {

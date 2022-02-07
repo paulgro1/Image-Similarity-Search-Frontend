@@ -46,6 +46,7 @@ class D3Map extends Component {
         super(props);
         this.state = {
             selectedImageId: undefined,
+            selectedImageCluster: undefined,
             selectedImageUrl: undefined,
             selectedImageFilename: undefined,
             sliderValue: 5,
@@ -247,6 +248,7 @@ class D3Map extends Component {
             this.setState({selectedImageUrl: fullsizeURL});
         }
         this.setState({selectedImageFilename: e.filename});
+        this.setState({selectedImageCluster: e.clusterCenter});
         if(parseInt(this.state.selectedImageId) >= this.state.IMAGES.length){
             this.handleUploadedNearestN(function(){
                 return
@@ -273,13 +275,25 @@ class D3Map extends Component {
      */
     handleExcelExport(){
         const fileName = this.state.selectedImageFilename + '_' + this.state.sliderValue + '_NN';
-        var data = [
-            [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
-            ['Image Id: ' + this.state.selectedImageId],
-            ['Cluster Center: TODO'],
-            [],
-            ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
-        ]
+        var clusterCenter = this.state.selectedImageCluster;
+        var data = []
+        if(clusterCenter === undefined){
+            data = [
+                [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
+                ['Image Id: ' + this.state.selectedImageId],
+                [],
+                ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
+            ]
+        } else {
+            data = [
+                [this.state.sliderValue + ' nearest neighbours of image: ' + this.state.selectedImageFilename],
+                ['Image Id: ' + this.state.selectedImageId],
+                ['Cluster Center: ' + this.state.selectedImageCluster],
+                [],
+                ['NN Id','NN Filename', 'NN Cluster Center', 'Euclidean Distance', 'Similarity in %'],
+            ]
+        }
+        
         for(let img of this.state.nearestNeighbours){
             let dataRow = []
             dataRow.push(img.id)
@@ -361,22 +375,16 @@ class D3Map extends Component {
     } 
 
     /**
-     * This function removes a mark from an image.
-     * @returns - nothing if markActive in state is false
+     * This function sets the slider value.
      */
-
-    /**
-     * This function handles the highlighting of images.
-     * @param {object} image - selected image
-     * @param {number} id - id of selected image
-     * @param {object} canvas - d3 canvas object
-     */
-
-
     setValue(value){
         this.setState({sliderValue: value});
     }
 
+    /**
+     * This function removes a mark from an image.
+     * @returns - nothing if markActive in state is false
+     */
     async removeMark(){
         //show uploaded again
         if(this.state.uploadedImages !== undefined) {
@@ -386,7 +394,6 @@ class D3Map extends Component {
             }
         }
 
-        
         if(this.state.markActive === true) {
             d3.selectAll('image')
             .classed('highlight', false)
@@ -631,7 +638,7 @@ class D3Map extends Component {
 
             // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
             var zoom = d3.zoom()
-                .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+                .scaleExtent([.1, 80])  // This control how much you can unzoom (x0.5) and zoom (x20)
                 .extent([[0, 0], [canvasWidth, canvasHeight]]) 
                 .on("zoom", updateChart.bind(this))   
 
