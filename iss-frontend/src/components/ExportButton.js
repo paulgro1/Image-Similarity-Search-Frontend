@@ -9,6 +9,8 @@ import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 
+import '../layout/css/HeaderStyle.css'
+
 const mapStateToProps = state => {
     return state
 }
@@ -147,7 +149,7 @@ class ExportButton extends Component {
      */
     render(){
         return (
-            <div>
+            <div id="navButton">
                 <Button variant="outline-success" onClick={this.handleExcelExportAllImages}> 
                     <Download/>
                 </Button>

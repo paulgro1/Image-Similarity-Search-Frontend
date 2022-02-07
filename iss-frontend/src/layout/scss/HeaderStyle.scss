@@ -1,0 +1,29 @@
+@use  "colorScheme" as colors;
+
+#brand {
+    font-size: 1.6rem;  
+    color: colors.$thirdColor;
+}
+
+#header {
+    background-color: colors.$primaryColor !important;
+}
+
+#navButton{
+    margin-right: 0.5rem;
+}
+
+.unMarkAlert {
+    display: table;
+    border-right: 2px solid colors.$alertColor;
+  
+
+    p{
+        font-family: inherit;
+        font-size: 1.3rem;
+        display: table-cell;
+        vertical-align: middle;
+        color: colors.$alertColor;
+        padding-right: 0.5rem;
+    }
+}

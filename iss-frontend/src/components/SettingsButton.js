@@ -7,6 +7,8 @@ import { Gear } from "react-bootstrap-icons";
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as settingsActions from '../actions/SettingsActions';
+import '../layout/css/HeaderStyle.css'
+import '../layout/css/settingsStyle.css'
 
 const mapStateToProps = state => {
     return state
@@ -134,20 +136,18 @@ class SettingsButton extends Component {
         if(this.props.markActive) {
             return(
                 <div>
-                    <Button variant="outline-success" onClick={this.handleShow}> 
+                    <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
                     <Gear/>
                 </Button>
                  <Modal show={showDialog} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Settings</Modal.Title>
+                    <Modal.Header id="settingsHeader" closeButton>
+                        <Modal.Title id="settingsTitle">Settings</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                        <div className="alert alert-danger" role="alert">
-                            Please unmark images before adjusting the settings.
-                        </div>
+                    <Modal.Body id="settingsBody">
+                    <div id="settingAlert">
+                        <p>Please unmark before changing settings!</p>
+                    </div>
                     </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
                 </Modal>
                 </div>
             )
@@ -155,36 +155,40 @@ class SettingsButton extends Component {
 
         return (
             <div>
-                <Button variant="outline-success" onClick={this.handleShow}> 
+                <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
                     <Gear/>
                 </Button>
-
-                <Modal show={showDialog} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Settings</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        Number of nearest neighbours: <br/>
-                        <RangeSlider
-                            value={this.state.sliderValue}
-                            onChange={changeEvent => this.setNeighboursValue(changeEvent.target.value)}
-                            min={1}
-                            max={30}
-                        />
-                        <br/>
-                        Number of Clustercenters: <br/>
-                        <RangeSlider
-                            value={this.state.clusterCenterValue}
-                            onChange={changeEvent => this.setClustersValue(changeEvent.target.value)}
-                            min={1}
-                            max={15}
-                        />
-                        <br/>
-                        <Button onClick={this.handleSave}>Save Changes</Button>
-                    </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
-                </Modal>
+                <div id="settingModal">
+                    <Modal show={showDialog} onHide={this.handleClose}>
+                        <Modal.Header id="settingsHeader" closeButton>
+                            <Modal.Title id="settingsTitle">Settings</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body id="settingsBody">
+                            <div id='neighbourDiv'>
+                            <p>Number of nearest neighbours:</p>
+                            <RangeSlider
+                                variant='success'
+                                value={this.state.sliderValue}
+                                onChange={changeEvent => this.setNeighboursValue(changeEvent.target.value)}
+                                min={1}
+                                max={30}
+                            />
+                            </div>
+                            <div id="clusterDiv">
+                            <p>Number of clustercenter:</p>
+                            <RangeSlider id='range'
+                                variant='success'
+                                value={this.state.clusterCenterValue}
+                                onChange={changeEvent => this.setClustersValue(changeEvent.target.value)}
+                                min={1}
+                                max={15}
+                            />
+                            </div>
+                           
+                            <Button variant='outline-success' onClick={this.handleSave}>Save Changes</Button>
+                        </Modal.Body>
+                    </Modal>
+                </div>
             </div>
         )
     }

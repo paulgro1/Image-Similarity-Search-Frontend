@@ -9,6 +9,7 @@ import ClusterButton from './Clusterbutton';
 import InstructionsButton from './InstructionsButton';
 
 import '../layout/css/HeaderStyle.css'
+import Logo from '../layout/pics/LogoVers2.svg'
 
 /**
  * Class representing the header component.
@@ -22,9 +23,10 @@ class Header extends Component {
      */
     render() {
         return(
-            <div>
-                <Navbar bg="light" expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}>  
-                    <Navbar.Brand>Image Similarity Search Project</Navbar.Brand>
+            <div id="header">
+                <Navbar expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}>
+                <Navbar.Brand><img alt="" src={Logo} width="50px"/></Navbar.Brand>  
+                    <Navbar.Brand id="brand">Image Similarity Search</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">

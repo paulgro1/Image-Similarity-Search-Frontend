@@ -1,0 +1,39 @@
+#uploadTitle {
+  color: #198754;
+  padding-left: 0.8rem;
+  font-size: 1.8rem;
+}
+
+#uploadHeader {
+  background-color: #f0f0f0;
+}
+
+#uploadBody {
+  background-color: #fafafa;
+}
+#uploadBody form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#uploadBody form input[type=file]::file-selector-button {
+  border: 1px solid #198754;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-right: 20px;
+  background-color: #fafafa;
+  transition: 1s;
+  color: #198754;
+}
+#uploadBody form input[type=file]::file-selector-button:hover {
+  background-color: #198754;
+  border: 1px solid #198754;
+  color: #fafafa;
+}
+#uploadBody form #uploadSubmit {
+  margin-left: -60px;
+}
+
+/*# sourceMappingURL=imageUploadStyle.css.map */

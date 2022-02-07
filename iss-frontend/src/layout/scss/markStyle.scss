@@ -10,7 +10,7 @@
   
   .highlight_neighbour {
     opacity: 1;
-    outline: 0.5vh solid colors.$neighbourColor;
+   /*  outline: 0.5vh solid colors.$neighbourColor; */
     /* transition: ease 0.5s;
     transform: perspective(200px) translateZ(20px); */
   }
@@ -30,3 +30,7 @@
     outline: 0.5vh solid colors.$uploadedColor;
   }
   
+
+  .hidden{
+    overflow: hidden;
+  }

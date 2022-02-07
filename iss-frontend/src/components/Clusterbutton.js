@@ -2,11 +2,11 @@
 import React, { Component } from "react";
 
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
-import Button from 'react-bootstrap/Button';
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import '../layout/css/clusterStyle.css'
+import '../layout/css/HeaderStyle.css'
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as settingsAction from '../actions/SettingsActions'
@@ -160,14 +160,14 @@ class ClusterButton extends Component  {
 
         if(this.props.markActive) {
             return(
-                <div>
                 
-                <Button variant="warning" width={130} >Unmark please</Button> 
-            </div>
+                <div id="navButton" className="unMarkAlert">
+                  <p>Please unmark before using clusterswitch!</p>
+                </div>
             )
         }
         return (
-            <div>
+            <div id="navButton">
                 <BootstrapSwitchButton width={130} onlabel="Cluster ON" offlabel="Cluster OFF" class="btn btn-outline-primary-xs" checked={this.state.checked} onChange={this.showCluster}/>
             </div>
             

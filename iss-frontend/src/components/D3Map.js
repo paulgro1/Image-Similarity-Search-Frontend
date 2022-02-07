@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 import '../layout/css/style.css'
 import '../layout/css/markStyle.css'
 import '../layout/css/legendStyle.css'
+import '../layout/css/infoViewStyle.css'
 
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
@@ -790,16 +791,24 @@ class D3Map extends Component {
         
         return(  
             <div>  
-                <div id="canvas" ref="canvas">
+                <div className="canvasBody" id="canvas" ref="canvas">
                     <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Informations</Modal.Title>
+                        <Modal.Header id="infoHeader" closeButton>
+                            <Modal.Title id="infoTitle">Information</Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>
-                            <Container>
-                                <Row>
-                                    <Col lg={4}>
+                        <Modal.Body id="infoBody" >
+                            <Container id="infoContainer">
+                                <Row id="firstRow">
+                                    <Col id="imageData" height={300} lg={4}>
                                         <Image src={this.state.selectedImageUrl} width={192} height={256}/>
+                                        <h4>Image Properties:</h4>
+                                        <div>
+                                            Filename: {this.state.selectedImageFilename}<br/>
+                                            {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
+                                            <Button id="exportButton" variant="outline-success" onClick={this.handleExcelExport}>
+                                            Export Data
+                                        </Button>
+                                        </div> 
                                     </Col>
                                     <Col lg={8}>
                                         <h3>Top {this.state.sliderValue} Similar Images:</h3>
@@ -820,31 +829,16 @@ class D3Map extends Component {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row>
-                                    <Col lg={4}>
-                                        <h4>Image Properties:</h4>
-                                        <div>
-                                            Filename: {this.state.selectedImageFilename}<br/>
-                                            {/* Cluster Center: {this.state.selectedImageClusterCenter} */}
-                                        </div>
-                                        <br></br> 
-                                    </Col>
-                                    <Col lg={8}>
-                                        <Button variant="outline-success" onClick={this.handleExcelExport}>
-                                            Export Data
-                                        </Button>
-                                    </Col>
-                                </Row>
+                                <Row id="secondRow"></Row>      
                             </Container>
                         </Modal.Body>
-                        <Modal.Footer>
-                        </Modal.Footer>
                     </Modal>
                 </div>
                     <div id='legend'>
                         <h4>Information:</h4>
-                        <h5>Neighbours: {this.state.sliderValue}</h5>
+                        
                         <div id="marks" key="marks">
+                            <h5>Neighbours: {this.state.sliderValue}</h5>
                             <li id='selected'>selected Image</li>
                             <li id='neighbours'>next Neighbours</li>
                             <li id='uploaded'>uploaded Image(s)</li>

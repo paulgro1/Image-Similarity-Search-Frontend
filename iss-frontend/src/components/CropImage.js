@@ -9,8 +9,10 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import '../layout/css/style.css'
+import '../layout/css/cropStyle.css'
 import axios from "axios"
 import * as route from '../config/Routes'
+import { light } from '@material-ui/core/styles/createPalette';
 
 
 const mapStateToProps = state => {
@@ -205,44 +207,45 @@ class CropImage extends Component {
         }
 
         return (
-           <Modal show={showCropDialog} onHide={this.handleCloseCrop} >
-                    
-                <Modal.Header closeButton>
-                    <Modal.Title>Crop and Upload Single Image</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="modal-dialog-crop">
-                        <div className="crop-container" >
-                            {!pending &&
-                            <Cropper
-                                image={this.state.url}
-                                crop={this.state.crop}
-                                zoom={this.state.zoom}
-                                aspect={this.state.aspect}
-                                cropsize={this.state.cropsize}
-                                onCropChange={this.onCropChange}
-                                onCropComplete={this.onCropComplete}
-                                onZoomChange={this.onZoomChange} />
-                            }
-                        </div>
-                    </div> 
-                </Modal.Body>
-                <Modal.Footer className="justify-content-center">
-                    <div className="controls container-fluid">
-                        <Slider
-                            value={this.state.zoom}
-                            min={1}
-                            max={3}
-                            step={0.1}
-                            aria-labelledby="Zoom"
-                            onChange={(e, zoom) => this.onZoomChange(zoom)}
-                        />
-                    </div>   
-                    <Button className="cropsubmit" variant="dark" onClick={this.handleSubmit}>Submit</Button>
-                    {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
-                    {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
-                </Modal.Footer>
-            </Modal>            
+            <div id="cropModal"> 
+                <Modal show={showCropDialog} onHide={this.handleCloseCrop} >  
+                        <Modal.Header id='cropHeader' closeButton>
+                            <Modal.Title id='cropTitle'>Crop and Upload</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body id='cropBody'>
+                            <div  className="modal-dialog-crop">
+                                <div className="crop-container" >
+                                    {!pending &&
+                                    <Cropper
+                                        image={this.state.url}
+                                        crop={this.state.crop}
+                                        zoom={this.state.zoom}
+                                        aspect={this.state.aspect}
+                                        cropsize={this.state.cropsize}
+                                        onCropChange={this.onCropChange}
+                                        onCropComplete={this.onCropComplete}
+                                        onZoomChange={this.onZoomChange} />
+                                    }
+                                </div>
+                            </div> 
+                        </Modal.Body>
+                    <Modal.Footer id='cropFooter' className="justify-content-center">
+                        <div className="controls container-fluid">
+                            <Slider
+                                value={this.state.zoom}
+                                min={1}
+                                max={3}
+                                step={0.1}
+                                aria-labelledby="Zoom"
+                                onChange={(e, zoom) => this.onZoomChange(zoom)}
+                            />
+                        </div>   
+                        <Button className="cropsubmit" variant="outline-success" onClick={this.handleSubmit}>Submit</Button>
+                        {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                        {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
+                    </Modal.Footer>
+                </Modal>
+            </div>            
         )
     }
 }

@@ -2,11 +2,15 @@
   position: absolute;
   right: 0;
   top: 0;
-  margin-top: 56px;
+  margin-top: 110px;
+  margin-right: 30px;
   padding: 1%;
-  background-color: #f8f9fa;
+  background-color: #f0f0f0;
   border: 1px solid #198754;
   border-radius: 4px;
+}
+#legend h4 {
+  margin-bottom: 0.5rem;
 }
 #legend li {
   margin-left: 10px;
@@ -24,7 +28,7 @@
   color: #65a6fa;
 }
 #legend #marks #uploaded {
-  color: #f11772;
+  color: #006eff;
 }
 #legend #cluster {
   display: flex;
@@ -37,7 +41,7 @@
   text-align: center;
 }
 #legend #cluster #cluster0 {
-  color: red;
+  color: #6adaaf;
 }
 #legend #cluster #cluster1 {
   color: blueviolet;
@@ -55,7 +59,7 @@
   color: orange;
 }
 #legend #cluster #cluster6 {
-  color: slategrey;
+  color: #0a0a0a;
 }
 #legend #cluster #cluster7 {
   color: teal;

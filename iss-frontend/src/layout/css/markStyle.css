@@ -7,7 +7,7 @@
 
 .highlight_neighbour {
   opacity: 1;
-  outline: 0.5vh solid #65a6fa;
+  /*  outline: 0.5vh solid colors.$neighbourColor; */
   /* transition: ease 0.5s;
   transform: perspective(200px) translateZ(20px); */
 }
@@ -24,7 +24,11 @@
 
 .highlight_uploaded {
   opacity: 1;
-  outline: 0.5vh solid #f11772;
+  outline: 0.5vh solid #006eff;
+}
+
+.hidden {
+  overflow: hidden;
 }
 
 /*# sourceMappingURL=markStyle.css.map */

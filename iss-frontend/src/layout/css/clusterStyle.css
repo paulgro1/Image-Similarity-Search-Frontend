@@ -1,5 +1,5 @@
 .cluster0 {
-  outline: 0.4vh solid red;
+  outline: 0.4vh solid #6adaaf;
 }
 
 .cluster1 {
@@ -23,7 +23,7 @@
 }
 
 .cluster6 {
-  outline: 0.4vh solid slategrey;
+  outline: 0.4vh solid #0a0a0a;
 }
 
 .cluster7 {
