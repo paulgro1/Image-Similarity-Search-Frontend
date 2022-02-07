@@ -1,0 +1,52 @@
+@use "colorScheme"as colors;
+
+#infoTitle{
+    color: colors.$thirdColor;
+    padding-left: 0.8rem;
+    font-size: 1.8rem;   
+}
+#infoHeader {
+    background-color: colors.$primaryColor;
+}
+
+#infoBody {
+    background-color: colors.$secondaryColor;
+}
+
+#image-container {
+    width: 480px !important;
+    height: 336px !important;
+    overflow-y: scroll;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+
+#image-container>div {
+    margin: 0.5rem;
+}
+
+#imageData{
+    margin-top: 3rem;
+}
+
+#exportButton {
+    margin-top: 0.9rem;
+}
+
+#firstRow{
+    margin-top: 1rem;
+
+    h3 {
+        font-size: 1.8rem;  
+    }
+
+    h4{
+        margin-top: 0.7rem;
+    }
+
+}
+#secondRow{
+    width: 480px !important;
+    height: 40px !important;
+}

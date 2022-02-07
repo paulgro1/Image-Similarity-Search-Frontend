@@ -1,0 +1,76 @@
+.cluster0 {
+  /* outline: $outline colors.$cluster0; */
+  filter: drop-shadow(0px 0px 5px #6adaaf);
+}
+
+.cluster1 {
+  /* outline: $outline colors.$cluster1; */
+  filter: drop-shadow(0px 0px 5px blueviolet);
+}
+
+.cluster2 {
+  /* outline: $outline colors.$cluster2; */
+  filter: drop-shadow(0px 0px 5px #ff98a9);
+}
+
+.cluster3 {
+  /* outline: $outline colors.$cluster3; */
+  filter: drop-shadow(0px 0px 5px #3cff00);
+}
+
+.cluster4 {
+  /* outline: $outline colors.$cluster4; */
+  filter: drop-shadow(0px 0px 5px yellowgreen);
+}
+
+.cluster5 {
+  /* outline: $outline colors.$cluster5; */
+  filter: drop-shadow(0px 0px 5px orange);
+}
+
+.cluster6 {
+  /* outline: $outline colors.$cluster6; */
+  filter: drop-shadow(0px 0px 6.5px #0a0a0a);
+}
+
+.cluster7 {
+  /* outline: $outline colors.$cluster7; */
+  filter: drop-shadow(0px 0px 5px #d3a94f);
+}
+
+.cluster8 {
+  /* outline: $outline colors.$cluster8; */
+  filter: drop-shadow(0px 0px 5px indianred);
+}
+
+.cluster9 {
+  /* outline: $outline colors.$cluster9; */
+  filter: drop-shadow(0px 0px 5px #0a8b26);
+}
+
+.cluster10 {
+  /* outline: $outline colors.$cluster10; */
+  filter: drop-shadow(0px 0px 5px #00ccff);
+}
+
+.cluster11 {
+  /* outline: $outline colors.$cluster11; */
+  filter: drop-shadow(0px 0px 5px #502a2a);
+}
+
+.cluster12 {
+  /* outline: $outline colors.$cluster12; */
+  filter: drop-shadow(0px 0px 5px #3cc5ca);
+}
+
+.cluster13 {
+  /* outline: $outline colors.$cluster13; */
+  filter: drop-shadow(0px 0px 5px #a860a6);
+}
+
+.cluster14 {
+  /* outline: $outline colors.$cluster14; */
+  filter: drop-shadow(0px 0px 5px #ffee00);
+}
+
+/*# sourceMappingURL=clusterStyleShadow.css.map */

@@ -1,0 +1,43 @@
+@use "colorScheme"as colors;
+
+#uploadTitle {
+    color: colors.$thirdColor;
+    padding-left: 0.8rem;
+    font-size: 1.8rem;
+}
+
+#uploadHeader {
+    background-color: colors.$primaryColor;
+}
+
+#uploadBody {
+    background-color: colors.$secondaryColor;
+
+    form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        margin-top: 10px;
+
+        input[type=file]::file-selector-button {
+            border: 1px solid colors.$thirdColor;
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin-right: 20px;
+            background-color: colors.$secondaryColor;
+            transition: 1s;
+            color: colors.$thirdColor;
+        }
+
+        input[type=file]::file-selector-button:hover {
+            background-color: colors.$thirdColor;
+            border: 1px solid colors.$thirdColor;
+            color: colors.$secondaryColor;
+        }
+
+        #uploadSubmit{
+            margin-left: 10px;
+        }
+    }
+}

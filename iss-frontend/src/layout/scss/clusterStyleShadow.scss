@@ -1,0 +1,80 @@
+@use  "colorScheme" as colors;
+
+$outline: 0.4vh solid; 
+
+.cluster0 {
+    /* outline: $outline colors.$cluster0; */ 
+    filter: drop-shadow(0px 0px 5px colors.$cluster0);
+
+}
+.cluster1 {
+    /* outline: $outline colors.$cluster1; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster1);
+
+}
+
+.cluster2 {
+    /* outline: $outline colors.$cluster2; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster2);
+
+}
+
+.cluster3 {
+   /* outline: $outline colors.$cluster3; */
+   filter: drop-shadow(0px 0px 5px colors.$cluster3);
+}
+
+.cluster4 {
+    /* outline: $outline colors.$cluster4; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster4);
+}
+
+.cluster5 {
+    /* outline: $outline colors.$cluster5; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster5);
+}
+
+.cluster6 {
+   /* outline: $outline colors.$cluster6; */
+   filter: drop-shadow(0px 0px 6.5px colors.$cluster6);
+}
+
+.cluster7 {
+    /* outline: $outline colors.$cluster7; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster7);
+}
+
+.cluster8 {
+    /* outline: $outline colors.$cluster8; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster8);
+}
+
+.cluster9 {
+    /* outline: $outline colors.$cluster9; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster9);
+}
+
+.cluster10 {
+    /* outline: $outline colors.$cluster10; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster10);
+}
+
+.cluster11 {
+    /* outline: $outline colors.$cluster11; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster11);
+}
+
+.cluster12 {
+    /* outline: $outline colors.$cluster12; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster12);
+}
+
+.cluster13 {
+    /* outline: $outline colors.$cluster13; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster13);
+}
+
+.cluster14 {
+    /* outline: $outline colors.$cluster14; */
+    filter: drop-shadow(0px 0px 5px colors.$cluster14);
+}

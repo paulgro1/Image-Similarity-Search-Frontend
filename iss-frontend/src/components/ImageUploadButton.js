@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import React, { Component } from 'react';
 import CropButton from './CropImage';
+import '../layout/css/HeaderStyle.css'
+import '../layout/css/imageUploadStyle.css'
 
 
 const mapStateToProps = state => {
@@ -136,21 +138,22 @@ class ImageUploadButton extends Component {
         var crop = this.state.files && this.state.files.length === 1;
        
         return (
-            <div>
+            <div id="navButton">
                 <Button variant="outline-success" onClick={this.handleShow}>
                     Upload Image
                 </Button>
 
                 <Modal show={showDialog} onHide={this.handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Image Upload</Modal.Title>
+                    <Modal.Header id="uploadHeader" closeButton>
+                        <Modal.Title id="uploadTitel">Image Upload</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body id="uploadBody">
                         <Form>
                             <Form.Group>
-                                <input type='file' onChange={this.handleSelect} multiple />
+                                <label for='fileUpload'></label>
+                                <input id='fileUpload' type='file' onChange={this.handleSelect} multiple />
                             </Form.Group>
-                            <Button variant="dark" onClick={this.handleSubmit}>
+                            <Button id='uploadSubmit' variant="outline-success" onClick={this.handleSubmit}>
                                 Submit
                             </Button>
             
@@ -158,8 +161,6 @@ class ImageUploadButton extends Component {
                             {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
                         </Form>
                     </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
                 </Modal>
                 {crop && <CropButton cropfile={this.state.files[0]}></CropButton> }
             </div>

@@ -1,0 +1,31 @@
+#brand {
+  font-size: 1.6rem;
+  color: #198754;
+}
+
+#header {
+  background-color: #f0f0f0 !important;
+}
+
+#navButton {
+  margin-right: 0.5rem;
+}
+
+.unMarkAlert {
+  display: table;
+  border-right: 2px solid #e7b537;
+}
+.unMarkAlert p {
+  font-family: inherit;
+  font-size: 1rem;
+  display: table-cell;
+  vertical-align: middle;
+  color: #e7b537;
+  padding-right: 0.5rem;
+}
+
+#tooltip {
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=HeaderStyle.css.map */

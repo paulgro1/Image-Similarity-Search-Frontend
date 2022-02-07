@@ -24,10 +24,10 @@ class Header extends Component {
      */
     render() {
         return(
-            <div>
-                <Navbar bg="light" expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}> 
-                    <Navbar.Brand><img alt="" src={Logo} width="55px"/></Navbar.Brand> 
-                    <Navbar.Brand>Image Similarity Search</Navbar.Brand>
+            <div id="header">
+                <Navbar expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}>
+                <Navbar.Brand><img alt="" src={Logo} width="50px"/></Navbar.Brand>  
+                    <Navbar.Brand id="brand">Image Similarity Search</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
