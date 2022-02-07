@@ -162,7 +162,7 @@ class ClusterButton extends Component  {
             return(
                 
                 <div id="navButton" className="unMarkAlert">
-                  <p>Please unmark before using clusterswitch!</p>
+                  <p>Please unmark before using Clusterswitch!</p>
                 </div>
             )
         }

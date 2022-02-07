@@ -20,10 +20,6 @@
   align-items: baseline;
   height: 100%;
 }
-#settingsBody range.value {
-  color: #198754;
-  text-align: center;
-}
 #settingsBody #neighbourDiv {
   display: inline-block;
   margin-left: 35px;
@@ -53,7 +49,7 @@
 #settingAlert p {
   font-family: inherit;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   display: table-cell;
   vertical-align: middle;
   color: #e7b537;
