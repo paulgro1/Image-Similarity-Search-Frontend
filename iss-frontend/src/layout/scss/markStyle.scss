@@ -3,26 +3,19 @@
 .highlight {
     opacity: 1;
     outline: 0.5vh solid colors.$markColor;
-    
-    /*transition: ease 0.5s;
-    transform: perspective(200px) translateZ(20px);*/
   }
   
   .highlight_neighbour {
     opacity: 1;
-   /*  outline: 0.5vh solid colors.$neighbourColor; */
-    /* transition: ease 0.5s;
-    transform: perspective(200px) translateZ(20px); */
+    outline: 0.5vh solid colors.$neighbourColor;
   }
   
   .hide_on {
     opacity: 0.1;
-    /* transition: ease 0.5s; */
   }
   
   .hide_off {
     opacity: 1;
-    /* transition: ease 0.5s; */
   }
   
   .highlight_uploaded {

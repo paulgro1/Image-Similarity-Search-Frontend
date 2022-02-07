@@ -35,7 +35,7 @@
 
 .cluster7 {
   /* outline: $outline colors.$cluster7; */
-  filter: drop-shadow(0px 0px 5px teal);
+  filter: drop-shadow(0px 0px 5px #d3a94f);
 }
 
 .cluster8 {
@@ -50,7 +50,7 @@
 
 .cluster10 {
   /* outline: $outline colors.$cluster10; */
-  filter: drop-shadow(0px 0px 5px #83e6ff);
+  filter: drop-shadow(0px 0px 5px #00ccff);
 }
 
 .cluster11 {
@@ -60,12 +60,12 @@
 
 .cluster12 {
   /* outline: $outline colors.$cluster12; */
-  filter: drop-shadow(0px 0px 5px #00f7ff);
+  filter: drop-shadow(0px 0px 5px #3cc5ca);
 }
 
 .cluster13 {
   /* outline: $outline colors.$cluster13; */
-  filter: drop-shadow(0px 0px 5px #ff00f7);
+  filter: drop-shadow(0px 0px 5px #a860a6);
 }
 
 .cluster14 {
