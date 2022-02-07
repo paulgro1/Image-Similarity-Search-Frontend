@@ -8,17 +8,16 @@ import { bindActionCreators } from 'redux';
 
 import * as instructionsActions from '../actions/InstructionActions';
 
-
+import '../layout/css/instructionStyle.css'
 import scrollimage from '../InstructionIcons/scroll.svg';
-import warning from '../InstructionIcons/warning.png';
+import warning from '../InstructionIcons/warning.svg';
 import leftclickandpan from '../InstructionIcons/left-click-2.svg';
 import leftclick from '../InstructionIcons/left-click.svg';
 import doubleleftclick from '../InstructionIcons/doubleleftclick.svg';
-import settingsButton from '../InstructionIcons/settingsButton.png';
-import uploadImageButton from '../InstructionIcons/uploadImageButton.png';
-import exportButton from '../InstructionIcons/exportButton.png';
-import ClusterOn from '../InstructionIcons/ClusterOnButton.png';
-import ClusterOff from '../InstructionIcons/ClusterOffButton.png';
+import settingsButton from '../InstructionIcons/settingsButton.svg';
+import uploadImageButton from '../InstructionIcons/uploadImageButton.svg';
+import exportButton from '../InstructionIcons/exportButton.svg';
+import Cluster from '../InstructionIcons/clusterButton.svg';
 
 const mapStateToProps = state => {
     return state
@@ -84,7 +83,7 @@ class InstructionsButton extends Component {
                 </svg>
                 </Button>
 
-                <Modal show={showDialog} onHide={this.handleClose} >
+                <Modal id="modalCentered" show={showDialog} onHide={this.handleClose} scrollable={true} >
                     <Modal.Header id="instHeader" closeButton>
                     
                         <Modal.Title>Instructions</Modal.Title>
@@ -93,10 +92,8 @@ class InstructionsButton extends Component {
                        
                     </Modal.Header>
                     <Modal.Body id="instBody">
-        <Container >
-          
-        {/* <table class="table table-striped">
-        <div class="container-fluid" id="bordercontainer"> */}
+        <Container>
+      
    
 
 
@@ -104,244 +101,81 @@ class InstructionsButton extends Component {
    
         <div class="row">
 
-<Row>
-<div class="col" id="attention">
+        <Row>
+        <div class="col" id="attention">
 
-          <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
-          The settings can not be changed while images are marked.<br></br><br></br>
-          <img id="attentionIcon" src={warning} height={20} alt="scroll icon" />
-          To reset the marking of the images, click on the white area around them.
-            
-            </div>
-</Row>
-</div>
+                  <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+                  The settings can not be changed while images are marked.<br></br><br></br>
+                  <img id="attentionIcon" src={warning} height={20} alt="scroll icon" />
+                  To reset the marking of the images, click on the white area around them.
+                    
+                    </div>
+        </Row>
+        </div>
    
    
     <div class="row">
        <Row>
 
-        <div class="row">
+        
             <div class="col">
-              <img id="icon" src={scrollimage} height={140}  alt="scroll icon" /><br></br>
+              <img id="icon" src={scrollimage} height={100}  alt="scroll icon" /><br></br>
               Scroll up and down to zoom in and out.<br/>
               Or double click on the canvas to zoom in.
             </div>
             <div class="col">
-              <img id="icon" src={leftclickandpan} height={140}  alt="scroll icon" /><br></br>
+              <img id="icon" src={leftclickandpan} height={100}  alt="scroll icon" /><br></br>
               Click left and pan to slide over the dataset.
             </div>
+        </Row>
+        </div>
+        <div class="row">
+        <Row>
             <div class="col">
-              <img id="icon" src={leftclick} height={140}  alt="scroll icon" /><br></br>
+              <img id="icon" src={leftclick} height={100}  alt="scroll icon" /><br></br>
               One left click on image to get the nearest neighbours.
             </div>
             <div class="col">
-              <img id="icon" src={doubleleftclick} height={140}  alt="scroll icon" /><br></br>
+              <img id="icon" src={doubleleftclick} height={100}  alt="scroll icon" /><br></br>
               Double left click on image to go to detail view, nearest neighbours, similarity, option to export data.
               When the picture is already selected, a single click is enough.
             </div>
-        </div>
-
+        
         </Row>
-            </div>
-              <img id="icon" src={leftclickandpan} height={140}  alt="scroll icon" /><br></br>
-              Click left and pan to slide over the dataset.
-        <div class="row">
-       <Row>
-
-        <div class="row">
-            <div class="col">
-            1 of 2
-            </div>
-            <div class="col">
-            2 of 2
-            </div>
-            <div class="col">
-            2 of 2
-            </div>
-            <div class="col">
-            2 of 2
-            </div>
         </div>
 
-
-          {/* <div class="col">
-
-          <Col xs={6} md={4}>
-          <div class="col-xs-1" align="center">
-          <img src={scrollimage} height={50} width={50} alt="scroll icon" />
-          </div>
-           </Col>
-          </div>
-
-          <div class="col">
-          <Col xs={12} md={8}>
-            Scroll with your mouse up and down to zoom in and out.<br/>
-            Or Double click on the canvas to zoom in.
-            </Col>
-            </div>
-
-          </Row>
-
-          </div>
-
-
-          <div class="row">
-
-            <Row>
+        
+        
+        <div class="row">
+        <Row>
             <div class="col">
-            <Col xs={6} md={4}>
-            <div class="col-xs-1" align="center">
-            <img src={leftclickandpan} height={50} width={50} alt="left click and pen icon" />
+              <img id="icon" src={settingsButton} height={100}  alt="scroll icon" /><br></br>
+              Click here to define the numbers of nearest neighbours and/or clusters with a slider.
             </div>
-            </Col>
-            </div>
-
             <div class="col">
-          <Col xs={12} md={8}>
-            Click left and pan to slide through the dataset
-            </Col>
+              <img id="icon" src={exportButton} height={100}  alt="scroll icon" /><br></br>
+              Click here to export the nearest neighbours of all images in a table.
             </div>
-            </Row>
-
-            </div>
-
-
-          <div class="row">
-
-          <Row>
-          <div class="col">
-            <Col xs={6} md={4}>
-            <div class="col-xs-1" align="center">
-            <img src={leftclick} height={50} width={50} alt="left click icon"/>
-            </div>
-            </Col>
-            </div>
-
+        </Row>
+        </div>
+        <div class="row">
+        <Row>
             <div class="col">
-            <Col xs={12} md={8}>
-            One left click on an image to get the nearest neighbours
-            </Col>
+              <img id="icon" src={uploadImageButton} height={100}  alt="scroll icon" /><br></br>
+              Click here to choose between single- and multiupload, then the option is given to crop a single image.
             </div>
-          </Row>
-
-          </div>
-            
-
-          <div class="row">
-
-            <Row>
             <div class="col">
-            <Col xs={6} md={4}>
-            <div class="col-xs-1" align="center">
-            <img src={leftclick} height={50} width={50} alt=" double left click icon" />
+              <img id="icon" src={Cluster} height={100}  alt="scroll icon" /><br></br>
+              The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image
             </div>
-            </Col>
-            </div>
-
-            <div class="col">
-            <Col xs={12} md={8}>
-           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data.<br/>
-           When the picture is already selected, a single click is enough
-            </Col>
-            </div>
-            </Row>
-
-            </div>
-
-
-            <div class="row">
-
-            <Row>
-            <div class="col">
-            <Col xs={6} md={4}>
-            <div class="col-xs-1" align="center">
-            <img src={settingsButton} height={45} width={45} alt="setting buttom"/>
-            </div>
-            </Col>
-            </div>
-
-            <div class="col">
-            <Col xs={12} md={8}>
-              Click here to define the numbers of nearest neighbours and/or clusters with a slider
-            </Col>
-            </div>
-            </Row>
-
-            </div>
-
-
-           <div class="row">
-
-            <Row>
-            <div class="col">
-            <Col xs={6} md={4}>
-            <div class="col-xs-1" align="center">
-            <img src={exportButton} height={42} width={45} alt="export button"/>
-            </div>
-            </Col>
-            </div>
-
-            <div class="col">
-            <Col xs={12} md={8}>
-              Click here to export (marked) nearest neighbours in a table
-            </Col>
-            </div>
-            </Row>
-
-            </div>
-
-
-            <div class="row">
-
-            <Row>
-            <div class="col">
-            <Col xs={6} md={4} >
-
-            <div class="col-xs-1" align="center">
-            <img src={uploadImageButton} height={40} width={100} alt="uploadbutton"/>
-            </div>
-
-            </Col>
-            </div>
-
-            <div class="col">
-            <Col xs={12} md={8}>
-              Click here to choose between single- and multiupload, than the option is given to crop a single image 
-            </Col>
-            </div>
-            </Row>
-            </div>
-
-
-            <div class="row">
-
-            <Row>
-            <div class="col">
-            <Col xs={6} md={4} >
-
-            <div class="col-xs-1" align="center">
-            <img src={ClusterOn} height={40} width={100} alt="cluster on button"/>
-            <img src={ClusterOff} height={40} width={100} alt="cluster off button"/>
-            </div>
-
-            </Col>
-            </div>
-
-            <div class="col">
-            <Col xs={12} md={8}>
-            The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image            </Col>
-            </div> */}
-            </Row>
-            </div>
-
-
-
-            {/* </div>
-
-    </table> */}
+        </Row>
+        </div>
+        
         </Container>
       </Modal.Body>
-                    
+                <Modal.Footer id="instFooter">
+
+                </Modal.Footer>
                 </Modal>
             </div>
         )
