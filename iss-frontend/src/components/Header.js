@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
-import Logo from '../Logo/LogoVers2.svg'
+import Logo from '../Logo/Logo.svg'
 
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';

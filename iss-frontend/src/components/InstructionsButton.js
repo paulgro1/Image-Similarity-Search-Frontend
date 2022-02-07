@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import { Col, Row, Container } from "react-bootstrap";
+import { Row, Container } from "react-bootstrap";
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 
