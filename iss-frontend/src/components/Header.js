@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
+import Logo from '../Logo/Logo.svg'
+
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
 import ExportButton from './ExportButton';
@@ -9,7 +11,6 @@ import ClusterButton from './Clusterbutton';
 import InstructionsButton from './InstructionsButton';
 
 import '../layout/css/HeaderStyle.css'
-import Logo from '../layout/pics/LogoVers2.svg'
 
 /**
  * Class representing the header component.

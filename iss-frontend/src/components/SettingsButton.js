@@ -157,7 +157,7 @@ class SettingsButton extends Component {
         return (
             <div>
                 <Tooltip id="tooltip" title="Settings" placement="bottom">
-                    <div>
+                    <div id="settingButton">
                         <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
                             <Gear/>
                         </Button>
