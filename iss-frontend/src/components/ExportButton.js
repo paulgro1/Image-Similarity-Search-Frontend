@@ -152,7 +152,7 @@ class ExportButton extends Component {
     render(){
         return (
             
-            <Tooltip title="Click here to download all image metadata" placement="bottom">
+            <Tooltip id="tooltip" title="Export to excel" placement="bottom">
                 <div id="navButton">
                     <Button variant="outline-success" onClick={this.handleExcelExportAllImages}> 
                         <Download/>

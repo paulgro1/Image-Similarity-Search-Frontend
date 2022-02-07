@@ -156,7 +156,7 @@ class SettingsButton extends Component {
 
         return (
             <div>
-                <Tooltip title="Click here to set values of cluster and neighbours" placement="bottom">
+                <Tooltip id="tooltip" title="Settings" placement="bottom">
                     <div>
                         <Button id="navButton" variant="outline-success" onClick={this.handleShow}> 
                             <Gear/>

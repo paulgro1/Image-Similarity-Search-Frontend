@@ -78,7 +78,7 @@ class InstructionsButton extends Component {
 
         return (
             <div >
-                <Tooltip title="Click here to get information about using this application." placement="bottom">
+                <Tooltip id="tooltip" title="Instructions" placement="bottom">
                     <div>
                       <Button variant="outline-success" onClick={this.handleShow}> 
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
