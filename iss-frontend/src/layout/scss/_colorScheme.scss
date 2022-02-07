@@ -1,18 +1,25 @@
 // Sass Variablen
 
+// main-colors
+$primaryColor: rgb(243, 243, 243);
+$secondaryColor: rgb(130, 163, 138);
+$thirdColor: rgb(25, 135, 84);
+$alertColor: rgb(231, 181, 55);
+
+
 // colors for mark-function
 $markColor: rgb(10, 85, 184);
 $neighbourColor: rgb(101, 166, 250);
 $uploadedColor: rgb(0, 110, 255);
 
 // Colors for Cluster
-$cluster0: red;
+$cluster0: rgb(106, 218, 175);
 $cluster1: blueviolet;
 $cluster2: rgb(255, 152, 169);
 $cluster3: rgb(60, 255, 0);
 $cluster4: rgb(154, 205, 50);
 $cluster5: orange;
-$cluster6: slategrey;
+$cluster6: rgb(10, 10, 10);
 $cluster7: teal;
 $cluster8: indianred;
 $cluster9: rgb(10, 139, 38);

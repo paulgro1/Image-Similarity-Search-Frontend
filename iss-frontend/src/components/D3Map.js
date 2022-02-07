@@ -783,11 +783,11 @@ class D3Map extends Component {
         
         
         return(  
-            <div>  
+            <div className='canvasBody'>  
                 <div id="canvas" ref="canvas">
                     <Modal show={showDialog} onHide={this.handleClose} size="lg" scrollable={false}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Informations</Modal.Title>
+                            <Modal.Title>Information</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Container>

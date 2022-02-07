@@ -18,6 +18,9 @@ html, body{
   margin: 2%;
 }
 
+.canvasBody{
+  background-color: rgb(240, 240, 240);
+}
 
 .modal-dialog-crop{
   width: 300px;
@@ -46,12 +49,39 @@ html, body{
   bottom: 20px;
 }
 
-#bordercontainer {
+.modal-header
+ {
+     background-color: rgba(207, 230, 219, 1);
+     color:rgb(25, 135, 84);
+ }
+
+#instHeader {
+  width: 900px;
+}
+
+#instBody {
+  width: 900px!important;
+  background-color: white;
+}
+
+/* #bordercontainer {
   padding: 10px;
 } 
 
 #bordercontainer .col {
   border: 1pt solid #f1f1f1;
+} */
+
+#icon {
+  margin-top: 20px;
+}
+
+#attention{
+  text-align: left;
+}
+
+#attentionIcon{
+  margin: 5px 5px 5px 5px;
 }
 
  .col img{
@@ -60,6 +90,16 @@ html, body{
 
 .col-xs-1 {
   align-content: center;
+}
+
+.col{
+  text-align: center;
+}
+
+
+
+#instBody{
+  width: 1200px;
 }
 
 #bordercontainer {

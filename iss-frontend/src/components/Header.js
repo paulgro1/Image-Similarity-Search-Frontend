@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
+import Logo from '../Logo/LogoVers2.svg'
+
 import ImageUploadButton from './ImageUploadButton';
 import SettingsButton from './SettingsButton';
 import ExportButton from './ExportButton';
@@ -23,8 +25,9 @@ class Header extends Component {
     render() {
         return(
             <div>
-                <Navbar bg="light" expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}>  
-                    <Navbar.Brand>Image Similarity Search Project</Navbar.Brand>
+                <Navbar bg="light" expand="lg" style={{padding: "0.5em 1em 0.5em 1em"}}> 
+                    <Navbar.Brand><img alt="" src={Logo} width="55px"/></Navbar.Brand> 
+                    <Navbar.Brand>Image Similarity Search</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">

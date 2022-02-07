@@ -9,21 +9,28 @@ import { bindActionCreators } from 'redux';
 import * as instructionsActions from '../actions/InstructionActions';
 
 
-import scrollimage from '../InstructionIcons/scroll.png';
-import leftclickandpan from '../InstructionIcons/left-click-2.png';
-import leftclick from '../InstructionIcons/left-click.png';
+import scrollimage from '../InstructionIcons/scroll.svg';
+import warning from '../InstructionIcons/warning.png';
+import leftclickandpan from '../InstructionIcons/left-click-2.svg';
+import leftclick from '../InstructionIcons/left-click.svg';
+import doubleleftclick from '../InstructionIcons/doubleleftclick.svg';
 import settingsButton from '../InstructionIcons/settingsButton.png';
 import uploadImageButton from '../InstructionIcons/uploadImageButton.png';
 import exportButton from '../InstructionIcons/exportButton.png';
 import ClusterOn from '../InstructionIcons/ClusterOnButton.png';
 import ClusterOff from '../InstructionIcons/ClusterOffButton.png';
-import scrollInfo from '../InstructionIcons/scroll-2.png';
 
 const mapStateToProps = state => {
     return state
 }
 
-
+/**
+ * Class representing the instructions button component.
+ * @prop {function} showInstructionsDialogAction - shows the instructions dialog
+ * @prop {function} hideInstructionsDialogAction - hides the instructions dialog
+ * 
+ * @extends {Component}
+ */
 class InstructionsButton extends Component {
 
     /**
@@ -77,19 +84,19 @@ class InstructionsButton extends Component {
                 </svg>
                 </Button>
 
-                <Modal show={showDialog} onHide={this.handleClose} scrollable={true}>
-                    <Modal.Header closeButton>
+                <Modal show={showDialog} onHide={this.handleClose} >
+                    <Modal.Header id="instHeader" closeButton>
                     
                         <Modal.Title>Instructions</Modal.Title>
                         &nbsp;
-                        <img src={scrollInfo} height={20} width={20} alt="scroll info" />
+                        
                        
                     </Modal.Header>
-                    <Modal.Body className="show-grid ">
-        <Container>
+                    <Modal.Body id="instBody">
+        <Container >
           
-        <table class="table table-striped">
-        <div class="container-fluid" id="bordercontainer">
+        {/* <table class="table table-striped">
+        <div class="container-fluid" id="bordercontainer"> */}
    
 
 
@@ -98,20 +105,13 @@ class InstructionsButton extends Component {
         <div class="row">
 
 <Row>
-<div class="col" align="center" >
-          <Col xs={12} md={8}>
-          The settings can not be changed while images are marked
-            </Col>
-            </div>
-</Row>
-</div>
+<div class="col" id="attention">
 
-<div class="row">
-
-<Row><div class="col" align="center">
-          <Col xs={12} md={8}>
-          To reset the marking of the images, click on the white area
-            </Col>
+          <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+          The settings can not be changed while images are marked.<br></br><br></br>
+          <img id="attentionIcon" src={warning} height={20} alt="scroll icon" />
+          To reset the marking of the images, click on the white area around them.
+            
             </div>
 </Row>
 </div>
@@ -120,7 +120,51 @@ class InstructionsButton extends Component {
     <div class="row">
        <Row>
 
-          <div class="col">
+        <div class="row">
+            <div class="col">
+              <img id="icon" src={scrollimage} height={140}  alt="scroll icon" /><br></br>
+              Scroll up and down to zoom in and out.<br/>
+              Or double click on the canvas to zoom in.
+            </div>
+            <div class="col">
+              <img id="icon" src={leftclickandpan} height={140}  alt="scroll icon" /><br></br>
+              Click left and pan to slide over the dataset.
+            </div>
+            <div class="col">
+              <img id="icon" src={leftclick} height={140}  alt="scroll icon" /><br></br>
+              One left click on image to get the nearest neighbours.
+            </div>
+            <div class="col">
+              <img id="icon" src={doubleleftclick} height={140}  alt="scroll icon" /><br></br>
+              Double left click on image to go to detail view, nearest neighbours, similarity, option to export data.
+              When the picture is already selected, a single click is enough.
+            </div>
+        </div>
+
+        </Row>
+            </div>
+              <img id="icon" src={leftclickandpan} height={140}  alt="scroll icon" /><br></br>
+              Click left and pan to slide over the dataset.
+        <div class="row">
+       <Row>
+
+        <div class="row">
+            <div class="col">
+            1 of 2
+            </div>
+            <div class="col">
+            2 of 2
+            </div>
+            <div class="col">
+            2 of 2
+            </div>
+            <div class="col">
+            2 of 2
+            </div>
+        </div>
+
+
+          {/* <div class="col">
 
           <Col xs={6} md={4}>
           <div class="col-xs-1" align="center">
@@ -131,7 +175,8 @@ class InstructionsButton extends Component {
 
           <div class="col">
           <Col xs={12} md={8}>
-            Scroll with your mouse up and down to zoom in and out
+            Scroll with your mouse up and down to zoom in and out.<br/>
+            Or Double click on the canvas to zoom in.
             </Col>
             </div>
 
@@ -195,7 +240,8 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data
+           Double left click on an image to go to the detail view, nearest neighbours, similarity, option to export data.<br/>
+           When the picture is already selected, a single click is enough
             </Col>
             </div>
             </Row>
@@ -252,7 +298,7 @@ class InstructionsButton extends Component {
             <Col xs={6} md={4} >
 
             <div class="col-xs-1" align="center">
-            <img src={uploadImageButton} height={40} width={100} alt="uploaded image button"/>
+            <img src={uploadImageButton} height={40} width={100} alt="uploadbutton"/>
             </div>
 
             </Col>
@@ -283,20 +329,19 @@ class InstructionsButton extends Component {
 
             <div class="col">
             <Col xs={12} md={8}>
-              The clusters and their colors can be activated or deactivated with a right click on these buttons
-            </Col>
-            </div>
+            The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image            </Col>
+            </div> */}
             </Row>
             </div>
 
 
 
-            </div>
-    </table>
+            {/* </div>
+
+    </table> */}
         </Container>
       </Modal.Body>
-                    <Modal.Footer>
-                    </Modal.Footer>
+                    
                 </Modal>
             </div>
         )

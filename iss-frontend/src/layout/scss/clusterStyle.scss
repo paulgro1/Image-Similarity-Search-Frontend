@@ -1,6 +1,7 @@
 @use  "colorScheme" as colors;
 
 $outline: 0.4vh solid;
+$box-shadow: 60px -16px;
 
 .cluster0 {
     outline: $outline colors.$cluster0;
