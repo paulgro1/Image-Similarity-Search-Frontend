@@ -180,9 +180,7 @@ class InstructionsButton extends Component {
         
         </Container>
       </Modal.Body>
-                <Modal.Footer id="instFooter">
 
-                </Modal.Footer>
                 </Modal>
             </div>
         )

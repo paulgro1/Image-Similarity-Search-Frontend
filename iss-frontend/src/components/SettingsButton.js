@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { Gear } from "react-bootstrap-icons";
 import Tooltip from "@material-ui/core/Tooltip";
+import warning from '../InstructionIcons/warning.svg';
 
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -145,9 +146,10 @@ class SettingsButton extends Component {
                         <Modal.Title id="settingsTitle">Settings</Modal.Title>
                     </Modal.Header>
                     <Modal.Body id="settingsBody">
-                    <div id="settingAlert">
-                        <p>Please unmark before changing settings!</p>
-                    </div>
+                    <div class="col" id="attention">
+                        <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+                        The settings can not be changed while images are marked.<br></br><br></br>
+                     </div>
                     </Modal.Body>
                 </Modal>
                 </div>
@@ -173,6 +175,7 @@ class SettingsButton extends Component {
                             <div id='neighbourDiv'>
                             <p>Number of nearest neighbours:</p>
                             <RangeSlider
+                                id='rangeNeighbour'
                                 variant='success'
                                 value={this.state.sliderValue}
                                 onChange={changeEvent => this.setNeighboursValue(changeEvent.target.value)}
@@ -182,7 +185,7 @@ class SettingsButton extends Component {
                             </div>
                             <div id="clusterDiv">
                             <p>Number of cluster centers:</p>
-                            <RangeSlider id='range'
+                            <RangeSlider id='rangeCluster'
                                 variant='success'
                                 value={this.state.clusterCenterValue}
                                 onChange={changeEvent => this.setClustersValue(changeEvent.target.value)}

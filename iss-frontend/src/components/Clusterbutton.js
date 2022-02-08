@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 import '../layout/css/clusterStyle.css'
 import '../layout/css/HeaderStyle.css'
+import warning from '../InstructionIcons/warning.svg';
 
 import * as fetchImagesActions from '../actions/FetchImagesActions'
 import * as settingsAction from '../actions/SettingsActions'
@@ -153,8 +154,9 @@ class ClusterButton extends Component  {
         if(this.props.markActive) {
             return(
                 
-                <div id="navButton" className="unMarkAlert">
-                  <p>Please unmark before using cluster switch!</p>
+                <div class="col" id="attention">
+                    <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+                    Please unmark before using Clusterswitch!
                 </div>
             )
         }
