@@ -801,7 +801,7 @@ class D3Map extends Component {
                             <Container id="infoContainer">
                                 <Row id="firstRow">
                                     <Col id="imageData" height={300} lg={4}>
-                                        <Image src={this.state.selectedImageUrl} width={192} height={256}/>
+                                        <Image src={this.state.selectedImageUrl} width={192}/>
                                         <h4>Image Properties:</h4>
                                         <div>
                                             Filename: {this.state.selectedImageFilename}<br/>

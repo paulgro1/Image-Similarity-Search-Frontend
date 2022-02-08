@@ -181,7 +181,7 @@ class SettingsButton extends Component {
                             />
                             </div>
                             <div id="clusterDiv">
-                            <p>Number of clustercenter:</p>
+                            <p>Number of clustercenters:</p>
                             <RangeSlider id='range'
                                 variant='success'
                                 value={this.state.clusterCenterValue}

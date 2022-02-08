@@ -1,11 +1,11 @@
 .highlight {
   opacity: 1;
-  outline: 0.5vh solid #0a55b8;
+  outline: 0.3vh solid #0a55b8;
 }
 
 .highlight_neighbour {
   opacity: 1;
-  outline: 0.5vh solid #65a6fa;
+  outline: 0.3vh solid #65a6fa;
 }
 
 .hide_on {
@@ -18,7 +18,7 @@
 
 .highlight_uploaded {
   opacity: 1;
-  outline: 0.5vh solid #ff00ea;
+  outline: 0.3vh solid #ff00ea;
 }
 
 .hidden {
