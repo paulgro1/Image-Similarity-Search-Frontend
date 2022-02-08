@@ -154,7 +154,7 @@ class ClusterButton extends Component  {
         if(this.props.markActive) {
             return(
                 
-                <div class="col" id="attention">
+                <div class="col" id="alert">
                     <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
                     Please unmark before using Clusterswitch!
                 </div>
