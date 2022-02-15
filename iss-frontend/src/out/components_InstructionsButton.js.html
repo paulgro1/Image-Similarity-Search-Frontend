@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/InstructionsButton.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/InstructionsButton.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, {Component} from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
+import { Row, Container } from "react-bootstrap";
+import Tooltip from "@material-ui/core/Tooltip";
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as instructionsActions from '../actions/InstructionActions';
+
+import scrollimage from '../InstructionIcons/scroll.svg';
+import warning from '../InstructionIcons/warning.svg';
+import leftclickandpan from '../InstructionIcons/left-click-2.svg';
+import leftclick from '../InstructionIcons/left-click.svg';
+import doubleleftclick from '../InstructionIcons/doubleleftclick.svg';
+import settingsButton from '../InstructionIcons/settingsButton.svg';
+import uploadImageButton from '../InstructionIcons/uploadImageButton.svg';
+import exportButton from '../InstructionIcons/exportButton.svg';
+import Cluster from '../InstructionIcons/clusterButton.svg';
+
+
+const mapStateToProps = state => {
+    return state
+}
+
+/**
+ * Class representing the instructions button component.
+ * @prop {function} showInstructionsDialogAction - shows the instructions dialog
+ * @prop {function} hideInstructionsDialogAction - hides the instructions dialog
+ * 
+ * @extends {Component}
+ */
+class InstructionsButton extends Component {
+
+    /**
+     * Create a InstructionButton component.
+     * @param {object} props - properties from redux store
+     */
+    constructor(props){
+        super(props)
+        this.state = {
+        };
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+    }
+
+    /**
+     * This function opens the instruction dialog.
+     */
+    handleShow(e){
+        e.preventDefault();
+        const {showInstructionsDialogAction} = this.props;
+        showInstructionsDialogAction();
+    }
+
+    /**
+     * This function closes the instruction dialog.
+     */
+    handleClose(){
+        const {hideInstructionsDialogAction} = this.props;
+        hideInstructionsDialogAction();
+    } 
+
+
+    /**
+     * This function renders the instruction button and modal dialog.
+     * @returns {object} - React component
+     */
+    render(){
+
+        var showDialog = this.props.showInstructionsDialog
+        if(showDialog === undefined){
+            showDialog = false;
+        }
+
+
+        return (
+            &lt;div >
+                &lt;Tooltip id="tooltip" title="Instructions" placement="bottom">
+                    &lt;div id="settingButton">
+                      &lt;Button variant="outline-success" onClick={this.handleShow}> 
+                          &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle" viewBox="0 0 16 16">
+                            &lt;path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            &lt;path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                          &lt;/svg>
+                      &lt;/Button>
+                    &lt;/div>
+                &lt;/Tooltip>
+              
+                
+
+                &lt;Modal id="modalCentered" show={showDialog} onHide={this.handleClose} scrollable={true} >
+                    &lt;Modal.Header id="instHeader" closeButton>
+                    
+                        &lt;Modal.Title>Instructions&lt;/Modal.Title>
+                        &amp;nbsp;
+                        
+                       
+                    &lt;/Modal.Header>
+                    &lt;Modal.Body id="instBody">
+        &lt;Container>
+      
+   
+
+
+
+   
+        &lt;div className="row">
+
+        &lt;Row>
+        &lt;div className="col" id="attention">
+
+                  &lt;img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+                  The settings can not be changed while images are marked.&lt;br>&lt;/br>&lt;br>&lt;/br>
+                  &lt;img id="attentionIcon" src={warning} height={20} alt="scroll icon" />
+                  Reset the marked images, by clicking on the canvas.
+                    
+                    &lt;/div>
+        &lt;/Row>
+        &lt;/div>
+   
+   
+    &lt;div className="row">
+       &lt;Row>
+
+        
+            &lt;div className="col">
+              &lt;img id="icon" src={scrollimage} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Scroll up and down to zoom in and out.&lt;br/>
+              Or double click on the canvas to zoom in.
+            &lt;/div>
+            &lt;div className="col">
+              &lt;img id="icon" src={leftclickandpan} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Click left and pan to slide over the dataset.
+            &lt;/div>
+        &lt;/Row>
+        &lt;/div>
+        &lt;div className="row">
+        &lt;Row>
+            &lt;div className="col">
+              &lt;img id="icon" src={leftclick} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              One left click on image to get the nearest neighbours.
+            &lt;/div>
+            &lt;div className="col">
+              &lt;img id="icon" src={doubleleftclick} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Double left click on image to go to detail view, nearest neighbours, similarity, option to export data.
+              When the picture is already selected, a single click is enough.
+            &lt;/div>
+        
+        &lt;/Row>
+        &lt;/div>
+
+        
+        
+        &lt;div className="row">
+        &lt;Row>
+            &lt;div className="col">
+              &lt;img id="icon" src={settingsButton} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Click here to define the numbers of nearest neighbours and/or clusters with a slider.
+            &lt;/div>
+            &lt;div className="col">
+              &lt;img id="icon" src={exportButton} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Click here to export the nearest neighbours of all images in a table.
+            &lt;/div>
+        &lt;/Row>
+        &lt;/div>
+        &lt;div className="row">
+        &lt;Row>
+            &lt;div className="col">
+              &lt;img id="icon" src={uploadImageButton} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              Click here to choose between single- and multiupload, then the option is given to crop a single image.
+            &lt;/div>
+            &lt;div className="col">
+              &lt;img id="icon" src={Cluster} height={100}  alt="scroll icon" />&lt;br>&lt;/br>
+              The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image
+            &lt;/div>
+        &lt;/Row>
+        &lt;/div>
+        
+        &lt;/Container>
+      &lt;/Modal.Body>
+
+                &lt;/Modal>
+            &lt;/div>
+        )
+    }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    showInstructionsDialogAction: instructionsActions.getShowInstructionsDialogAction,
+    hideInstructionsDialogAction: instructionsActions.getHideInstructionsDialogAction,
+},dispatch)
+
+const connectedInstructionsButton = connect(mapStateToProps, mapDispatchToProps)(InstructionsButton);
+export default connectedInstructionsButton;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ClusterButton.html">ClusterButton</a></li><li><a href="CropImage.html">CropImage</a></li><li><a href="D3Map.html">D3Map</a></li><li><a href="ExportButton.html">ExportButton</a></li><li><a href="Header.html">Header</a></li><li><a href="ImageUploadButton.html">ImageUploadButton</a></li><li><a href="InstructionsButton.html">InstructionsButton</a></li><li><a href="SettingsButton.html">SettingsButton</a></li></ul><h3>Global</h3><ul><li><a href="global.html#fetchAllImagesIds">fetchAllImagesIds</a></li><li><a href="global.html#fetchAllNearestNeighbours">fetchAllNearestNeighbours</a></li><li><a href="global.html#fetchAllThumbnailMeta">fetchAllThumbnailMeta</a></li><li><a href="global.html#fetchAllThumbnails">fetchAllThumbnails</a></li><li><a href="global.html#fetchMultipleThumbnails">fetchMultipleThumbnails</a></li><li><a href="global.html#fetchNearestNeighbours">fetchNearestNeighbours</a></li><li><a href="global.html#fetchNearestNeighboursWithIds">fetchNearestNeighboursWithIds</a></li><li><a href="global.html#fetchOneImage">fetchOneImage</a></li><li><a href="global.html#fetchSetClusterValue">fetchSetClusterValue</a></li><li><a href="global.html#getHideImageCropDialogAction">getHideImageCropDialogAction</a></li><li><a href="global.html#getHideImageUploadDialogAction">getHideImageUploadDialogAction</a></li><li><a href="global.html#getHideInstructionsDialogAction">getHideInstructionsDialogAction</a></li><li><a href="global.html#getHideSettingsDialogAction">getHideSettingsDialogAction</a></li><li><a href="global.html#getSendFilesToStoreAction">getSendFilesToStoreAction</a></li><li><a href="global.html#getSessionToken">getSessionToken</a></li><li><a href="global.html#getShowImageCropDialogAction">getShowImageCropDialogAction</a></li><li><a href="global.html#getShowImageUploadDialogAction">getShowImageUploadDialogAction</a></li><li><a href="global.html#getShowInstructionsDialogAction">getShowInstructionsDialogAction</a></li><li><a href="global.html#getShowSettingsDialogAction">getShowSettingsDialogAction</a></li><li><a href="global.html#getUploadErrorAction">getUploadErrorAction</a></li><li><a href="global.html#getUploadPendingAction">getUploadPendingAction</a></li><li><a href="global.html#getUploadSuccessAction">getUploadSuccessAction</a></li><li><a href="global.html#hideInformationDialogAction">hideInformationDialogAction</a></li><li><a href="global.html#imageUpload">imageUpload</a></li><li><a href="global.html#setClusterCenterValue">setClusterCenterValue</a></li><li><a href="global.html#setClusterCenterValueAction">setClusterCenterValueAction</a></li><li><a href="global.html#setClusterSwitch">setClusterSwitch</a></li><li><a href="global.html#setClusterSwitchAction">setClusterSwitchAction</a></li><li><a href="global.html#setMarkActive">setMarkActive</a></li><li><a href="global.html#setMarkActiveAction">setMarkActiveAction</a></li><li><a href="global.html#setNeighboursSliderValue">setNeighboursSliderValue</a></li><li><a href="global.html#setSessionToken">setSessionToken</a></li><li><a href="global.html#setSessionTokenAction">setSessionTokenAction</a></li><li><a href="global.html#setSliderValueAction">setSliderValueAction</a></li><li><a href="global.html#showInformationDialogAction">showInformationDialogAction</a></li><li><a href="global.html#upload">upload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Feb 15 2022 20:24:25 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

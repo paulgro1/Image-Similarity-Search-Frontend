@@ -2,6 +2,7 @@ import * as route from '../config/Routes';
 
 export const SET_SESSION_TOKEN = "SET_SESSION_TOKEN";
 
+
 /**
  * This function accepts a session token and returns an action object.
  * @param {string} sessionToken 

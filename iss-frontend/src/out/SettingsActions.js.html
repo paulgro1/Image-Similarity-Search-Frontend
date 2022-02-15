@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SettingsActions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SettingsActions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as route from '../config/Routes';
+export const SHOW_SETTINGS_DIALOG = 'SHOW_SETTINGS_DIALOG';
+export const HIDE_SETTINGS_DIALOG = 'HIDE_SETTINGS_DIALOG';
+export const SET_SLIDER_VALUE = 'SET_SLIDER_VALUE';
+export const SET_CLUSTER_VALUE = 'SET_CLUSTERCENTER_VALUE'
+export const SET_CLUSTERSWITCH = 'SET_CLUSTERSWITCH'
+export const SET_MARK_ACTIVE = 'SET_MARK_ACTIVE'
+
+/**
+ * This function returns an action object to show the settings dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function getShowSettingsDialogAction(){
+    return {
+        type: SHOW_SETTINGS_DIALOG
+    }
+}
+
+/**
+ * This function returns an action object to hide the settings dialog.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function getHideSettingsDialogAction(){
+    return {
+        type: HIDE_SETTINGS_DIALOG
+    }
+}
+
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - slider value (number of nearest neighbours)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function setSliderValueAction(value){
+    return {
+        type: SET_SLIDER_VALUE,
+        value: value
+    }
+}
+
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - slider value (number of clusters)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function setClusterCenterValueAction(value) {
+    return {
+        type: SET_CLUSTER_VALUE,
+        value: value
+    }
+}
+
+/**
+ * This function returns an action object to set the slider value.
+ * @param {number} value - switch value (on or off)
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function setClusterSwitchAction(value) {
+    return {
+        type: SET_CLUSTERSWITCH,
+        value: value
+    }
+}
+
+/**
+ * This function returns an action object to set the slider value.
+ * @param {boolean} markActive - marked true or false
+ * @param {object} markedImagesIDs - IDs of marked images
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function setMarkActiveAction(markActive, markedImagesIDs) {
+    return {
+        type: SET_MARK_ACTIVE,
+        markActive: markActive,
+        markedImagesIDs: markedImagesIDs
+    }
+}
+
+/**
+ * This function dispatches the setSliderValueAction.
+ * @param {number} value - slider value
+ * @returns {function} dispatch - a function that dispatches the action
+*/
+export function setNeighboursSliderValue(value) {
+    return dispatch => {
+        console.log("Settings: NeighboursSliderValue: " + value)
+        dispatch(setSliderValueAction(value));
+    }
+}
+
+/**
+ * This function dispatches the setSliderValueAction.
+ * @param {number} value - slider value
+ * @param {string} sessionToken - token of current user session
+ * @returns {function} dispatch - a function that dispatches the action
+*/
+export const setClusterCenterValue = (value, sessionToken) => {
+    return function (dispatch) {
+        console.log("Settings: ClusterSliderValue: " + value)
+        fetchSetClusterValue(value, sessionToken).then(function () {
+            dispatch(setClusterCenterValueAction(value))
+        })
+    }
+}
+
+/**
+ * This function dispatches the setSliderValueAction.
+ * @param {number} value - slider value
+ * @param {string} sessionToken - token of current user session
+ * @returns {object} backend response
+*/
+export const fetchSetClusterValue = (value, sessionToken) => {
+    return fetch(route.CHANGE_CLUSTER_VALUE, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Api-Session-Token': sessionToken
+        },
+        body: JSON.stringify({
+            nr_of_centroids: value
+        })
+    })
+}
+
+/**
+ * This function dispatches the setClusterSwitchAction.
+ * @param {number} value - slider value
+ * @returns {function} dispatch - a function that dispatches the action
+*/
+export const setClusterSwitch = (value) => {
+    return (dispatch) => {
+        dispatch(setClusterSwitchAction(value))
+    }
+}
+
+/**
+ * This function dispatches the setMarkActiveAction.
+ * @param {boolean} markActive - marked true or false
+ * @param {object} markedImagesIDs - IDs of marked images
+ * @returns {object} dispatch - a function that dispatches the action
+ */
+export const setMarkActive = (markActive, markedImagesIDs) => {
+    return (dispatch) => {
+        dispatch(setMarkActiveAction(markActive, markedImagesIDs))
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#fetchAllImagesIds">fetchAllImagesIds</a></li><li><a href="global.html#fetchAllNearestNeighbours">fetchAllNearestNeighbours</a></li><li><a href="global.html#fetchAllThumbnailMeta">fetchAllThumbnailMeta</a></li><li><a href="global.html#fetchAllThumbnails">fetchAllThumbnails</a></li><li><a href="global.html#fetchMultipleThumbnails">fetchMultipleThumbnails</a></li><li><a href="global.html#fetchNearestNeighbours">fetchNearestNeighbours</a></li><li><a href="global.html#fetchNearestNeighboursWithIds">fetchNearestNeighboursWithIds</a></li><li><a href="global.html#fetchOneImage">fetchOneImage</a></li><li><a href="global.html#fetchSetClusterValue">fetchSetClusterValue</a></li><li><a href="global.html#getHideImageCropDialogAction">getHideImageCropDialogAction</a></li><li><a href="global.html#getHideImageUploadDialogAction">getHideImageUploadDialogAction</a></li><li><a href="global.html#getHideInstructionsDialogAction">getHideInstructionsDialogAction</a></li><li><a href="global.html#getHideSettingsDialogAction">getHideSettingsDialogAction</a></li><li><a href="global.html#getSendFilesToStoreAction">getSendFilesToStoreAction</a></li><li><a href="global.html#getSessionToken">getSessionToken</a></li><li><a href="global.html#getShowImageCropDialogAction">getShowImageCropDialogAction</a></li><li><a href="global.html#getShowImageUploadDialogAction">getShowImageUploadDialogAction</a></li><li><a href="global.html#getShowInstructionsDialogAction">getShowInstructionsDialogAction</a></li><li><a href="global.html#getShowSettingsDialogAction">getShowSettingsDialogAction</a></li><li><a href="global.html#getUploadErrorAction">getUploadErrorAction</a></li><li><a href="global.html#getUploadPendingAction">getUploadPendingAction</a></li><li><a href="global.html#getUploadSuccessAction">getUploadSuccessAction</a></li><li><a href="global.html#hideInformationDialogAction">hideInformationDialogAction</a></li><li><a href="global.html#imageUpload">imageUpload</a></li><li><a href="global.html#setClusterCenterValue">setClusterCenterValue</a></li><li><a href="global.html#setClusterCenterValueAction">setClusterCenterValueAction</a></li><li><a href="global.html#setClusterSwitch">setClusterSwitch</a></li><li><a href="global.html#setClusterSwitchAction">setClusterSwitchAction</a></li><li><a href="global.html#setMarkActive">setMarkActive</a></li><li><a href="global.html#setMarkActiveAction">setMarkActiveAction</a></li><li><a href="global.html#setNeighboursSliderValue">setNeighboursSliderValue</a></li><li><a href="global.html#setSessionToken">setSessionToken</a></li><li><a href="global.html#setSessionTokenAction">setSessionTokenAction</a></li><li><a href="global.html#setSliderValueAction">setSliderValueAction</a></li><li><a href="global.html#showInformationDialogAction">showInformationDialogAction</a></li><li><a href="global.html#upload">upload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Feb 15 2022 20:17:09 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

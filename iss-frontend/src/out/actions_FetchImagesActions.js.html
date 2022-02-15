@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: actions/FetchImagesActions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: actions/FetchImagesActions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as route from '../config/Routes';
+import axios from 'axios';
+var request = require('request');
+var JSZip = require("jszip");
+
+export const FETCH_IMAGES_PENDING = 'FETCH_IMAGES_PENDING';
+export const FETCH_IMAGES_SUCCESS = 'FETCH_IMAGES_SUCCESS';
+export const FETCH_IMAGES_ERROR = 'FETCH_IMAGES_ERROR';
+export const SHOW_INFORMATION_DIALOG = "SHOW_INFORMATION_DIALOG";
+export const HIDE_INFORMATION_DIALOG = "HIDE_INFORMATION_DIALOG";
+
+export function fetchImagesPendingAction() {
+    return {
+        type: FETCH_IMAGES_PENDING
+    }
+}
+
+export function fetchImagesSuccessAction(images) {
+    return {
+        type: FETCH_IMAGES_SUCCESS,
+        images: images
+    }
+}
+
+export function fetchImagesErrorAction(error) {
+    return {
+        type: FETCH_IMAGES_ERROR,
+        error: error
+    }
+}
+
+
+/**
+ * This function returns an action object.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function showInformationDialogAction() {
+    return {
+        type: SHOW_INFORMATION_DIALOG,
+    }
+}
+
+/**
+ * This function returns an action object.
+ * @returns {object} - action object that will be send to the RootReducer
+ */
+export function hideInformationDialogAction() {
+    return {
+        type: HIDE_INFORMATION_DIALOG,
+    }
+}
+
+
+export const getImagesMetaFromDb = () => {
+
+    return function (dispatch) {
+        dispatch(fetchImagesPendingAction());
+        fetchAllThumbnailMeta()
+            .then(
+                function (imagesMeta) {
+                    const action = fetchImagesSuccessAction(imagesMeta);
+                    dispatch(action);
+                },
+                error => {
+                    dispatch(fetchImagesErrorAction(error));
+                }
+            )
+            .catch(error => {
+                dispatch(fetchImagesErrorAction(error));
+            })
+    }
+}
+
+
+
+/**
+ * This function fetches the metadata for all thumbnail images.
+ * @returns {object} - object with the response (thumbnail meta data or error)
+ */
+export function fetchAllThumbnailMeta() {
+    console.log("Fetch image metadata from: " + route.FETCH_ALL_THUMBNAIL_META);
+
+    return axios({
+        method: "GET",
+        url: route.FETCH_ALL_THUMBNAIL_META,
+    })
+    .then(response => {
+        if(response.status === 200) {
+            let data = []
+            data = response.data
+
+        var imagesMetaArray = []
+        for (const oneMeta of data) {
+            let image = {
+                id: oneMeta.id,
+                filename: oneMeta.filename,
+                x: oneMeta.position[0],
+                y: oneMeta.position[1],
+                thumbnailSize: oneMeta.thumbnail_size,
+                clusterCenter: oneMeta.cluster_center
+
+            }
+        imagesMetaArray.push(image)
+        }
+
+        return imagesMetaArray
+    }
+    else {
+        console.log("Error occured in thumbnail metadata response.")
+    }   
+    }).catch(error => {
+        console.log("Error occured in metadata response.")
+        console.log(error)
+        return(error)
+    })
+}
+
+/**
+ * This function fetches one image.
+ * @param {number} id - image id
+ * @param {string} sessionToken - token for current session
+ * @returns {string} - one fullsize image blob url, which was received from the backend 
+ */
+export function fetchOneImage(id, sessionToken) {
+    var restUrl = route.FETCH_ONE_IMAGE + id;
+    console.log("Fetch One Image from: " + restUrl);
+
+    return fetch(restUrl, { 
+        method: 'GET',
+        headers: {
+            'Api-Session-Token': sessionToken
+        }})
+        .then(response => response.blob())
+        .then(blob => {
+            return URL.createObjectURL(blob)
+        })
+}
+
+/**
+ * Callback for returning the image URLs.
+ * @callback returnURLsCallback
+ * @param {string[]} imageUrls - array with the image URLs
+ */
+
+/**
+ * This function fetches multiple thumbnail images based on the given ids.
+ * @param {string} sessionToken - token for current session
+ * @param {number[]} picture_ids - array with image ids
+ * @param {returnURLsCallback} callback - a callback to run
+ * @returns {function} - callback wich returns the image URLs
+ */
+export async function fetchMultipleThumbnails(sessionToken, picture_ids, callback) {
+    var restUrl = route.FETCH_MULTIPLE_THUMBNAILS;
+    console.log("Fetch multiple thumbnails with the ids: " + picture_ids + " from: " + restUrl);
+    
+    request({
+    method : "POST",
+    headers :  {'Api-Session-Token': sessionToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+    },
+    url : restUrl,
+    encoding: null, // &lt;- this one is important!
+    body: JSON.stringify({
+        picture_ids: picture_ids
+    })
+}, function(error, response, body) {
+     JSZip.loadAsync(body).then(function(zip) {
+        var imageUrls = [];
+        var regex = /(?:\.([^.]+))?$/;
+        var regexId = /^[^_]+(?=_)/;
+        for(let zipEntry in zip.files) {
+            var data = zip.file(zipEntry).async("arraybuffer").then(function (data) {
+                var ext = regex.exec(zipEntry)[0];
+                var thumbnailId = regexId.exec(zipEntry)[0];
+                var type = "image/" + ext.split('.')[1];
+                var buffer = new Uint8Array(data);
+                var blob = new Blob([buffer.buffer], {type: type});
+                let url = URL.createObjectURL(blob)
+                var thumbnailData = {url: url, thumbnailId: thumbnailId}
+                return thumbnailData
+               });
+               imageUrls.push(data)
+        }
+        return callback(imageUrls)
+        })
+    });
+}
+
+/**
+ * This function fetches all thumbnail images.
+ * @param {string} sessionToken - token for current session
+ * @param {returnURLsCallback} callback - a callback to run
+ * @returns {function} - callback wich returns the image URLs
+ */
+export async function fetchAllThumbnails(sessionToken, callback) {
+    var restUrl = route.FETCH_THUMBNAILS;
+    console.log("Fetch all thumbnails from: " + restUrl);
+
+    request({
+    method : "GET",
+    headers :  {'Api-Session-Token': sessionToken},
+    url : restUrl,
+    encoding: null // &lt;- this one is important!
+}, function(error, response, body) {
+     JSZip.loadAsync(body).then(function(zip) {
+        var imageUrls = [];
+        var regex = /(?:\.([^.]+))?$/;
+        for(let zipEntry in zip.files) {
+            var url = zip.file(zipEntry).async("arraybuffer").then(function (data) {
+                var ext = regex.exec(zipEntry)[0];
+                var type = "image/" + ext.split('.')[1];
+                var buffer = new Uint8Array(data);
+                var blob = new Blob([buffer.buffer], {type: type});
+                let url = URL.createObjectURL(blob)
+                return url
+               });
+            imageUrls.push(url)
+        }
+        return callback(imageUrls)
+        })
+    });
+}
+
+/**
+ * This function fetches k nearest neighbours for one image.
+ * @param {number} id - image id
+ * @param {number} k - integer number of nearest neighbours to fetch
+ * @param {string} sessionToken - token for current session
+ * @returns {object} - object with nearest neighbours
+ */
+export function fetchNearestNeighbours(id, k, sessionToken) {
+    console.log("Fetch " + k +" NN for image: " + id)
+    
+    return axios({
+            method: 'POST',
+            url: route.FETCH_NEAREST_NEIGHBOURS + id,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Api-Session-Token': sessionToken
+            }, 
+            data: JSON.stringify({
+                k: k
+            })
+        })
+        .then(response => {
+            response = response.data
+            var nearestNeighbours = {
+                distances: response.distances,
+                ids: response.ids,
+                clusterCenters: response.neighbour_cluster_centers,
+                similarities: response.similarities,
+                filenames: response.neighbour_filenames
+            }
+            return nearestNeighbours;
+        })
+}
+
+/**
+ * This function fetches k nearest neighbours for all images.
+ * @param {number} k - integer number of nearest neighbours to fetch
+ * @returns {object} - object with nearest neighbours
+ */
+export function fetchAllNearestNeighbours(k) {
+    console.log("Fetch " + k +" NN of all images")
+    return axios({
+            method: 'GET',
+            url: route.FETCH_ALL_NEAREST_NEIGHBOURS + k, 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            return response.data;
+        })
+}
+
+/**
+ * This function fetches k nearest neighbours for multiple images based on the given ids.
+ * Relevant for Excel export.
+ * @param {number} k - integer number of nearest neighbours to fetch
+ * @param {number[]} ids - ids of images
+ * @returns {object} - object with nearest neighbours
+ */
+export function fetchNearestNeighboursWithIds(k, ids) {
+    console.log("Fetch " + k +" NN of " + ids.length + " images.")
+    return axios({
+            method: 'POST',
+            url: route.FETCH_ALL_NEAREST_NEIGHBOURS + k,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                picture_ids: ids
+            })
+        })
+        .then(response => {
+            return response.data;
+        })
+}
+
+/**
+ * This function fetches all image ids.
+ * @returns {object} - object with all image ids
+ */
+export function fetchAllImagesIds(){
+    console.log('Fetch Ids of all images.')
+    return axios({
+        method: 'GET',
+        url: route.FETCH_ALL_IMAGES_IDS, 
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        return response.data;
+    })
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ClusterButton.html">ClusterButton</a></li><li><a href="CropImage.html">CropImage</a></li><li><a href="D3Map.html">D3Map</a></li><li><a href="ExportButton.html">ExportButton</a></li><li><a href="Header.html">Header</a></li><li><a href="ImageUploadButton.html">ImageUploadButton</a></li><li><a href="InstructionsButton.html">InstructionsButton</a></li><li><a href="SettingsButton.html">SettingsButton</a></li></ul><h3>Global</h3><ul><li><a href="global.html#fetchAllImagesIds">fetchAllImagesIds</a></li><li><a href="global.html#fetchAllNearestNeighbours">fetchAllNearestNeighbours</a></li><li><a href="global.html#fetchAllThumbnailMeta">fetchAllThumbnailMeta</a></li><li><a href="global.html#fetchAllThumbnails">fetchAllThumbnails</a></li><li><a href="global.html#fetchMultipleThumbnails">fetchMultipleThumbnails</a></li><li><a href="global.html#fetchNearestNeighbours">fetchNearestNeighbours</a></li><li><a href="global.html#fetchNearestNeighboursWithIds">fetchNearestNeighboursWithIds</a></li><li><a href="global.html#fetchOneImage">fetchOneImage</a></li><li><a href="global.html#fetchSetClusterValue">fetchSetClusterValue</a></li><li><a href="global.html#getHideImageCropDialogAction">getHideImageCropDialogAction</a></li><li><a href="global.html#getHideImageUploadDialogAction">getHideImageUploadDialogAction</a></li><li><a href="global.html#getHideInstructionsDialogAction">getHideInstructionsDialogAction</a></li><li><a href="global.html#getHideSettingsDialogAction">getHideSettingsDialogAction</a></li><li><a href="global.html#getSendFilesToStoreAction">getSendFilesToStoreAction</a></li><li><a href="global.html#getSessionToken">getSessionToken</a></li><li><a href="global.html#getShowImageCropDialogAction">getShowImageCropDialogAction</a></li><li><a href="global.html#getShowImageUploadDialogAction">getShowImageUploadDialogAction</a></li><li><a href="global.html#getShowInstructionsDialogAction">getShowInstructionsDialogAction</a></li><li><a href="global.html#getShowSettingsDialogAction">getShowSettingsDialogAction</a></li><li><a href="global.html#getUploadErrorAction">getUploadErrorAction</a></li><li><a href="global.html#getUploadPendingAction">getUploadPendingAction</a></li><li><a href="global.html#getUploadSuccessAction">getUploadSuccessAction</a></li><li><a href="global.html#hideInformationDialogAction">hideInformationDialogAction</a></li><li><a href="global.html#imageUpload">imageUpload</a></li><li><a href="global.html#setClusterCenterValue">setClusterCenterValue</a></li><li><a href="global.html#setClusterCenterValueAction">setClusterCenterValueAction</a></li><li><a href="global.html#setClusterSwitch">setClusterSwitch</a></li><li><a href="global.html#setClusterSwitchAction">setClusterSwitchAction</a></li><li><a href="global.html#setMarkActive">setMarkActive</a></li><li><a href="global.html#setMarkActiveAction">setMarkActiveAction</a></li><li><a href="global.html#setNeighboursSliderValue">setNeighboursSliderValue</a></li><li><a href="global.html#setSessionToken">setSessionToken</a></li><li><a href="global.html#setSessionTokenAction">setSessionTokenAction</a></li><li><a href="global.html#setSliderValueAction">setSliderValueAction</a></li><li><a href="global.html#showInformationDialogAction">showInformationDialogAction</a></li><li><a href="global.html#upload">upload</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Feb 15 2022 20:24:25 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
