@@ -5,7 +5,7 @@ import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import '../layout/css/clusterStyle.css'
+import '../layout/css/clusterStyleShadow.css'
 import '../layout/css/HeaderStyle.css'
 import warning from '../InstructionIcons/warning.svg';
 
@@ -154,7 +154,7 @@ class ClusterButton extends Component  {
         if(this.props.markActive) {
             return(
                 
-                <div class="col" id="alert">
+                <div className="col" id="alert">
                     <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
                     Please unmark before using Clusterswitch!
                 </div>
@@ -162,7 +162,7 @@ class ClusterButton extends Component  {
         }
         return (
             <div id="navButton">
-                <BootstrapSwitchButton width={130} onlabel="Cluster ON" offlabel="Cluster OFF" class="btn btn-outline-primary-xs" checked={this.state.checked} onChange={this.showCluster}/>
+                <BootstrapSwitchButton width={130} onlabel="Cluster ON" offlabel="Cluster OFF" className="btn btn-outline-primary-xs" checked={this.state.checked} onChange={this.showCluster}/>
             </div>
             
         )

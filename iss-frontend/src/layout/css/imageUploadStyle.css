@@ -13,9 +13,9 @@
 }
 #uploadBody form {
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
   margin-top: 10px;
 }
 #uploadBody form input[type=file]::file-selector-button {
@@ -34,6 +34,12 @@
 }
 #uploadBody form #uploadSubmit {
   margin-left: 10px;
+}
+#uploadBody form #UploadAlert {
+  width: 100%;
+  padding-top: 2rem;
+  margin: auto 2%;
+  padding-left: 1.1rem;
 }
 
 /*# sourceMappingURL=imageUploadStyle.css.map */

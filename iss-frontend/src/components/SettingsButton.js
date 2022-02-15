@@ -146,7 +146,7 @@ class SettingsButton extends Component {
                         <Modal.Title id="settingsTitle">Settings</Modal.Title>
                     </Modal.Header>
                     <Modal.Body id="settingsBody">
-                    <div class="col" id="alert">
+                    <div className="col" id="alert">
                         <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
                         The settings can not be changed while images are marked.<br></br><br></br>
                      </div>

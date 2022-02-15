@@ -80,7 +80,7 @@ class InstructionsButton extends Component {
                 <Tooltip id="tooltip" title="Instructions" placement="bottom">
                     <div id="settingButton">
                       <Button variant="outline-success" onClick={this.handleShow}> 
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-info-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                             <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                           </svg>
@@ -106,10 +106,10 @@ class InstructionsButton extends Component {
 
 
    
-        <div class="row">
+        <div className="row">
 
         <Row>
-        <div class="col" id="attention">
+        <div className="col" id="attention">
 
                   <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
                   The settings can not be changed while images are marked.<br></br><br></br>
@@ -121,28 +121,28 @@ class InstructionsButton extends Component {
         </div>
    
    
-    <div class="row">
+    <div className="row">
        <Row>
 
         
-            <div class="col">
+            <div className="col">
               <img id="icon" src={scrollimage} height={100}  alt="scroll icon" /><br></br>
               Scroll up and down to zoom in and out.<br/>
               Or double click on the canvas to zoom in.
             </div>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={leftclickandpan} height={100}  alt="scroll icon" /><br></br>
               Click left and pan to slide over the dataset.
             </div>
         </Row>
         </div>
-        <div class="row">
+        <div className="row">
         <Row>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={leftclick} height={100}  alt="scroll icon" /><br></br>
               One left click on image to get the nearest neighbours.
             </div>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={doubleleftclick} height={100}  alt="scroll icon" /><br></br>
               Double left click on image to go to detail view, nearest neighbours, similarity, option to export data.
               When the picture is already selected, a single click is enough.
@@ -153,25 +153,25 @@ class InstructionsButton extends Component {
 
         
         
-        <div class="row">
+        <div className="row">
         <Row>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={settingsButton} height={100}  alt="scroll icon" /><br></br>
               Click here to define the numbers of nearest neighbours and/or clusters with a slider.
             </div>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={exportButton} height={100}  alt="scroll icon" /><br></br>
               Click here to export the nearest neighbours of all images in a table.
             </div>
         </Row>
         </div>
-        <div class="row">
+        <div className="row">
         <Row>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={uploadImageButton} height={100}  alt="scroll icon" /><br></br>
               Click here to choose between single- and multiupload, then the option is given to crop a single image.
             </div>
-            <div class="col">
+            <div className="col">
               <img id="icon" src={Cluster} height={100}  alt="scroll icon" /><br></br>
               The clusters and their colors can be activated or deactivated with a left click on these buttons, or can specify with a click on an image
             </div>

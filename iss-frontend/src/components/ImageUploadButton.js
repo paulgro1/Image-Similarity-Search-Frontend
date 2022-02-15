@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as imageUploadActions from '../actions/ImageUploadActions';
 import React, { Component } from 'react';
 import CropButton from './CropImage';
+import warning from '../InstructionIcons/warning.svg';
 import '../layout/css/HeaderStyle.css'
 import '../layout/css/imageUploadStyle.css'
 
@@ -71,6 +72,7 @@ class ImageUploadButton extends Component {
     handleClose(){
         const {hideImageUploadDialogAction} = this.props;
         hideImageUploadDialogAction();
+        this.setState({ files: undefined })
     } 
 
     /**
@@ -150,14 +152,16 @@ class ImageUploadButton extends Component {
                     <Modal.Body id="uploadBody">
                         <Form>
                             <Form.Group>
-                                <label for='fileUpload'></label>
+                                <label htmlFor='fileUpload'></label>
                                 <input id='fileUpload' type='file' onChange={this.handleSelect} multiple />
                             </Form.Group>
                             <Button id='uploadSubmit' variant="outline-success" onClick={this.handleSubmit}>
                                 Submit
                             </Button>
-            
-                            {error && <Form.Label style={{ color: "red" }}> Something went wrong.</Form.Label>}
+                            {error &&   <div id="UploadAlert">
+                                            <img id="attentionIcon" src={warning} height={20}  alt="scroll icon" />
+                                            Images must have same size as images in database.<br></br><br></br>
+                                        </div>}
                             {pending && <Spinner animation="border" style={{ color: "grey" }} size="sm" />}
                         </Form>
                     </Modal.Body>

@@ -107,8 +107,13 @@ export function imageUpload(formData) {
         dispatch(getUploadPendingAction());
         upload(formData)
             .then(function(response){
-                const action = getUploadSuccessAction(response);
-                dispatch(action);
+                if(response){
+                    const action = getUploadSuccessAction(response);
+                    dispatch(action);
+                }
+                else {
+                    throw new Error('WRONG SIZE')
+                }                
             },
             error =>{
                 dispatch(getUploadErrorAction(error));
@@ -125,6 +130,7 @@ export function imageUpload(formData) {
  * @returns {object} - object with the response (image data or error)
 */
 async function upload(formData) {
+
     console.log("Uploading images to: " + route.IMAGE_UPLOAD)
     return await axios({
         method: "POST",
@@ -135,6 +141,7 @@ async function upload(formData) {
         },
     })
     .then(response => {
+        console.log(response)
         if(response.status === 200) {
             let responseData = response.data
             let imageData = {
@@ -150,15 +157,12 @@ async function upload(formData) {
                 uploaded: true,
             }
 
-
-            return imageData
+            return (imageData)
         }
         else {
             console.log("Error occured in image upload response.")
         }   
     }).catch(error => {
-        console.log("Error occured in image upload.")
-        console.log(error)
-        return(error)
+        console.log(error.message)
     })
 }
