@@ -5,7 +5,7 @@ import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import '../layout/css/clusterStyleShadow.css'
+import '../layout/css/clusterStyle.css'
 import '../layout/css/HeaderStyle.css'
 import warning from '../InstructionIcons/warning.svg';
 
