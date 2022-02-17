@@ -50,4 +50,4 @@ Durch Drücken von strg + c in der Kommandozeile kann der Prozess beendet werden
 
 ### (6) Anmerkungen
 
-Anmerkungen und Hinweise bitte der [README.md](README.md) entnehmen.
+Anmerkungen und Hinweise zur Anwednung bitte der [README.md](README.md) entnehmen.
