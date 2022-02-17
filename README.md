@@ -12,4 +12,6 @@ Zum Aufsetzen und Starten des Frontend Servers bitte die Schritte in [INSTALL.md
 
 ### Anmerkungen
 
-Für diesen Prototypen sind beim Bilder-Upload lediglich Bilder der Größe 336 x 448 px vorgesehen. Abweichende Maße können den Programmablauf stören.
+Bei einer sehr großen Menge an Bildern ist die Anwendnung je nach Leistung des Computers nicht mehr flüssig nutzbar. Dies liegt unter anderem am Pan/Zoom Feature, dessen Berechnung sehr aufwendig ist und für einen so großen Datensatz optimiert werden muss.
+
+Das Streudiagramm, mit dem die Bilder angezeigt werden, passt seinen Maßstab an die Bildschirmauflösung an und sieht somit je nach Auflösung anders aus.
