@@ -12,6 +12,6 @@ Zum Aufsetzen und Starten des Frontend Servers bitte die Schritte in [INSTALL.md
 
 ### Anmerkungen
 
-Bei einer sehr großen Menge an Bildern ist die Anwendnung je nach Leistung des Computers nicht mehr flüssig nutzbar. Dies liegt unter anderem am Pan/Zoom Feature, dessen Berechnung sehr aufwendig ist und für einen so großen Datensatz optimiert werden muss.
+Bei einer sehr großen Menge an Bildern ist die Anwendnung je nach Leistung des Computers nicht mehr flüssig nutzbar. Dies liegt unter anderem am Pan/Zoom Feature, dessen Berechnung sehr aufwendig ist und für einen so großen Datensatz optimiert werden sollte.
 
 Das Streudiagramm, mit dem die Bilder angezeigt werden, passt seinen Maßstab an die Bildschirmauflösung an und sieht somit je nach Auflösung anders aus.
