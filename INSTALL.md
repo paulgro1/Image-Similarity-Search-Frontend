@@ -49,4 +49,4 @@ REACT_APP_SLIDER_VALUE_CLUSTER=15
 
 Wichtig: Jede neue Umgebungsvariable in .env muss mit "REACT_APP_" beginnen.
 
-Weitere Anmerkungen und Hinweise zur Anwednung bitte der [README.md](README.md) entnehmen.
+Weitere Anmerkungen und Hinweise zur Anwednung bitte [README.md](README.md) entnehmen.
