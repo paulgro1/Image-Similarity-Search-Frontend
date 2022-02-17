@@ -50,4 +50,4 @@ Durch Drücken von strg + c in der Kommandozeile kann der Prozess beendet werden
 
 ### (6) Anmerkungen
 
-Für diesen Prototypen sind beim Bilder-Upload lediglich Bilder der Größe 336 x 448 px vorgesehen. Abweichende Maße können den Programmablauf stören.
+Anmerkungen und Hinweise bitte der [README.md](README.md) entnehmen.
