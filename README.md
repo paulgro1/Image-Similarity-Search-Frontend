@@ -8,10 +8,14 @@ Mit Hilfe von Back- und Frontend ließ sich eine Schnittstelle entwickeln, die e
 Man kann beliebige Bild-Datensätze in einem angepassten Koordinatensystem erkunden und sich einen genaueren Überblick über die bestimmten Daten geben lassen.
 Es gibt die Möglichkeit sich die ähnlichsten Bilder eines bestimmten Bildes, ob hochgeladen oder ausgewählt, ausgeben zu lassen. Hier bekommt man detaillierte Informationen wie den Namen des Bildes, deren prozentuale Ähnlichkeit und die genaue Distanz.
 
+Um die Applikation so benutzerfreundlich wie möglich zu gestalten wurde sich hier für die Verwendung von D3.js entschieden, um sich einen guten visuellen Überblick der Daten machen zu können. 
+Unter Anderem gibt es zudem auch einige interessante Features, wie das semantische Zoomen oder das Hochladen einzelner Bilder, die man in die gewünschte Größe, mit Hilfe des Crops, bringen kann, als auch das gleichzeitige Uploaden mehrerer Bilder. 
+Um auch bestimmte Klassifizierungen im Datensatz leichter finden zu können, gibt es die Option sich diese farblich gruppiert ausgeben zu lassen.
+
 Zum Aufsetzen und Starten des Frontend Servers bitte die Schritte in [INSTALL.md](INSTALL.md) befolgen.
 
 ### Anmerkungen
 
-Bei einer sehr großen Menge an Bildern ist die Anwendnung je nach Leistung des Computers nicht mehr flüssig nutzbar. Dies liegt unter anderem am Pan/Zoom Feature, dessen Berechnung sehr aufwendig ist und für einen so großen Datensatz optimiert werden sollte.
+Bei einer sehr großen Menge an Bildern ist die Anwendung je nach Leistung des Computers nicht mehr flüssig nutzbar. Dies liegt unter anderem am Zoom Feature, dessen Berechnung momentan auf den Bildern einzeln durchgeführt wird und somit sehr rechenintensiv ist. Diese Berechnungen sollten in Zukunft effizienter umgesetzt werden. Zum Beispiel dadurch das alle Bilder gruppiert werden und auf dieser Gruppe dann die Transformationen durchgeführt werden.
 
-Das Streudiagramm, mit dem die Bilder angezeigt werden, passt seinen Maßstab an die Bildschirmauflösung an und sieht somit je nach Auflösung anders aus.
+Das Streudiagramm, mit dem die Bilder angezeigt werden, passt seinen Maßstab an die Bildschirmauflösung an und sieht somit je nach Auflösung anders aus. Dadurch können die Abstände zwischen den Bilder in der Darstellung variieren.
