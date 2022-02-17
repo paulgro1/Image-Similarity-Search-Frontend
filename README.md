@@ -9,3 +9,7 @@ Man kann beliebige Bild-Datensätze in einem angepassten Koordinatensystem erkun
 Es gibt die Möglichkeit sich die ähnlichsten Bilder eines bestimmten Bildes, ob hochgeladen oder ausgewählt, ausgeben zu lassen. Hier bekommt man detaillierte Informationen wie den Namen des Bildes, deren prozentuale Ähnlichkeit und die genaue Distanz.
 
 Zum Aufsetzen und Starten des Frontend Servers bitte die Schritte in [INSTALL.md](INSTALL.md) befolgen.
+
+### Anmerkungen
+
+Für diesen Prototypen sind beim Bilder-Upload lediglich Bilder der Größe 336 x 448 px vorgesehen. Abweichende Maße können den Programmablauf stören.
