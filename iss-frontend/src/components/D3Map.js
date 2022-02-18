@@ -220,7 +220,7 @@ class D3Map extends Component {
                     for (let i=0; i < this.state.sliderValue; i++){
                         var nearestNeighbour = {
                             id: nN.nnIds[i],
-                            filename: nN.nnFilenames[id],
+                            filename: nN.nnFilenames[i],
                             distances: nN.distances[i],
                             similarities: nN.similarities[i],
                             url: urls[nN.nnIds[i]],
